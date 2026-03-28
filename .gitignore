@@ -1,0 +1,13 @@
+#*.png*
+#*.doc*
+#*.txt*
+#*.h5*
+#*shipment*
+tom_scripts/
+__pycache__
+*.pyc
+.vscode/
+*.log
+.venv/
+#Shipment*
+venv/
