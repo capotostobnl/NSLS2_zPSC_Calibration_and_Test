@@ -113,10 +113,9 @@ def main():
     dut = DUT()
     dut.prompt_inputs()
     sleep_time = 0
+    sleep_done = False
     sleep_time = int(input("How long do you want to sleep before beginning? "
                            "(Minutes): "))
-
-    sleep_func(sleep_time)
 
     if cal:
         while True:
@@ -131,43 +130,26 @@ def main():
                 break
             else:
                 print("Invalid input. Please enter <Y/N>")
-        print("Starting Calibration script subprocess...\n\n\n")
+        if not sleep_done:
+            sleep_func(sleep_time)
+            sleep_done = True
+        print("Starting Calibration script...\n\n\n")
         print("----------------------------------------------------------\n\n")
-        """
-        # OS indiscriminate/Path safe jump to subdir for cal script
-        launcher_dir = os.path.dirname(os.path.abspath(__file__))
-        target_script = os.path.join(launcher_dir, 'Cal', 'psc_calibration.py')
 
-        try:
-            # sys.executable runs the same Python interpreter used
-            # for Launcher.py...
-            # check=True Raise exception if subprocess returns
-            # non-zero exit code
-
-            subprocess.run([sys.executable, target_script], check=True)
-        except subprocess.CalledProcessError as e:
-            print("\nThe calibration script crashed or was cancelled "
-                  f"(Return code: {e.returncode})")
-            cal_returncode = e.returncode
-        """
         run_calibration(dut=dut)
 
 
         print("----------------------------------------------------------\n\n")
         if test:
-            if cal_returncode:
-                input("Cal failed! Press return to continue...") 
-            elif not cal_returncode:
-                print("Calibration complete. Continuing to functional test...\n\n")
+            print("Continuing to functional test...\n\n")
         else:
-            if cal_returncode:
-                print("Calibration failed! Exiting...")
-                sys.exit()
-            elif not cal_returncode:
-                print("Calibration complete. Exiting!")
-                sys.exit()
+            print("Calibration complete. Exiting!")
+            sys.exit()
 
     if test:
+        if not sleep_done:
+            sleep_func(sleep_time)
+            sleep_done=True
         print("Beginning functional test...")
         run_psc_test_suite(dut)
 
