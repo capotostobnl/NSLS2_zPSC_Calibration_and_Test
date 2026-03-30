@@ -28,6 +28,7 @@ import os
 import time
 import subprocess
 from Test.test_main import run_psc_test_suite
+from Cal.psc_calibration import run_calibration
 from Common.initialize_dut import DUT
 
 
@@ -132,10 +133,10 @@ def main():
                 print("Invalid input. Please enter <Y/N>")
         print("Starting Calibration script subprocess...\n\n\n")
         print("----------------------------------------------------------\n\n")
-
+        """
         # OS indiscriminate/Path safe jump to subdir for cal script
         launcher_dir = os.path.dirname(os.path.abspath(__file__))
-        target_script = os.path.join(launcher_dir, 'Cal', 'pscCALdib.py')
+        target_script = os.path.join(launcher_dir, 'Cal', 'psc_calibration.py')
 
         try:
             # sys.executable runs the same Python interpreter used
@@ -147,13 +148,24 @@ def main():
         except subprocess.CalledProcessError as e:
             print("\nThe calibration script crashed or was cancelled "
                   f"(Return code: {e.returncode})")
+            cal_returncode = e.returncode
+        """
+        run_calibration(dut=dut)
+
 
         print("----------------------------------------------------------\n\n")
         if test:
-            print("Calibration complete. Continuing to functional test...\n\n")
+            if cal_returncode:
+                input("Cal failed! Press return to continue...") 
+            elif not cal_returncode:
+                print("Calibration complete. Continuing to functional test...\n\n")
         else:
-            print("Calibration complete. Exiting!")
-            sys.exit()
+            if cal_returncode:
+                print("Calibration failed! Exiting...")
+                sys.exit()
+            elif not cal_returncode:
+                print("Calibration complete. Exiting!")
+                sys.exit()
 
     if test:
         print("Beginning functional test...")

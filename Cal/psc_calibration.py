@@ -34,25 +34,25 @@ def run_calibration(dut: DUT):
 
     psc = f"lab{{{dut.psc_num}}}Chan"
 
+    num_chan = len(dut.model.channels)
     designation = dut.model.designation
     Ndcct = dut.model.calibration_parameters.ndcct
     chan = [str(c) for c in dut.model.channels]
-    Rb = dut.model.calibration_parameters.burden_resistors.as_list()
+    Rb = dut.model.calibration_parameters.burden_resistors.as_list(num_chan)
 
     sf = dut.model.psc_scale_factors
-    SF_Vout = sf.sf_vout.as_list()
-    SF_Spare = sf.sf_spare.as_list()
+    SF_Vout = sf.sf_vout.as_list(num_chan)
+    SF_Spare = sf.sf_spare.as_list(num_chan)
 
     flt_thresholds = dut.model.psc_fault_thresholds_limits
-    OVC1_Flt_Threshold = flt_thresholds.ovc1_threshold.as_list()
-    OVC2_Flt_Threshold = flt_thresholds.ovc2_threshold.as_list()
-    OVV_Flt_Threshold = flt_thresholds.ovv_threshold.as_list()
+    OVC1_Flt_Threshold = flt_thresholds.ovc1_threshold.as_list(num_chan)
+    OVC2_Flt_Threshold = flt_thresholds.ovc2_threshold.as_list(num_chan)
+    OVV_Flt_Threshold = flt_thresholds.ovv_threshold.as_list(num_chan)
 
     string1 = "Calibrating PSC model " + designation + "SN" + dut.psc_sn
     print(string1)
 
     N=5 # of runs per channel
-
 
     ser1 = serial.Serial('/dev/ttyUSB0', 115200, timeout=30)
     x = ser1.write(b"++addr 24\n")
@@ -217,7 +217,7 @@ def run_calibration(dut: DUT):
 
     #now = datetime.now()
     #date_str = now.strftime("%Y-%m-%d_%H.%M.%S")
-
+    
     #file_str = "psc_calibration_temp_" + SN + ".doc"
     file_str = "psc_calibration_temp.doc"
     fp = open(file_str, "w")
@@ -239,7 +239,7 @@ def run_calibration(dut: DUT):
         caput(psc+'3:DigOut_ON1-SP', 0)
         caput(psc+'4:DigOut_ON1-SP', 0)
         print("Turning all channels off...")
-
+    
         #put all ATE channels in test mode
         for x in ['1', '2', '3', '4']:
             sock.sendto(b'T' + x.encode('UTF-8') + b'0' + b'\n', server_address)
@@ -252,7 +252,7 @@ def run_calibration(dut: DUT):
         #get dmm zero reading
         dmm_offs = float(get_3458A().decode('utf-8')) # reference current i0
         print("DMM zero offset reading: %1.7f" % dmm_offs)
-
+        
         #set channel j to cal mode
         #sock.sendto(b'T' + str(j+1).encode('UTF-8') + b'1' + b'\n', server_address)
         sock.sendto(b'T' + chan[j].encode('UTF-8') + b'1' + b'\n', server_address)
@@ -293,7 +293,7 @@ def run_calibration(dut: DUT):
         caput(psc+chan[j]+':SF:Regulator-SP', 1.0)
         caput(psc+chan[j]+':SF:Error-SP', 1.0)
 
-
+        
         #Fault thresholds
         caput(psc+chan[j]+':OVC1_Flt_Threshold-SP', OVC1_Flt_Threshold[j])
         caput(psc+chan[j]+':OVC2_Flt_Threshold-SP', OVC2_Flt_Threshold[j])
