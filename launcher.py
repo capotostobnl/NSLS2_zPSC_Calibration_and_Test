@@ -30,7 +30,7 @@ import subprocess
 from Test.test_main import run_psc_test_suite
 from Cal.psc_calibration import run_calibration
 from Common.initialize_dut import DUT
-
+from initialize_qspi import initialize_qspi
 
 def prompt_execution_mode():
     """
@@ -44,25 +44,35 @@ def prompt_execution_mode():
     while True:
         print("\n--------------------------------")
         print("Select Execution Mode:")
-        print("1. Calibrate Only")
-        print("2. Test Only")
-        print("3. Calibrate and Test")
+        print("1. Initialize QSPI Only")
+        print("2. Calibrate Only")
+        print("3. Test Only")
+        print("4. Calibrate and Test")
         print("--------------------------------")
 
-        selection = str(input("\nEnter selection (1-3): ").strip())
+        selection = str(input("\nEnter selection (1-4): ").strip())
 
-        if selection == "1":  # Cal Only
+        if selection == "1":  # Initialize QSPI Only
+            init_qspi = True
+            cal_sel = False
+            test_sel = False
+            return init_qspi, cal_sel, test_sel
+
+        if selection == "2":  # Cal Only
+            init_qspi = False
             cal_sel = True
             test_sel = False
-            return cal_sel, test_sel
-        elif selection == "2":  # Test Only
+            return init_qspi, cal_sel, test_sel
+        elif selection == "3":  # Test Only
+            init_qspi = False
             cal_sel = False
             test_sel = True
-            return cal_sel, test_sel
-        elif selection == "3":  # Cal and Test
+            return init_qspi, cal_sel, test_sel
+        elif selection == "4":  # Cal and Test
+            init_qspi = False
             cal_sel = True
             test_sel = True
-            return cal_sel, test_sel
+            return init_qspi, cal_sel, test_sel
         else:
             print(
                 f"\n[!] Invalid input: '{selection}'. \n"
@@ -108,10 +118,14 @@ def main():
         selected sub-suites (Calibration and/or Testing) to ensure
         data consistency and eliminate redundant prompts.
     """
-    cal, test = prompt_execution_mode()
+    init_qspi, cal, test = prompt_execution_mode()
 
     dut = DUT()
     dut.prompt_inputs()
+
+    if init_qspi:
+        initialize_qspi(dut)
+
     sleep_time = 0
     sleep_done = False
     sleep_time = int(input("How long do you want to sleep before beginning? "
