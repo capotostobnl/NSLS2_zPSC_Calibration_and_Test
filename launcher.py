@@ -126,10 +126,23 @@ def main():
     if init_qspi:
         initialize_qspi(dut)
 
-    sleep_time = 0
-    sleep_done = False
-    sleep_time = int(input("How long do you want to sleep before beginning? "
-                           "(Minutes): "))
+    if not init_qspi:
+        sleep_time = 0
+        sleep_done = False
+        sleep_time = int(input("How long do you want to sleep before beginning? "
+                            "(Minutes): "))
+
+    if cal or test:
+        while True:
+            tuning_board = input("Are the correct tuning boards installed in the ATE? <Y/N>: ")
+            if tuning_board in ('Y', 'y'):
+                break
+            elif tuning_board in ('N', 'n'):
+                input("Please install the correct tuning boards for the device under test"
+                      "then hit return when ready to proceed...")
+                break
+            else:
+                print("Invalid input. Please enter <Y/N>")
 
     if cal:
         while True:
