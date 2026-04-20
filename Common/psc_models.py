@@ -27,7 +27,7 @@ from dataclasses import dataclass, field
 from typing import List, NamedTuple, TypeVar, Generic
 
 T = TypeVar('T')
-    
+
 @dataclass(frozen=True)
 class ChannelValues(Generic[T]):
     """
@@ -466,167 +466,10 @@ class PSCModel:
 
 # Define the Registry of all known units
 MODELS = {
-    # 2-Channel Units
-    "AR-QD-QF": PSCModel(model_id="AR-QD-QF",
-                       display_name="2CH-HSS-AR-QD-QF",
-                       description="PSC-2CH-HSS-AR-QD-QF",
-                       designation="PSC-2CH-HSS-AR-QD-QF_",
-                       channels=(1, 2),
-                       drive_channels=(1, 2),
-                       readback_channels=(1,2),
-
-                       #####################################################################
-                       #      Calibration                                                  #
-                       #####################################################################
-                       calibration_parameters=CalibrationParameters(
-                            ndcct=1000.0,
-                            burden_resistors=ChannelValues(ch1=18.0, ch2=9.0),
-                            ovc1_threshold=ChannelValues(ch1=51.0, ch2=101.0),
-                            ovc2_threshold=ChannelValues(ch1=51.0, ch2=101.0),
-                            ovv_threshold=ChannelValues(ch1=12.7, ch2=12.7),
-                       ),
-
-                       psc_scale_factors=PSCScaleFactors(
-                           sf_vout=ChannelValues(ch1=-1.25, ch2=-1.25),
-                           sf_spare=ChannelValues(ch1=-6.0, ch2=-12.0),
-                       ),
-                       #######################################################################
-                       #      Test                                                           #
-                       #######################################################################
-                       reg=RegulatorTestParams(
-                           setpoints=(reg_pts := ChannelValues(ch1=30,
-                                                   ch2=50)),
-                           settling_time=10),
-
-
-                       smooth=SmoothRampTestParams(
-                           start_setpoints=ChannelValues(ch1=0,
-                                                         ch2=0,
-                                                         ),
-                           end_setpoints=ChannelValues(ch1=49.9,
-                                                       ch2=99.9,
-                                                       ),
-                           ramp_rate=ChannelValues(ch1=10,
-                                                   ch2=20),
-                           settling_time=10,
-                           tolerance=0.05),
-                       jump=JumpTestParams(
-                           start_setpoints=reg_pts,
-                           step_size=ChannelValues(ch1=0.05,
-                                                   ch2=0.05),
-                           sample_window=500,
-                           tolerance=0.05
-                        )
-                       ),
-
-    "ABEND-QFA": PSCModel(model_id="ABEND-QFA",
-                          display_name="ABEND QFA - R3 2Ch",
-                          description="PSC-2CH-HSS-AR-Abend-QFA",
-                          designation="2CH-HSS-AR-ABend-QFA_",
-                          channels=(1, 2),
-                          drive_channels=(1, 2),
-                          readback_channels=(1,2),
-
-                          #####################################################################
-                          #      Calibration                                                  #
-                          #####################################################################
-                          calibration_parameters=CalibrationParameters(
-                                ndcct=2000.0,
-                                burden_resistors=ChannelValues(ch1=4.5, ch2=9.0),
-                                ovc1_threshold=ChannelValues(ch1=390.0, ch2=195.0),
-                                ovc2_threshold=ChannelValues(ch1=390.0, ch2=195.0),
-                                ovv_threshold=ChannelValues(ch1=470.0, ch2=190.0),
-                          ),
-
-                          psc_scale_factors=PSCScaleFactors(
-                                sf_vout=ChannelValues(ch1=-47.5, ch2=-20.0),
-                                sf_spare=ChannelValues(ch1=-40.0, ch2=-20.0),
-                          ),
-
-                          #######################################################################
-                          #      Test                                                           #
-                          #######################################################################
-                          reg=RegulatorTestParams(
-                           setpoints=(reg_pts := ChannelValues(ch1=200,
-                                                   ch2=100)),
-                           settling_time=30),
-
-                          smooth=SmoothRampTestParams(
-                              start_setpoints=ChannelValues(ch1=0,
-                                                            ch2=0,
-                                                            ),
-                              end_setpoints=ChannelValues(ch1=385,
-                                                          ch2=185,
-                                                          ),
-                              ramp_rate=ChannelValues(ch1=60,
-                                                      ch2=30),
-                              settling_time=10,
-                              tolerance=0.05),
-                          jump=JumpTestParams(
-                              start_setpoints=reg_pts,
-                              step_size=ChannelValues(ch1=0.5,
-                                                      ch2=0.5),
-                              sample_window=500,
-                              tolerance=0.05
-                           )
-                          ),
-
-    "SPECIAL_2CH_HSS_AR-Slow-XY-Corr": PSCModel(model_id="AR-Slow-XY-Corr",
-                        display_name="4CH-MSS-AR Slow XY Corr",
-                        description="PSC-4CH-MSS-AR-Slow XY Corr.",
-                        designation="4CH-MSS-AR Slow XY Corr_",
-                        channels=(1, 2),
-                        drive_channels=(1, 2),
-                        readback_channels=(1,2),
-
-                            #######################################################################
-                            #      Calibration                                                    #
-                            #######################################################################
-                            calibration_parameters=CalibrationParameters(
-                                    ndcct=1000.0,
-                                    burden_resistors=ChannelValues(ch1=33.333333, ch2=33.333333,
-                                                ),
-                                    ovc1_threshold=ChannelValues(ch1=24.5, ch2=24.5),
-                                    ovc2_threshold=ChannelValues(ch1=24.5, ch2=24.5),
-                                    ovv_threshold=ChannelValues(ch1=18.5, ch2=18.5),
-                            ),
-
-                            psc_scale_factors=PSCScaleFactors(
-                                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9),
-                                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0),
-                            ),
-                            #######################################################################
-                            #      Test                                                           #
-                            #######################################################################
-                        reg=RegulatorTestParams(
-                            setpoints=(reg_pts := ChannelValues(ch1=10,
-                                                    ch2=10)),
-                            settling_time=10),
-
-
-                        smooth=SmoothRampTestParams(
-                            start_setpoints=ChannelValues(ch1=0,
-                                                            ch2=0,
-                                                            ),
-                            end_setpoints=ChannelValues(ch1=23.9,
-                                                        ch2=23.9,
-                                                        ),
-                            ramp_rate=ChannelValues(ch1=10,
-                                                    ch2=10,
-                                                    ),
-                            settling_time=10,
-                            tolerance=0.05),
-                        jump=JumpTestParams(
-                            start_setpoints=reg_pts,
-                            step_size=ChannelValues(ch1=0.05,
-                                                    ch2=0.05,
-                                                    ),
-                            sample_window=500,
-                            tolerance=0.05
-                            )
-                        ),
-
     # 4-Channel Units
+    """
+    Used for temporary testing of Cell 29 PSCs with 83.33 Ohm burdens, comps 1k/1k/2k/470, 4u7, 2u2, 4u7, 4u7. 
+    No longer used!
     "C29-ARI-SXN": PSCModel(model_id="C29-ARI-SXN",
                        display_name="C29-ARI-SXN",
                        description="C29-ARI-SXN",
@@ -679,6 +522,135 @@ MODELS = {
                            tolerance=0.05),
                        jump=JumpTestParams(
                            start_setpoints=reg_pts,
+                           step_size=ChannelValues(ch1=0.05,
+                                                   ch2=0.05,
+                                                   ch3=0.05,
+                                                   ch4=0.05),
+                           sample_window=500,
+                           tolerance=0.05
+                        )
+                       ),
+    """
+    "4Ch-MSS-ID_XYCorr": PSCModel(model_id="4Ch-MSS-ID_XYCorr",
+                       display_name="4Ch-MSS-ID_XYCorr (ARI/SXN Cell 29)",
+                       description="4Ch-MSS-ID_XYCorr",
+                       designation="4Ch-MSS-ID_XYCorr",
+                       channels=(1, 2, 3, 4),
+                       drive_channels=(1, 2, 3, 4),
+                       readback_channels=(1,2, 3, 4),
+
+                          #######################################################################
+                          #      Calibration                                                    #
+                          #######################################################################
+                          calibration_parameters=CalibrationParameters(
+                                ndcct=1000.0,
+                                burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
+                                            ch3=83.333333, ch4=83.333333),
+                                ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                                ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                                ovv_threshold=ChannelValues(ch1=7, ch2=7, ch3=7, ch4=7),
+                          ),
+
+                          psc_scale_factors=PSCScaleFactors(
+                                sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
+                                sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+                          ),
+                          #######################################################################
+                          #      Test                                                           #
+                          #######################################################################
+                       reg=RegulatorTestParams(
+                           setpoints=(reg_pts := ChannelValues(ch1=5,
+                                                   ch2=5,
+                                                   ch3=5,
+                                                   ch4=5)),
+                           settling_time=10),
+
+
+                       smooth=SmoothRampTestParams(
+                           start_setpoints=ChannelValues(ch1=-5,
+                                                         ch2=-5,
+                                                         ch3=-5,
+                                                         ch4=-5),
+                           end_setpoints=ChannelValues(ch1=5,
+                                                       ch2=5,
+                                                       ch3=5,
+                                                       ch4=5),
+                           ramp_rate=ChannelValues(ch1=10,
+                                                   ch2=10,
+                                                   ch3=10,
+                                                   ch4=10),
+                           settling_time=10,
+                           tolerance=0.05),
+                       jump=JumpTestParams(
+                           start_setpoints=ChannelValues(ch1=0.05,
+                                                   ch2=0.05,
+                                                   ch3=0.05,
+                                                   ch4=0.05),
+                           step_size=ChannelValues(ch1=0.05,
+                                                   ch2=0.05,
+                                                   ch3=0.05,
+                                                   ch4=0.05),
+                           sample_window=500,
+                           tolerance=0.05
+                        )
+                       ),
+    "4CH-MSS-Cur_Strip": PSCModel(model_id="4CH-MSS-Cur_Strip",
+                       display_name="4CH-MSS-Cur_Strip (ARI/SXN Cell 29)",
+                       description="4CH-MSS-Cur_Strip",
+                       designation="4CH-MSS-Cur_Strip",
+                       channels=(1, 2, 3, 4),
+                       drive_channels=(1, 2, 3, 4),
+                       readback_channels=(1,2, 3, 4),
+
+                          #######################################################################
+                          #      Calibration                                                    #
+                          #######################################################################
+                          calibration_parameters=CalibrationParameters(
+                                ndcct=1000.0,
+                                burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
+                                            ch3=83.333333, ch4=83.333333),
+                                ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                                ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                                ovv_threshold=ChannelValues(ch1=15, ch2=15, ch3=15, ch4=15),
+                          ),
+
+                          psc_scale_factors=PSCScaleFactors(
+                                sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
+                                sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+                          ),
+                          #######################################################################
+                          #      Test                                                           #
+                          #######################################################################
+                       reg=RegulatorTestParams(
+                           setpoints=(reg_pts := ChannelValues(ch1=5,
+                                                   ch2=5,
+                                                   ch3=5,
+                                                   ch4=5)),
+                           settling_time=10),
+
+
+                       smooth=SmoothRampTestParams(
+                           start_setpoints=ChannelValues(ch1=-9,
+                                                         ch2=-9,
+                                                         ch3=-9,
+                                                         ch4=-9),
+                           end_setpoints=ChannelValues(ch1=9,
+                                                       ch2=9,
+                                                       ch3=9,
+                                                       ch4=9),
+                           ramp_rate=ChannelValues(ch1=10,
+                                                   ch2=10,
+                                                   ch3=10,
+                                                   ch4=10),
+                           settling_time=10,
+                           tolerance=0.05),
+                       jump=JumpTestParams(
+                           start_setpoints=ChannelValues(
+                                                   ch1=5,
+                                                   ch2=5,
+                                                   ch3=5,
+                                                   ch4=5
+                           ),
                            step_size=ChannelValues(ch1=0.05,
                                                    ch2=0.05,
                                                    ch3=0.05,
@@ -798,6 +770,7 @@ MODELS = {
 # -----------------------------------------------------------------------------
 
 def get_psc_model_from_user(num_channels: int) -> PSCModel:
+    """Prompt the user to enter PSC Model"""
     # Normalize channel count:
     # 2 or less becomes 2; 3 or more becomes 4.
     if num_channels is None:
@@ -846,3 +819,6 @@ def get_psc_model_from_user(num_channels: int) -> PSCModel:
             print(f"Invalid choice. Select 1-{len(model_list)}.")
         except ValueError:
             print("Invalid input. Please enter a number.")
+
+if __name__ == "__main__":
+    get_psc_model_from_user(num_channels=4)

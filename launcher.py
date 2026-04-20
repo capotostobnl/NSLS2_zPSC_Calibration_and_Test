@@ -24,13 +24,12 @@ Workflow:
     5. Execute selected suites using the shared `DUT` and `config_instance`.
 """
 import sys
-import os
 import time
-import subprocess
 from Test.test_main import run_psc_test_suite
 from Cal.psc_calibration import run_calibration
 from Common.initialize_dut import DUT
 from initialize_qspi import initialize_qspi
+
 
 def prompt_execution_mode():
     """
@@ -123,23 +122,25 @@ def main():
     dut = DUT()
     dut.prompt_inputs()
 
+    sleep_time = 0
+
     if init_qspi:
         initialize_qspi(dut)
 
     if not init_qspi:
-        sleep_time = 0
         sleep_done = False
-        sleep_time = int(input("How long do you want to sleep before beginning? "
-                            "(Minutes): "))
+        sleep_time = int(input("How long do you want to sleep before beginning"
+                               "? (Minutes): "))
 
     if cal or test:
         while True:
-            tuning_board = input("Are the correct tuning boards installed in the ATE? <Y/N>: ")
+            tuning_board = input("Are the correct tuning boards installed in "
+                                 "the ATE? <Y/N>: ")
             if tuning_board in ('Y', 'y'):
                 break
             elif tuning_board in ('N', 'n'):
-                input("Please install the correct tuning boards for the device under test"
-                      "then hit return when ready to proceed...")
+                input("Please install the correct tuning boards for the device"
+                      " under test, then hit return when ready to proceed...")
                 break
             else:
                 print("Invalid input. Please enter <Y/N>")
@@ -165,7 +166,6 @@ def main():
 
         run_calibration(dut=dut)
 
-
         print("----------------------------------------------------------\n\n")
         if test:
             print("Continuing to functional test...\n\n")
@@ -176,7 +176,7 @@ def main():
     if test:
         if not sleep_done:
             sleep_func(sleep_time)
-            sleep_done=True
+            sleep_done = True
         print("Beginning functional test...")
         run_psc_test_suite(dut)
 
