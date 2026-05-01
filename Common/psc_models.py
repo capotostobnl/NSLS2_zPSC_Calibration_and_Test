@@ -723,8 +723,8 @@ MODELS = {
                           #######################################################################
                           calibration_parameters=CalibrationParameters(
                                 ndcct=1000.0,
-                                burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
-                                            ch3=83.333333, ch4=83.333333),
+                                burden_resistors=ChannelValues(ch1=33.333333, ch2=33.333333,
+                                            ch3=33.333333, ch4=33.333333),
                                 ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
                                 ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
                                 ovv_threshold=ChannelValues(ch1=15, ch2=15, ch3=15, ch4=15),

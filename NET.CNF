@@ -1,0 +1,11 @@
+dhcp no
+addr 10.69.26.31
+mask 255.255.254.0
+gw 10.0.142.1
+hwaddr 00:0A:45:23:10:06
+
+numchans 4
+resolution MS
+bandwidth fast
+polarity bipolar
+
