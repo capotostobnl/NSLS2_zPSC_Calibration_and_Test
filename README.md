@@ -47,6 +47,7 @@ python launcher.py
 
 ### 3. Execution Modes
 Upon launching, you will be prompted to select a mode:
+* **Initialize QSPI:** Initialize values for all channels in QSPI for Gains of 1, Offsets 0, and scale factors/current limits per the values set in the DUT object.
 * **Calibrate Only:** Executes high-precision DAC/ADC calibration.
 * **Test Only:** Runs functional verification, including Ramp Tracking, Step Response, and Stability tests.
 * **Calibrate and Test:** Performs full end-to-end verification.
@@ -169,7 +170,7 @@ NSLS-II_PSC_CAL_AND_TEST/
 │       ├── fofb_test.py                    # FOFB Integration (UDP capture & HDF5)
 │       ├── jump_test.py                    # Transient Response Analysis
 │       ├── ps_regulation_test.py           # DAC Loopback & Regulation verification
-│       ├── smooth_ramp_test.py             # Ramp Tracking & Stability Analysis
+│       ├── smooth_ramp_test.py             # Ramp Tracking & FOFB Packet Generation
 │       ├── caen_fast_genpacket.c           # Low-level UDP packet generator (C)
 │       └── caen_fast_genpacket_loop_inf.sh # Shell wrapper for packet generation
 ├── Test_Data/              # Functional Test Data and Reports Directory
