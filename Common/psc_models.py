@@ -152,59 +152,6 @@ class SmoothRampTestParams:
                                                     )
 
 @dataclass
-class CalibrationParameters:
-    """
-    Encapsulates the core hardware constants and logic parameters for PSC calibration.
-
-    This class serves as the primary data container for the physical properties 
-    of the Power Supply Controller (PSC) and the specific settings required 
-    to orchestrate the calibration sequence.
-
-    Attributes:
-        ndcct (float): The normalization factor for the DC Current Transformer (DCCT) 
-            Scaling. This is a fundamental physical constant for the unit.
-        burden_resistors (ChannelValues): A mapping of the resistance values (Ohms) 
-            for the burden resistors installed on each physical channel.
-        ovc1_threshold (ChannelValues): Over-Current 1 trip thresholds for 
-            hardware protection across all channels.
-        ovc2_threshold (ChannelValues): Over-Current 2 trip thresholds for 
-            redundant hardware protection.
-        ovv_threshold (ChannelValues): Over-Voltage trip thresholds (Volts) 
-            assigned to each physical channel.
-        num_runs (int): The total number of calibration iterations to perform per 
-            channel to ensure statistical stability. Defaults to 5.
-        sp0 (float): The initial setpoint (Amps) used as the baseline 'Low' 
-            measurement during the calibration loop.
-    """
-    ndcct: float
-    burden_resistors: ChannelValues
-    ovc1_threshold: ChannelValues
-    ovc2_threshold: ChannelValues
-    ovv_threshold: ChannelValues
-    num_runs: int = 5
-    sp0: float = 1.0
-    current_full_scale_dividend: float = 1.0
-    g_target_multiplier: float = 10.0
-
-@dataclass
-class CalibrationTestThresholds:
-    """Encapsulates all pass/fail limits for PSC calibration."""
-    init_error_upper: float = 0.1  # Upper bound of initial error.
-    init_dcct_gain_upper: float = 1.008  # Upper bound of DCCT Gain
-    init_dcct_gain_lower: float = 1.006  # Lower bound of DCCT Gain
-    dac_rb_offset_upper: float = 0.01  # Upper bound of DAC RB Offset
-    dac_rb_gain_upper: float = 1.001  # Upper bound of DAC RB Gain
-    verif_error_upper: float = 0.1  # Upper bound of Verification Error
-    final_offset_upper: float = 0.001  # Upper bound of final measured offsets
-    final_gain_upper: float = 1.000050  # Upper bound of final measured gains
-    final_gain_lower: float = 0.999950  # Lower bound of final measured gains
-    verif_offset_mean_upper: float = 0.001  # Upper bound of final measured offsets mean
-    verif_offset_mean_std_dev_upper: float = 0.001  # Upper bound of final measured Std Dev. offsets mean
-    verif_gain_mean_upper: float = 1.000050  # Upper bound of final measured gains mean
-    verif_gain_mean_lower: float = 0.999950  # Lower bound of final measured gains mean
-    verif_gain_std_dev_upper: float = 0.0001  # Upper bound of final measured Std. Dev. gains mean
-
-@dataclass
 class PSCFaultThresholdsLimits:
     """
     Defines the hardware protection thresholds and fault latching criteria for the PSC.
@@ -260,7 +207,6 @@ class PSCFaultThresholdsLimits:
     flt3_flt_cnt: float = 0.5
     flt_on_cnt: float = 3
     flt_heartbeat_cnt: float = 3
-
 @dataclass
 class PSCScaleFactors:
     """
@@ -300,6 +246,54 @@ class PSCScaleFactors:
     sf_spare: ChannelValues = field(default_factory=lambda: ChannelValues(0.0, 0.0))
     sf_regulator: float = 1.0
     sf_error: float = 1.0
+
+@dataclass
+class CalibrationParameters:
+    """
+    Encapsulates the core hardware constants and logic parameters for PSC calibration.
+
+    This class serves as the primary data container for the physical properties 
+    of the Power Supply Controller (PSC) and the specific settings required 
+    to orchestrate the calibration sequence.
+
+    Attributes:
+        ndcct (float): The normalization factor for the DC Current Transformer (DCCT) 
+            Scaling. This is a fundamental physical constant for the unit.
+        burden_resistors (ChannelValues): A mapping of the resistance values (Ohms) 
+            for the burden resistors installed on each physical channel.
+        num_runs (int): The total number of calibration iterations to perform per 
+            channel to ensure statistical stability. Defaults to 5.
+        sp0 (float): The initial setpoint (Amps) used as the baseline 'Low' 
+            measurement during the calibration loop.
+    """
+    ndcct: float
+    burden_resistors: ChannelValues
+    num_runs: int = 5
+    sp0: float = 1.0
+    current_full_scale_dividend: float = 1.0
+    g_target_multiplier: float = 10.0
+
+    fault_limits: PSCFaultThresholdsLimits = field(default_factory=PSCFaultThresholdsLimits)
+    scale_factors: PSCScaleFactors = field(
+        default_factory = PSCScaleFactors)
+
+@dataclass
+class CalibrationTestThresholds:
+    """Encapsulates all pass/fail limits for PSC calibration."""
+    init_error_upper: float = 0.1  # Upper bound of initial error.
+    init_dcct_gain_upper: float = 1.008  # Upper bound of DCCT Gain
+    init_dcct_gain_lower: float = 1.006  # Lower bound of DCCT Gain
+    dac_rb_offset_upper: float = 0.01  # Upper bound of DAC RB Offset
+    dac_rb_gain_upper: float = 1.001  # Upper bound of DAC RB Gain
+    verif_error_upper: float = 0.1  # Upper bound of Verification Error
+    final_offset_upper: float = 0.001  # Upper bound of final measured offsets
+    final_gain_upper: float = 1.000050  # Upper bound of final measured gains
+    final_gain_lower: float = 0.999950  # Lower bound of final measured gains
+    verif_offset_mean_upper: float = 0.001  # Upper bound of final measured offsets mean
+    verif_offset_mean_std_dev_upper: float = 0.001  # Upper bound of final measured Std Dev. offsets mean
+    verif_gain_mean_upper: float = 1.000050  # Upper bound of final measured gains mean
+    verif_gain_mean_lower: float = 0.999950  # Lower bound of final measured gains mean
+    verif_gain_std_dev_upper: float = 0.0001  # Upper bound of final measured Std. Dev. gains mean
 
 class PSCCalculator:
     """
@@ -444,12 +438,9 @@ class PSCModel:
     calibration_test_thresholds: CalibrationTestThresholds = field(
         default_factory = CalibrationTestThresholds
     )
-    psc_fault_thresholds_limits: PSCFaultThresholdsLimits = field(
-        default_factory = PSCFaultThresholdsLimits
-    )
-    psc_scale_factors: PSCScaleFactors = field(
+    """"psc_scale_factors: PSCScaleFactors = field(
         default_factory = PSCScaleFactors
-    )
+    )"""
 
     @property
     def calc(self) -> PSCCalculator:
@@ -469,7 +460,7 @@ MODELS = {
     # 4-Channel Units
     """
     Used for temporary testing of Cell 29 PSCs with 83.33 Ohm burdens, comps 1k/1k/2k/470, 4u7, 2u2, 4u7, 4u7. 
-    No longer used!
+    No longer used!"""
     "C29-ARI-SXN": PSCModel(model_id="C29-ARI-SXN",
                        display_name="C29-ARI-SXN",
                        description="C29-ARI-SXN",
@@ -485,14 +476,17 @@ MODELS = {
                                 ndcct=1000.0,
                                 burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
                                             ch3=83.333333, ch4=83.333333),
-                                ovc1_threshold=ChannelValues(ch1=12, ch2=12, ch3=12, ch4=12),
-                                ovc2_threshold=ChannelValues(ch1=24.5, ch2=24.5, ch3=24.5, ch4=24.5),
-                                ovv_threshold=ChannelValues(ch1=18.5, ch2=18.5, ch3=18.5, ch4=18.5),
-                          ),
+                                
+                                fault_limits=PSCFaultThresholdsLimits(
+                                    ovc1_threshold=ChannelValues(ch1=12, ch2=12, ch3=12, ch4=12),
+                                    ovc2_threshold=ChannelValues(ch1=24.5, ch2=24.5, ch3=24.5, ch4=24.5),
+                                    ovv_threshold=ChannelValues(ch1=18.5, ch2=18.5, ch3=18.5, ch4=18.5),
+                                ),
 
-                          psc_scale_factors=PSCScaleFactors(
-                                sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
-                                sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+                                scale_factors=PSCScaleFactors(
+                                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
+                                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+                                ),
                           ),
                           #######################################################################
                           #      Test                                                           #
@@ -530,7 +524,6 @@ MODELS = {
                            tolerance=0.05
                         )
                        ),
-    """
     "4Ch-MSS-ID_XYCorr": PSCModel(model_id="4Ch-MSS-ID_XYCorr",
                        display_name="4Ch-MSS-ID_XYCorr (ARI/SXN Cell 29)",
                        description="4Ch-MSS-ID_XYCorr",
@@ -546,14 +539,16 @@ MODELS = {
                                 ndcct=1000.0,
                                 burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
                                             ch3=83.333333, ch4=83.333333),
-                                ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                                ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                                ovv_threshold=ChannelValues(ch1=7, ch2=7, ch3=7, ch4=7),
-                          ),
+                                fault_limits=PSCFaultThresholdsLimits(
+                                    ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                                    ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                                    ovv_threshold=ChannelValues(ch1=7, ch2=7, ch3=7, ch4=7),
+                                ),
 
-                          psc_scale_factors=PSCScaleFactors(
-                                sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
-                                sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+                                scale_factors=PSCScaleFactors(
+                                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
+                                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+                                    ),
                           ),
                           #######################################################################
                           #      Test                                                           #
@@ -609,14 +604,17 @@ MODELS = {
                                 ndcct=1000.0,
                                 burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
                                             ch3=83.333333, ch4=83.333333),
-                                ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                                ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                                ovv_threshold=ChannelValues(ch1=15, ch2=15, ch3=15, ch4=15),
-                          ),
+                                
+                                fault_limits=PSCFaultThresholdsLimits(
+                                    ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                                    ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                                    ovv_threshold=ChannelValues(ch1=15, ch2=15, ch3=15, ch4=15),
+                                ),
 
-                          psc_scale_factors=PSCScaleFactors(
-                                sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
-                                sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+                                scale_factors=PSCScaleFactors(
+                                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
+                                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+                                ),
                           ),
                           #######################################################################
                           #      Test                                                           #
@@ -673,14 +671,16 @@ MODELS = {
                        calibration_parameters=CalibrationParameters(
                                 ndcct=1000.0,
                                 burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333),
-                                ovc1_threshold=ChannelValues(ch1=10, ch2=10),
-                                ovc2_threshold=ChannelValues(ch1=10, ch2=10),
-                                ovv_threshold=ChannelValues(ch1=15, ch2=15),
-                          ),
-
-                          psc_scale_factors=PSCScaleFactors(
-                                sf_vout=ChannelValues(ch1=1.9, ch2=1.9),
-                                sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0),
+                                fault_limits=PSCFaultThresholdsLimits(
+                                    ovc1_threshold=ChannelValues(ch1=10, ch2=10),
+                                    ovc2_threshold=ChannelValues(ch1=10, ch2=10),
+                                    ovv_threshold=ChannelValues(ch1=15, ch2=15),
+                                ),
+                                
+                                scale_factors=PSCScaleFactors(
+                                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9),
+                                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0),
+                                ),
                           ),
                        #######################################################################
                        #      Test                                                           #
@@ -725,14 +725,17 @@ MODELS = {
                                 ndcct=1000.0,
                                 burden_resistors=ChannelValues(ch1=33.333333, ch2=33.333333,
                                             ch3=33.333333, ch4=33.333333),
-                                ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                                ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                                ovv_threshold=ChannelValues(ch1=15, ch2=15, ch3=15, ch4=15),
-                          ),
+                                
+                                fault_limits=PSCFaultThresholdsLimits(
+                                    ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                                    ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                                    ovv_threshold=ChannelValues(ch1=15, ch2=15, ch3=15, ch4=15),
+                                ),
 
-                          psc_scale_factors=PSCScaleFactors(
-                                sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
-                                sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+                                scale_factors=PSCScaleFactors(
+                                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
+                                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+                                ),
                           ),
                           #######################################################################
                           #      Test                                                           #
@@ -746,10 +749,10 @@ MODELS = {
 
 
                        smooth=SmoothRampTestParams(
-                           start_setpoints=ChannelValues(ch1=-9,
-                                                         ch2=-9,
-                                                         ch3=-9,
-                                                         ch4=-9),
+                           start_setpoints=ChannelValues(ch1=0,
+                                                         ch2=0,
+                                                         ch3=0,
+                                                         ch4=0),
                            end_setpoints=ChannelValues(ch1=9,
                                                        ch2=9,
                                                        ch3=9,
