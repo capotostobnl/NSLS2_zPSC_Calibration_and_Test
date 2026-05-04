@@ -33,38 +33,8 @@ def initialize_qspi(dut: DUT):
     for j in range(len(chan)):
         sf = dut.model.calibration_parameters.scale_factors
         flt = dut.model.calibration_parameters.fault_limits
-        #Scale factors
-        caput(psc+chan[j]+':SF:AmpsperSec-SP', sf.sf_ramp_rate)
-        caput(psc+chan[j]+':SF:DAC_DCCTs-SP', G)
-        caput(psc+chan[j]+':SF:Vout-SP', sf.sf_vout.as_list(num_chan)[j])
-        caput(psc+chan[j]+':SF:Ignd-SP', sf.sf_ignd)
-        caput(psc+chan[j]+':SF:Spare-SP', sf.sf_spare.as_list(num_chan)[j])
-        caput(psc+chan[j]+':SF:Regulator-SP', sf.sf_regulator)
-        caput(psc+chan[j]+':SF:Error-SP', sf.sf_error)
 
         
-        #Fault thresholds
-        caput(psc+chan[j]+':OVC1_Flt_Threshold-SP', OVC1_Flt_Threshold[j])
-        caput(psc+chan[j]+':OVC2_Flt_Threshold-SP', OVC2_Flt_Threshold[j])
-        caput(psc+chan[j]+':OVV_Flt_Threshold-SP', OVV_Flt_Threshold[j])
-        caput(psc+chan[j]+':ERR1_Flt_Threshold-SP', flt.err1_threshold)
-        caput(psc+chan[j]+':ERR2_Flt_Threshold-SP', flt.err2_threshold)
-        caput(psc+chan[j]+':IGND_Flt_Threshold-SP', flt.ignd_threshold)
-
-        #Fault Count limits
-        caput(psc+chan[j]+':OVC1_Flt_CntLim-SP', flt.ovc1_flt_cnt)
-        caput(psc+chan[j]+':OVC2_Flt_CntLim-SP', flt.ovc2_flt_cnt)
-        caput(psc+chan[j]+':OVV_Flt_CntLim-SP', flt.ovv_flt_cnt)
-        caput(psc+chan[j]+':ERR1_Flt_CntLim-SP', flt.err1_flt_cnt)
-        caput(psc+chan[j]+':ERR2_Flt_CntLim-SP', flt.err2_flt_cnt)
-        caput(psc+chan[j]+':IGND_Flt_CntLim-SP', flt.ignd_flt_cnt)
-        caput(psc+chan[j]+':DCCT_Flt_CntLim-SP', flt.dcct_flt_cnt)
-        caput(psc+chan[j]+':FLT1_Flt_CntLim-SP', flt.flt1_flt_cnt)
-        caput(psc+chan[j]+':FLT2_Flt_CntLim-SP', flt.flt2_flt_cnt)
-        caput(psc+chan[j]+':FLT3_Flt_CntLim-SP', flt.flt3_flt_cnt)
-        caput(psc+chan[j]+':ON_Flt_CntLim-SP', flt.flt_on_cnt)
-        caput(psc+chan[j]+':HeartBeat_Flt_CntLim-SP', flt.flt_heartbeat_cnt)
-            
         caput(psc+chan[j]+':DAC_OpMode-SP', 3) # jump mode
         caput(psc+chan[j]+':AveMode-SP', 1) #PSC average mode, 167 samples
 
@@ -96,6 +66,7 @@ def initialize_qspi(dut: DUT):
         cal.write_scale_factor(dut, chan_index)
         cal.write_flt_thresholds(dut, chan_index)
         cal.write_flt_cnt_limits(dut, chan_index)
+        cal.initialize_gains_offsets(dut, chan_index)
 
         caput(cal._psc+cal._chan[chan_index]+':WriteQspi-SP', 1) # write all data to qspi
 

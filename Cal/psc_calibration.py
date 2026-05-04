@@ -74,6 +74,29 @@ def write_flt_cnt_limits(dut: DUT, chan_index: int):
     caput(_psc+physical_chan+':DAC_OpMode-SP', 3) # jump mode
     caput(_psc+physical_chan+':AveMode-SP', 1) #PSC average mode, 167 samples
 
+def initialize_gains_offsets(dut: DUT, chan_index: int):
+    #set PSC gains to 1 and offsets to 0
+    physical_chan = _chan[chan_index]
+    caput(_psc+physical_chan+':DACSetPt-Gain-SP', 1.0)
+    caput(_psc+physical_chan+':DCCT1-Gain-SP', 1.0)
+    caput(_psc+physical_chan+':DCCT2-Gain-SP', 1.0)
+    caput(_psc+physical_chan+':DAC-Gain-SP', 1.0)
+    caput(_psc+physical_chan+':Volt-Gain-SP', 1.0)
+    caput(_psc+physical_chan+':Gnd-Gain-SP', 1.0)
+    caput(_psc+physical_chan+':Spare-Gain-SP', 1.0)
+    caput(_psc+physical_chan+':Reg-Gain-SP', 1.0)
+    caput(_psc+physical_chan+':Error-Gain-SP', 1.0)
+
+    caput(_psc+physical_chan+':DACSetPt-Offset-SP', 0.0)
+    caput(_psc+physical_chan+':DCCT1-Offset-SP', 0.0)
+    caput(_psc+physical_chan+':DCCT2-Offset-SP', 0.0)
+    caput(_psc+physical_chan+':DAC-Offset-SP', 0.0)
+    caput(_psc+physical_chan+':Volt-Offset-SP', 0.0)
+    caput(_psc+physical_chan+':Gnd-Offset-SP', 0.0)
+    caput(_psc+physical_chan+':Spare-Offset-SP', 0.0)
+    caput(_psc+physical_chan+':Reg-Offset-SP', 0.0)
+    caput(_psc+physical_chan+':Error-Offset-SP', 0.0)
+
 def run_calibration(dut: DUT):
     """Executes the calibration routine, but now using the DUT parameters
     instead of hard-coding"""
@@ -319,26 +342,7 @@ def run_calibration(dut: DUT):
             #Calibration
 
 
-            #set PSC gains to 1 and offsets to 0
-            caput(_psc+physical_chan+':DACSetPt-Gain-SP', 1.0)
-            caput(_psc+physical_chan+':DCCT1-Gain-SP', 1.0)
-            caput(_psc+physical_chan+':DCCT2-Gain-SP', 1.0)
-            caput(_psc+physical_chan+':DAC-Gain-SP', 1.0)
-            caput(_psc+physical_chan+':Volt-Gain-SP', 1.0)
-            caput(_psc+physical_chan+':Gnd-Gain-SP', 1.0)
-            caput(_psc+physical_chan+':Spare-Gain-SP', 1.0)
-            caput(_psc+physical_chan+':Reg-Gain-SP', 1.0)
-            caput(_psc+physical_chan+':Error-Gain-SP', 1.0)
-
-            caput(_psc+physical_chan+':DACSetPt-Offset-SP', 0.0)
-            caput(_psc+physical_chan+':DCCT1-Offset-SP', 0.0)
-            caput(_psc+physical_chan+':DCCT2-Offset-SP', 0.0)
-            caput(_psc+physical_chan+':DAC-Offset-SP', 0.0)
-            caput(_psc+physical_chan+':Volt-Offset-SP', 0.0)
-            caput(_psc+physical_chan+':Gnd-Offset-SP', 0.0)
-            caput(_psc+physical_chan+':Spare-Offset-SP', 0.0)
-            caput(_psc+physical_chan+':Reg-Offset-SP', 0.0)
-            caput(_psc+physical_chan+':Error-Offset-SP', 0.0)
+            initialize_gains_offsets(dut, chan_index)
 
 
 
