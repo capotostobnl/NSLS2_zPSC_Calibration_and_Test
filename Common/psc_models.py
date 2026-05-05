@@ -461,323 +461,392 @@ MODELS = {
     """
     Used for temporary testing of Cell 29 PSCs with 83.33 Ohm burdens, comps 1k/1k/2k/470, 4u7, 2u2, 4u7, 4u7. 
     No longer used!"""
-    "C29-ARI-SXN": PSCModel(model_id="C29-ARI-SXN",
-                       display_name="C29-ARI-SXN",
-                       description="C29-ARI-SXN",
-                       designation="C29-ARI-SXN",
-                       channels=(1, 2, 3, 4),
-                       drive_channels=(1, 2, 3, 4),
-                       readback_channels=(1,2, 3, 4),
+    "C29-ARI-SXN": PSCModel(
+        model_id="C29-ARI-SXN",
+        display_name="C29-ARI-SXN",
+        description="C29-ARI-SXN",
+        designation="C29-ARI-SXN",
+        channels=(1, 2, 3, 4),
+        drive_channels=(1, 2, 3, 4),
+        readback_channels=(1,2, 3, 4),
 
-                          #######################################################################
-                          #      Calibration                                                    #
-                          #######################################################################
-                          calibration_parameters=CalibrationParameters(
-                                ndcct=1000.0,
-                                burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
+            #######################################################################
+            #      Calibration                                                    #
+            #######################################################################
+            calibration_parameters=CalibrationParameters(
+                ndcct=1000.0,
+                burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
+                            ch3=83.333333, ch4=83.333333),
+                
+                fault_limits=PSCFaultThresholdsLimits(
+                    ovc1_threshold=ChannelValues(ch1=12, ch2=12, ch3=12, ch4=12),
+                    ovc2_threshold=ChannelValues(ch1=24.5, ch2=24.5, ch3=24.5, ch4=24.5),
+                    ovv_threshold=ChannelValues(ch1=18.5, ch2=18.5, ch3=18.5, ch4=18.5),
+                ),
+
+                scale_factors=PSCScaleFactors(
+                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
+                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+                ),
+            ),
+            #######################################################################
+            #      Test                                                           #
+            #######################################################################
+        reg=RegulatorTestParams(
+            setpoints=(reg_pts := ChannelValues(ch1=5,
+                                    ch2=5,
+                                    ch3=5,
+                                    ch4=5)),
+            settling_time=10),
+
+
+        smooth=SmoothRampTestParams(
+            start_setpoints=ChannelValues(ch1=-5,
+                                            ch2=-5,
+                                            ch3=-5,
+                                            ch4=-5),
+            end_setpoints=ChannelValues(ch1=5,
+                                        ch2=5,
+                                        ch3=5,
+                                        ch4=5),
+            ramp_rate=ChannelValues(ch1=10,
+                                    ch2=10,
+                                    ch3=10,
+                                    ch4=10),
+            settling_time=10,
+            tolerance=0.05),
+        jump=JumpTestParams(
+            start_setpoints=reg_pts,
+            step_size=ChannelValues(ch1=0.05,
+                                    ch2=0.05,
+                                    ch3=0.05,
+                                    ch4=0.05),
+            sample_window=500,
+            tolerance=0.05
+        )
+    ),
+    "4Ch-MSS-ID_XYCorr": PSCModel(
+        model_id="4Ch-MSS-ID_XYCorr",
+        display_name="4Ch-MSS-ID_XYCorr (ARI/SXN Cell 29)",
+        description="4Ch-MSS-ID_XYCorr",
+        designation="4Ch-MSS-ID_XYCorr",
+        channels=(1, 2, 3, 4),
+        drive_channels=(1, 2, 3, 4),
+        readback_channels=(1,2, 3, 4),
+
+            #######################################################################
+            #      Calibration                                                    #
+            #######################################################################
+            calibration_parameters=CalibrationParameters(
+                ndcct=1000.0,
+                burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
+                            ch3=83.333333, ch4=83.333333),
+                fault_limits=PSCFaultThresholdsLimits(
+                    ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                    ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                    ovv_threshold=ChannelValues(ch1=7, ch2=7, ch3=7, ch4=7),
+                ),
+
+                scale_factors=PSCScaleFactors(
+                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
+                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+                    ),
+            ),
+            #######################################################################
+            #      Test                                                           #
+            #######################################################################
+        reg=RegulatorTestParams(
+            setpoints=(reg_pts := ChannelValues(ch1=5,
+                                    ch2=5,
+                                    ch3=5,
+                                    ch4=5)),
+            settling_time=10),
+
+
+        smooth=SmoothRampTestParams(
+            start_setpoints=ChannelValues(ch1=-5,
+                                            ch2=-5,
+                                            ch3=-5,
+                                            ch4=-5),
+            end_setpoints=ChannelValues(ch1=5,
+                                        ch2=5,
+                                        ch3=5,
+                                        ch4=5),
+            ramp_rate=ChannelValues(ch1=10,
+                                    ch2=10,
+                                    ch3=10,
+                                    ch4=10),
+            settling_time=10,
+            tolerance=0.05),
+        jump=JumpTestParams(
+            start_setpoints=ChannelValues(ch1=0.05,
+                                    ch2=0.05,
+                                    ch3=0.05,
+                                    ch4=0.05),
+            step_size=ChannelValues(ch1=0.05,
+                                    ch2=0.05,
+                                    ch3=0.05,
+                                    ch4=0.05),
+            sample_window=500,
+            tolerance=0.05
+        )
+    ),
+    "4CH-MSS-Cur_Strip": PSCModel(
+        model_id="4CH-MSS-Cur_Strip",
+        display_name="4CH-MSS-Cur_Strip (ARI/SXN Cell 29)",
+        description="4CH-MSS-Cur_Strip",
+        designation="4CH-MSS-Cur_Strip",
+        channels=(1, 2, 3, 4),
+        drive_channels=(1, 2, 3, 4),
+        readback_channels=(1,2, 3, 4),
+
+            #######################################################################
+            #      Calibration                                                    #
+            #######################################################################
+            calibration_parameters=CalibrationParameters(
+                ndcct=1000.0,
+                burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
+                            ch3=83.333333, ch4=83.333333),
+                
+                fault_limits=PSCFaultThresholdsLimits(
+                    ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                    ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                    ovv_threshold=ChannelValues(ch1=15, ch2=15, ch3=15, ch4=15),
+                ),
+
+                scale_factors=PSCScaleFactors(
+                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
+                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+                ),
+            ),
+            #######################################################################
+            #      Test                                                           #
+            #######################################################################
+        reg=RegulatorTestParams(
+            setpoints=(reg_pts := ChannelValues(ch1=5,
+                                    ch2=5,
+                                    ch3=5,
+                                    ch4=5)),
+            settling_time=10),
+
+
+        smooth=SmoothRampTestParams(
+            start_setpoints=ChannelValues(ch1=-9,
+                                            ch2=-9,
+                                            ch3=-9,
+                                            ch4=-9),
+            end_setpoints=ChannelValues(ch1=9,
+                                        ch2=9,
+                                        ch3=9,
+                                        ch4=9),
+            ramp_rate=ChannelValues(ch1=10,
+                                    ch2=10,
+                                    ch3=10,
+                                    ch4=10),
+            settling_time=10,
+            tolerance=0.05),
+        jump=JumpTestParams(
+            start_setpoints=ChannelValues(
+                                    ch1=5,
+                                    ch2=5,
+                                    ch3=5,
+                                    ch4=5
+            ),
+            step_size=ChannelValues(ch1=0.05,
+                                    ch2=0.05,
+                                    ch3=0.05,
+                                    ch4=0.05),
+            sample_window=500,
+            tolerance=0.05
+        )
+    ),
+    "EIC-HSS": PSCModel(
+        model_id="EIC_2-CH-HSS",
+        display_name="2CH-HSS-EIC",
+        description="PSC-2CH-HSS-EIC",
+        designation="PSC-2CH-HSS-EIC_",
+        channels=(1, 2),
+        drive_channels=(1, 2),
+        readback_channels=(1,2),
+
+        #####################################################################
+        #      Calibration                                                  #
+        #####################################################################
+        calibration_parameters=CalibrationParameters(
+                ndcct=1000.0,
+                burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333),
+                
+                fault_limits=PSCFaultThresholdsLimits(
+                    ovc1_threshold=ChannelValues(ch1=10, ch2=10),
+                    ovc2_threshold=ChannelValues(ch1=10, ch2=10),
+                    ovv_threshold=ChannelValues(ch1=15, ch2=15),
+                ),
+                
+                scale_factors=PSCScaleFactors(
+                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9),
+                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0),
+                ),
+            ),
+        #######################################################################
+        #      Test                                                           #
+        #######################################################################
+        reg=RegulatorTestParams(
+            setpoints=(reg_pts := ChannelValues(ch1=5,
+                                    ch2=5)),
+            settling_time=10),
+
+
+        smooth=SmoothRampTestParams(
+            start_setpoints=ChannelValues(ch1=0,
+                                            ch2=0,
+                                            ),
+            end_setpoints=ChannelValues(ch1=9,
+                                        ch2=9,
+                                        ),
+            ramp_rate=ChannelValues(ch1=10,
+                                    ch2=20),
+            settling_time=10,
+            tolerance=0.05),
+        jump=JumpTestParams(
+            start_setpoints=reg_pts,
+            step_size=ChannelValues(ch1=0.05,
+                                    ch2=0.05),
+            sample_window=500,
+            tolerance=0.05
+        )
+        ),
+    "EIC-HSF": PSCModel(
+        model_id="EIC_4-CH-HSF",
+        display_name="4CH-HSF-EIC",
+        description="PSC-4CH-HSF-EIC",
+        designation="PSC-4CH-HSF-EIC_",
+        channels=(1, 2, 3, 4),
+        drive_channels=(1, 2, 3, 4),
+        readback_channels=(1,2, 3, 4),
+
+        #######################################################################
+        #      Calibration                                                    #
+        #######################################################################
+        calibration_parameters=CalibrationParameters(
+            ndcct=1000.0,
+            burden_resistors=ChannelValues(ch1=33.333333, ch2=33.333333,
+                        ch3=33.333333, ch4=33.333333),
+            
+            fault_limits=PSCFaultThresholdsLimits(
+                ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                ovv_threshold=ChannelValues(ch1=15, ch2=15, ch3=15, ch4=15),
+            ),
+
+            scale_factors=PSCScaleFactors(
+                sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
+                sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+            ),
+        ),
+        #######################################################################
+        #      Test                                                           #
+        #######################################################################
+        reg=RegulatorTestParams(
+            setpoints=(reg_pts := ChannelValues(ch1=5,
+                                    ch2=5,
+                                    ch3=5,
+                                    ch4=5)),
+            settling_time=10),
+
+
+        smooth=SmoothRampTestParams(
+            start_setpoints=ChannelValues(ch1=0,
+                                            ch2=0,
+                                            ch3=0,
+                                            ch4=0),
+            end_setpoints=ChannelValues(ch1=9,
+                                        ch2=9,
+                                        ch3=9,
+                                        ch4=9),
+            ramp_rate=ChannelValues(ch1=10,
+                                    ch2=10,
+                                    ch3=10,
+                                    ch4=10),
+            settling_time=10,
+            tolerance=0.05),
+        jump=JumpTestParams(
+            start_setpoints=ChannelValues(
+                                    ch1=5,
+                                    ch2=5,
+                                    ch3=5,
+                                    ch4=5
+            ),
+            step_size=ChannelValues(ch1=0.05,
+                                    ch2=0.05,
+                                    ch3=0.05,
+                                    ch4=0.05),
+            sample_window=500,
+            tolerance=0.05
+        )
+    ),
+    "NSLS-II-SKQ": PSCModel(
+        model_id="NSLS-II-SK",
+        display_name="4CH-MSS-SR-SK",
+        description="PSC-4CH-MSS-SR-SK",
+        designation="4CH-MSS-SR-SK_",
+        channels=(1, 2, 3, 4),
+        drive_channels=(1, 2, 3, 4),
+        readback_channels=(1,2, 3, 4),
+
+        #######################################################################
+        #      Calibration                                                    #
+        #######################################################################
+        calibration_parameters = CalibrationParameters(
+            ndcct=1000.0,
+            burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
                                             ch3=83.333333, ch4=83.333333),
-                                
-                                fault_limits=PSCFaultThresholdsLimits(
-                                    ovc1_threshold=ChannelValues(ch1=12, ch2=12, ch3=12, ch4=12),
-                                    ovc2_threshold=ChannelValues(ch1=24.5, ch2=24.5, ch3=24.5, ch4=24.5),
-                                    ovv_threshold=ChannelValues(ch1=18.5, ch2=18.5, ch3=18.5, ch4=18.5),
-                                ),
+            
+            fault_limits=PSCFaultThresholdsLimits(
+                ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                ovv_threshold=ChannelValues(ch1=16, ch2=16, ch3=16, ch4=16),
+            ),
 
-                                scale_factors=PSCScaleFactors(
-                                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
-                                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
-                                ),
-                          ),
-                          #######################################################################
-                          #      Test                                                           #
-                          #######################################################################
-                       reg=RegulatorTestParams(
-                           setpoints=(reg_pts := ChannelValues(ch1=5,
-                                                   ch2=5,
-                                                   ch3=5,
-                                                   ch4=5)),
-                           settling_time=10),
-
-
-                       smooth=SmoothRampTestParams(
-                           start_setpoints=ChannelValues(ch1=-5,
-                                                         ch2=-5,
-                                                         ch3=-5,
-                                                         ch4=-5),
-                           end_setpoints=ChannelValues(ch1=5,
-                                                       ch2=5,
-                                                       ch3=5,
-                                                       ch4=5),
-                           ramp_rate=ChannelValues(ch1=10,
-                                                   ch2=10,
-                                                   ch3=10,
-                                                   ch4=10),
-                           settling_time=10,
-                           tolerance=0.05),
-                       jump=JumpTestParams(
-                           start_setpoints=reg_pts,
-                           step_size=ChannelValues(ch1=0.05,
-                                                   ch2=0.05,
-                                                   ch3=0.05,
-                                                   ch4=0.05),
-                           sample_window=500,
-                           tolerance=0.05
-                        )
-                       ),
-    "4Ch-MSS-ID_XYCorr": PSCModel(model_id="4Ch-MSS-ID_XYCorr",
-                       display_name="4Ch-MSS-ID_XYCorr (ARI/SXN Cell 29)",
-                       description="4Ch-MSS-ID_XYCorr",
-                       designation="4Ch-MSS-ID_XYCorr",
-                       channels=(1, 2, 3, 4),
-                       drive_channels=(1, 2, 3, 4),
-                       readback_channels=(1,2, 3, 4),
-
-                          #######################################################################
-                          #      Calibration                                                    #
-                          #######################################################################
-                          calibration_parameters=CalibrationParameters(
-                                ndcct=1000.0,
-                                burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
-                                            ch3=83.333333, ch4=83.333333),
-                                fault_limits=PSCFaultThresholdsLimits(
-                                    ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                                    ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                                    ovv_threshold=ChannelValues(ch1=7, ch2=7, ch3=7, ch4=7),
-                                ),
-
-                                scale_factors=PSCScaleFactors(
-                                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
-                                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+            scale_factors = PSCScaleFactors(
+                sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
+                sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+            ),
+        ),
+        #######################################################################
+        #      Test                                                           #
+        #######################################################################
+        reg=RegulatorTestParams(
+            setpoints=(reg_pts := ChannelValues(ch1=9,
+                                    ch2=9,
+                                    ch3=9,
+                                    ch4=9)),
+            settling_time=10
                                     ),
-                          ),
-                          #######################################################################
-                          #      Test                                                           #
-                          #######################################################################
-                       reg=RegulatorTestParams(
-                           setpoints=(reg_pts := ChannelValues(ch1=5,
-                                                   ch2=5,
-                                                   ch3=5,
-                                                   ch4=5)),
-                           settling_time=10),
-
-
-                       smooth=SmoothRampTestParams(
-                           start_setpoints=ChannelValues(ch1=-5,
-                                                         ch2=-5,
-                                                         ch3=-5,
-                                                         ch4=-5),
-                           end_setpoints=ChannelValues(ch1=5,
-                                                       ch2=5,
-                                                       ch3=5,
-                                                       ch4=5),
-                           ramp_rate=ChannelValues(ch1=10,
-                                                   ch2=10,
-                                                   ch3=10,
-                                                   ch4=10),
-                           settling_time=10,
-                           tolerance=0.05),
-                       jump=JumpTestParams(
-                           start_setpoints=ChannelValues(ch1=0.05,
-                                                   ch2=0.05,
-                                                   ch3=0.05,
-                                                   ch4=0.05),
-                           step_size=ChannelValues(ch1=0.05,
-                                                   ch2=0.05,
-                                                   ch3=0.05,
-                                                   ch4=0.05),
-                           sample_window=500,
-                           tolerance=0.05
-                        )
-                       ),
-    "4CH-MSS-Cur_Strip": PSCModel(model_id="4CH-MSS-Cur_Strip",
-                       display_name="4CH-MSS-Cur_Strip (ARI/SXN Cell 29)",
-                       description="4CH-MSS-Cur_Strip",
-                       designation="4CH-MSS-Cur_Strip",
-                       channels=(1, 2, 3, 4),
-                       drive_channels=(1, 2, 3, 4),
-                       readback_channels=(1,2, 3, 4),
-
-                          #######################################################################
-                          #      Calibration                                                    #
-                          #######################################################################
-                          calibration_parameters=CalibrationParameters(
-                                ndcct=1000.0,
-                                burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
-                                            ch3=83.333333, ch4=83.333333),
-                                
-                                fault_limits=PSCFaultThresholdsLimits(
-                                    ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                                    ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                                    ovv_threshold=ChannelValues(ch1=15, ch2=15, ch3=15, ch4=15),
-                                ),
-
-                                scale_factors=PSCScaleFactors(
-                                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
-                                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
-                                ),
-                          ),
-                          #######################################################################
-                          #      Test                                                           #
-                          #######################################################################
-                       reg=RegulatorTestParams(
-                           setpoints=(reg_pts := ChannelValues(ch1=5,
-                                                   ch2=5,
-                                                   ch3=5,
-                                                   ch4=5)),
-                           settling_time=10),
-
-
-                       smooth=SmoothRampTestParams(
-                           start_setpoints=ChannelValues(ch1=-9,
-                                                         ch2=-9,
-                                                         ch3=-9,
-                                                         ch4=-9),
-                           end_setpoints=ChannelValues(ch1=9,
-                                                       ch2=9,
-                                                       ch3=9,
-                                                       ch4=9),
-                           ramp_rate=ChannelValues(ch1=10,
-                                                   ch2=10,
-                                                   ch3=10,
-                                                   ch4=10),
-                           settling_time=10,
-                           tolerance=0.05),
-                       jump=JumpTestParams(
-                           start_setpoints=ChannelValues(
-                                                   ch1=5,
-                                                   ch2=5,
-                                                   ch3=5,
-                                                   ch4=5
-                           ),
-                           step_size=ChannelValues(ch1=0.05,
-                                                   ch2=0.05,
-                                                   ch3=0.05,
-                                                   ch4=0.05),
-                           sample_window=500,
-                           tolerance=0.05
-                        )
-                       ),
-    "EIC-HSS": PSCModel(model_id="EIC_2-CH-HSS",
-                       display_name="2CH-HSS-EIC",
-                       description="PSC-2CH-HSS-EIC",
-                       designation="PSC-2CH-HSS-EIC_",
-                       channels=(1, 2),
-                       drive_channels=(1, 2),
-                       readback_channels=(1,2),
-
-                       #####################################################################
-                       #      Calibration                                                  #
-                       #####################################################################
-                       calibration_parameters=CalibrationParameters(
-                                ndcct=1000.0,
-                                burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333),
-                                fault_limits=PSCFaultThresholdsLimits(
-                                    ovc1_threshold=ChannelValues(ch1=10, ch2=10),
-                                    ovc2_threshold=ChannelValues(ch1=10, ch2=10),
-                                    ovv_threshold=ChannelValues(ch1=15, ch2=15),
-                                ),
-                                
-                                scale_factors=PSCScaleFactors(
-                                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9),
-                                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0),
-                                ),
-                          ),
-                       #######################################################################
-                       #      Test                                                           #
-                       #######################################################################
-                       reg=RegulatorTestParams(
-                           setpoints=(reg_pts := ChannelValues(ch1=5,
-                                                   ch2=5)),
-                           settling_time=10),
-
-
-                       smooth=SmoothRampTestParams(
-                           start_setpoints=ChannelValues(ch1=0,
-                                                         ch2=0,
-                                                         ),
-                           end_setpoints=ChannelValues(ch1=9,
-                                                       ch2=9,
-                                                       ),
-                           ramp_rate=ChannelValues(ch1=10,
-                                                   ch2=20),
-                           settling_time=10,
-                           tolerance=0.05),
-                       jump=JumpTestParams(
-                           start_setpoints=reg_pts,
-                           step_size=ChannelValues(ch1=0.05,
-                                                   ch2=0.05),
-                           sample_window=500,
-                           tolerance=0.05
-                        )
-                       ),
-    "EIC-HSF": PSCModel(model_id="EIC_4-CH-HSF",
-                       display_name="4CH-HSF-EIC",
-                       description="PSC-4CH-HSF-EIC",
-                       designation="PSC-4CH-HSF-EIC_",
-                       channels=(1, 2, 3, 4),
-                       drive_channels=(1, 2, 3, 4),
-                       readback_channels=(1,2, 3, 4),
-
-                          #######################################################################
-                          #      Calibration                                                    #
-                          #######################################################################
-                          calibration_parameters=CalibrationParameters(
-                                ndcct=1000.0,
-                                burden_resistors=ChannelValues(ch1=33.333333, ch2=33.333333,
-                                            ch3=33.333333, ch4=33.333333),
-                                
-                                fault_limits=PSCFaultThresholdsLimits(
-                                    ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                                    ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                                    ovv_threshold=ChannelValues(ch1=15, ch2=15, ch3=15, ch4=15),
-                                ),
-
-                                scale_factors=PSCScaleFactors(
-                                    sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
-                                    sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
-                                ),
-                          ),
-                          #######################################################################
-                          #      Test                                                           #
-                          #######################################################################
-                       reg=RegulatorTestParams(
-                           setpoints=(reg_pts := ChannelValues(ch1=5,
-                                                   ch2=5,
-                                                   ch3=5,
-                                                   ch4=5)),
-                           settling_time=10),
-
-
-                       smooth=SmoothRampTestParams(
-                           start_setpoints=ChannelValues(ch1=0,
-                                                         ch2=0,
-                                                         ch3=0,
-                                                         ch4=0),
-                           end_setpoints=ChannelValues(ch1=9,
-                                                       ch2=9,
-                                                       ch3=9,
-                                                       ch4=9),
-                           ramp_rate=ChannelValues(ch1=10,
-                                                   ch2=10,
-                                                   ch3=10,
-                                                   ch4=10),
-                           settling_time=10,
-                           tolerance=0.05),
-                       jump=JumpTestParams(
-                           start_setpoints=ChannelValues(
-                                                   ch1=5,
-                                                   ch2=5,
-                                                   ch3=5,
-                                                   ch4=5
-                           ),
-                           step_size=ChannelValues(ch1=0.05,
-                                                   ch2=0.05,
-                                                   ch3=0.05,
-                                                   ch4=0.05),
-                           sample_window=500,
-                           tolerance=0.05
-                        )
-                       ),
+        smooth=SmoothRampTestParams(
+            start_setpoints=ChannelValues(ch1=-9,
+                                            ch2=-9,
+                                            ch3=-9,
+                                            ch4=-9),
+            end_setpoints=ChannelValues(ch1=9,
+                                        ch2=9,
+                                        ch3=9,
+                                        ch4=9),
+            ramp_rate=ChannelValues(ch1=10,
+                                    ch2=10,
+                                    ch3=10,
+                                    ch4=10),
+            settling_time=10,
+            tolerance=0.05),
+        jump=JumpTestParams(
+            start_setpoints=reg_pts,
+            step_size=ChannelValues(ch1=0.05,
+                                    ch2=0.05,
+                                    ch3=0.05,
+                                    ch4=0.05),
+            sample_window=500,
+            tolerance=0.05
+        )
+    ),
 }
 
 
