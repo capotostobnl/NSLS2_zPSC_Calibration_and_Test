@@ -22,6 +22,13 @@ if __name__ == "__main__":
 ###############################################################################
 from Common.initialize_dut import DUT
 
+#  Formatting Constants for tables
+HEAD_FMT = "{:>38}{:>14}{:>14}{:>14}"
+DATA_FMT = "{:<29}{:>9.6f}{:>14.6f}{:>14.6f}{:>14.6f}"
+VAL_FMT  = "{:>14.6f}{:>14.6f}{:>14.6f}{:>14.6f}{:>14.6f}{:>14.6f}"
+
+
+
 def initialize_qspi(dut: DUT):
     """Writes gains and offsets of 1 and 0, and sets QSPI parameters 
     for initial testing"""
@@ -39,77 +46,73 @@ def initialize_qspi(dut: DUT):
 
 def write_scale_factor(dut: DUT, chan_index: int):
     sf = dut.model.calibration_parameters.scale_factors
-    _psc = dut.psc_chan_prefix
-    _num_chan = dut.num_channels
-    chan = dut.channel_list[chan_index]
+    chan = int(dut.channel_list[chan_index])
+
     #Scale factors
-    caput(f'{_psc}{chan}:SF:AmpsperSec-SP', sf.sf_ramp_rate)
-    caput(f'{_psc}{chan}:SF:DAC_DCCTs-SP', dut.model.calc.get_p_scale_factor(chan))
-    caput(f'{_psc}{chan}:SF:Vout-SP', sf.sf_vout.as_list(_num_chan)[chan_index])
-    caput(f'{_psc}{chan}:SF:Ignd-SP', sf.sf_ignd)
-    caput(f'{_psc}{chan}:SF:Spare-SP', sf.sf_spare.as_list(_num_chan)[chan_index])
-    caput(f'{_psc}{chan}:SF:Regulator-SP', sf.sf_regulator)
-    caput(f'{_psc}{chan}:SF:Error-SP', sf.sf_error)
+    dut.psc.set_sf_ramp_rate(chan, sf.sf_ramp_rate)
+    dut.psc.set_sf_dcct_scale(chan, dut.model.calc.get_p_scale_factor(chan))
+    dut.psc.set_sf_vout(chan, sf.sf_vout.as_list(dut.num_channels)[chan_index])
+    dut.psc.set_sf_ignd(chan, sf.sf_ignd)
+    dut.psc.set_sf_spare(chan, sf.sf_spare.as_list(dut.num_channels)[chan_index])
+    dut.psc.set_sf_regulator(chan, sf.sf_regulator)
+    dut.psc.set_sf_error(chan, sf.sf_error)
 
 def write_flt_thresholds(dut: DUT, chan_index: int):
     #Fault thresholds
-    _psc = dut.psc_chan_prefix
-    _num_chan = dut.num_channels
     chan = dut.channel_list[chan_index]
 
     flt = dut.model.calibration_parameters.fault_limits
-    caput(f'{_psc}{chan}:OVC1_Flt_Threshold-SP', flt.ovc1_threshold.as_list(_num_chan)[chan_index])
-    caput(f'{_psc}{chan}:OVC2_Flt_Threshold-SP', flt.ovc2_threshold.as_list(_num_chan)[chan_index])
-    caput(f'{_psc}{chan}:OVV_Flt_Threshold-SP', flt.ovv_threshold.as_list(_num_chan)[chan_index])
-    caput(f'{_psc}{chan}:ERR1_Flt_Threshold-SP', flt.err1_threshold)
-    caput(f'{_psc}{chan}:ERR2_Flt_Threshold-SP', flt.err2_threshold)
-    caput(f'{_psc}{chan}:IGND_Flt_Threshold-SP', flt.ignd_threshold)
+    dut.psc.set_threshold_ovc1(chan, flt.ovc1_threshold.as_list(dut.num_channels)[chan_index])
+    dut.psc.set_threshold_ovc2(chan, flt.ovc2_threshold.as_list(dut.num_channels)[chan_index])
+    dut.psc.set_threshold_ovv(chan, flt.ovv_threshold.as_list(dut.num_channels)[chan_index])
+    dut.psc.set_threshold_err1(chan, flt.err1_threshold)
+    dut.psc.set_threshold_err2(chan, flt.err2_threshold)
+    dut.psc.set_threshold_ignd(chan, flt.ignd_threshold)
 
 def write_flt_cnt_limits(dut: DUT, chan_index: int):
     #Fault Count limits
-    _psc = dut.psc_chan_prefix
     chan = dut.channel_list[chan_index]
 
     flt = dut.model.calibration_parameters.fault_limits
-    caput(f'{_psc}{chan}:OVC1_Flt_CntLim-SP', flt.ovc1_flt_cnt)
-    caput(f'{_psc}{chan}:OVC2_Flt_CntLim-SP', flt.ovc2_flt_cnt)
-    caput(f'{_psc}{chan}:OVV_Flt_CntLim-SP', flt.ovv_flt_cnt)
-    caput(f'{_psc}{chan}:ERR1_Flt_CntLim-SP', flt.err1_flt_cnt)
-    caput(f'{_psc}{chan}:ERR2_Flt_CntLim-SP', flt.err2_flt_cnt)
-    caput(f'{_psc}{chan}:IGND_Flt_CntLim-SP', flt.ignd_flt_cnt)
-    caput(f'{_psc}{chan}:DCCT_Flt_CntLim-SP', flt.dcct_flt_cnt)
-    caput(f'{_psc}{chan}:FLT1_Flt_CntLim-SP', flt.flt1_flt_cnt)
-    caput(f'{_psc}{chan}:FLT2_Flt_CntLim-SP', flt.flt2_flt_cnt)
-    caput(f'{_psc}{chan}:FLT3_Flt_CntLim-SP', flt.flt3_flt_cnt)
-    caput(f'{_psc}{chan}:ON_Flt_CntLim-SP', flt.flt_on_cnt)
-    caput(f'{_psc}{chan}:HeartBeat_Flt_CntLim-SP', flt.flt_heartbeat_cnt)
-    caput(f'{_psc}{chan}:DAC_OpMode-SP', 3) # jump mode
-    caput(f'{_psc}{chan}:AveMode-SP', 1) #PSC average mode, 167 samples
+    dut.psc.set_count_limit_ovc1(chan, flt.ovc1_flt_cnt)
+    dut.psc.set_count_limit_ovc2(chan, flt.ovc2_flt_cnt)
+    dut.psc.set_count_limit_ovv(chan, flt.ovv_flt_cnt)
+    dut.psc.set_count_limit_err1(chan, flt.err1_flt_cnt)
+    dut.psc.set_count_limit_err2(chan, flt.err2_flt_cnt)
+    dut.psc.set_count_limit_ignd(chan, flt.ignd_flt_cnt)
+    dut.psc.set_count_limit_dcct(chan, flt.dcct_flt_cnt)
+    dut.psc.set_count_limit_flt1(chan, flt.flt1_flt_cnt)
+    dut.psc.set_count_limit_flt2(chan, flt.flt2_flt_cnt)
+    dut.psc.set_count_limit_flt3(chan, flt.flt3_flt_cnt)
+    dut.psc.set_count_limit_on(chan, flt.flt_on_cnt)
+    dut.psc.set_count_limit_heartbeat(chan, flt.flt_heartbeat_cnt)
+    dut.psc.set_op_mode(chan, 3) # jump mode
+    dut.psc.set_averaging(chan, 1) #PSC average mode, 167 samples
 
 def initialize_gains_offsets(dut: DUT, chan_index: int):
     #set PSC gains to 1 and offsets to 0
     _psc = dut.psc_chan_prefix
     chan = dut.channel_list[chan_index]
 
-    caput(f'{_psc}{chan}:DACSetPt-Gain-SP', 1.0)
-    caput(f'{_psc}{chan}:DCCT1-Gain-SP', 1.0)
-    caput(f'{_psc}{chan}:DCCT2-Gain-SP', 1.0)
-    caput(f'{_psc}{chan}:DAC-Gain-SP', 1.0)
-    caput(f'{_psc}{chan}:Volt-Gain-SP', 1.0)
-    caput(f'{_psc}{chan}:Gnd-Gain-SP', 1.0)
-    caput(f'{_psc}{chan}:Spare-Gain-SP', 1.0)
-    caput(f'{_psc}{chan}:Reg-Gain-SP', 1.0)
-    caput(f'{_psc}{chan}:Error-Gain-SP', 1.0)
+    dut.psc.set_gain_dac_setpoint(chan, 1.0)
+    dut.psc.set_gain_dcct1(chan, 1.0)
+    dut.psc.set_gain_dcct2(chan, 1.0)
+    dut.psc.set_gain_dac_setpoint(chan, 1.0)
+    dut.psc.set_gain_voltage(chan, 1.0)
+    dut.psc.set_gain_ground(chan, 1.0)
+    dut.psc.set_gain_spare(chan, 1.0)
+    dut.psc.set_gain_regulator(chan, 1.0)
+    dut.psc.set_gain_error(chan, 1.0)
 
-    caput(f'{_psc}{chan}:DACSetPt-Offset-SP', 0.0)
-    caput(f'{_psc}{chan}:DCCT1-Offset-SP', 0.0)
-    caput(f'{_psc}{chan}:DCCT2-Offset-SP', 0.0)
-    caput(f'{_psc}{chan}:DAC-Offset-SP', 0.0)
-    caput(f'{_psc}{chan}:Volt-Offset-SP', 0.0)
-    caput(f'{_psc}{chan}:Gnd-Offset-SP', 0.0)
-    caput(f'{_psc}{chan}:Spare-Offset-SP', 0.0)
-    caput(f'{_psc}{chan}:Reg-Offset-SP', 0.0)
-    caput(f'{_psc}{chan}:Error-Offset-SP', 0.0)
+    dut.psc.set_offset_dac_setpoint(chan, 0.0)
+    dut.psc.set_offset_dcct1(chan, 0.0)
+    dut.psc.set_offset_dcct2(chan, 0.0)
+    dut.psc.set_offset_dac_setpoint(chan, 0.0)
+    dut.psc.set_offset_voltage(chan, 0.0)
+    dut.psc.set_offset_ground(chan, 0.0)
+    dut.psc.set_offset_spare(chan, 0.0)
+    dut.psc.set_offset_regulator(chan, 0.0)
+    dut.psc.set_offset_error(chan, 0.0)
 
 def run_calibration(dut: DUT):
     """Executes the calibration routine, but now using the DUT parameters
@@ -513,9 +516,6 @@ def run_calibration(dut: DUT):
         print(f"{'Final meas. offsets stdev:'}{m_std[4]:>9.6f}{m_std[5]:>14.6f}{m_std[6]:>14.6f}{m_std[7]:>14.6f}")
         print(f"{'Final meas. gains mean:   '}{m_avg[0]:>9.6f}{m_avg[1]:>14.6f}{m_avg[2]:>14.6f}{m_avg[3]:>14.6f}")
         print(f"{'Final meas. gains stdev:  '}{m_std[0]:>9.6f}{m_std[1]:>14.6f}{m_std[2]:>14.6f}{m_std[3]:>14.6f}")
-
-
-        #print initial measured gain errors in percent (gtarget-m1)/gtarget*100, (gtarget-m2)/gtarget*100 ...
         print("")
 
         #if k==num_runs-1:
