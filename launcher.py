@@ -26,9 +26,8 @@ Workflow:
 import sys
 import time
 from Test.test_main import run_psc_test_suite
-from Cal.psc_calibration import run_calibration
+from Cal.psc_calibration import run_calibration, initialize_qspi
 from Common.initialize_dut import DUT
-from initialize_qspi import initialize_qspi
 
 
 def prompt_execution_mode():

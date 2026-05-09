@@ -32,6 +32,9 @@ class DUT:
             psc: EPICS adapter created after pv_prefix is known.
             model: PSCModel dataclass with parameters/limits for
             different models.
+            num_channels: Number of channels for the model
+            channel_list: List of channel strings
+            psc_chan_prefx: PV Prefix appended with Chan (for cal script)
 
             cal_report_dir: Property that creates/returns the calibration
             report path.
@@ -53,6 +56,21 @@ class DUT:
     psc_num: int = field(init=False, default=0)
     psc: PSC | None = None
     model: PSCModel = field(init=False)
+
+    @property
+    def num_channels(self) -> int:
+        """Returns number of channels for the model, used in cal script primarily"""
+        return len(self.model.channels)
+
+    @property
+    def channel_list(self) -> list:
+        """Returns a list of channels as strings, used in cal script primarily"""
+        return [str(c) for c in self.model.channels]
+
+    @property
+    def psc_chan_prefix(self) -> str:
+        """Return the PV prefix + Chan, used in cal script primarily"""
+        return f"{self.pv_prefix}Chan"
 
     # --- filesystem / run info ---
     # We dynamically find the project root relative to this file

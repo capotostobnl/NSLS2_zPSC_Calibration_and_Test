@@ -1,3 +1,5 @@
+# pylint: disable=line-too-long, missing-module-docstring, missing-function-docstring, missing-class-docstring
+
 import time
 import sys
 import socket
@@ -7,7 +9,6 @@ import numpy as np
 from epics import caget, caput
 import serial
 
-# pylint: disable=wrong-import-position
 # flake8: noqa: E402
 ###############################################################################
 #   Add outer directory to path, so app can find Common dir when run standalone
@@ -23,19 +24,27 @@ from Common.initialize_dut import DUT
 
 ATE_IP_ADDRESS = '10.69.26.3'
 
-_psc, _chan, _num_chan = None, None, None
+def initialize_qspi(dut: DUT):
+    """Writes gains and offsets of 1 and 0, and sets QSPI parameters 
+    for initial testing"""
 
-def init_local_vars(dut:DUT):
-    global _psc, _chan, _num_chan
-    _psc = f"{dut.pv_prefix}Chan"
-    _chan = [str(c) for c in dut.model.channels]
-    _num_chan = len(dut.model.channels)
+    _psc = dut.psc_chan_prefix
+    _chan = dut.channel_list
 
+    for chan_index in range(dut.num_channels):
+        write_scale_factor(dut, chan_index)
+        write_flt_thresholds(dut, chan_index)
+        write_flt_cnt_limits(dut, chan_index)
+        initialize_gains_offsets(dut, chan_index)
+        caput(_psc+_chan[chan_index]+':WriteQspi-SP', 1) # write all data to qspi
+        print("QSPI Written")
 
 def write_scale_factor(dut: DUT, chan_index: int):
     sf = dut.model.calibration_parameters.scale_factors
+    _psc = dut.psc_chan_prefix
+    _num_chan = dut.num_channels
+    chan = dut.channel_list[chan_index]
     #Scale factors
-    chan = _chan[chan_index]
     caput(f'{_psc}{chan}:SF:AmpsperSec-SP', sf.sf_ramp_rate)
     caput(f'{_psc}{chan}:SF:DAC_DCCTs-SP', dut.model.calc.get_p_scale_factor(chan))
     caput(f'{_psc}{chan}:SF:Vout-SP', sf.sf_vout.as_list(_num_chan)[chan_index])
@@ -46,7 +55,10 @@ def write_scale_factor(dut: DUT, chan_index: int):
 
 def write_flt_thresholds(dut: DUT, chan_index: int):
     #Fault thresholds
-    chan = _chan[chan_index]
+    _psc = dut.psc_chan_prefix
+    _num_chan = dut.num_channels
+    chan = dut.channel_list[chan_index]
+
     flt = dut.model.calibration_parameters.fault_limits
     caput(f'{_psc}{chan}:OVC1_Flt_Threshold-SP', flt.ovc1_threshold.as_list(_num_chan)[chan_index])
     caput(f'{_psc}{chan}:OVC2_Flt_Threshold-SP', flt.ovc2_threshold.as_list(_num_chan)[chan_index])
@@ -57,7 +69,9 @@ def write_flt_thresholds(dut: DUT, chan_index: int):
 
 def write_flt_cnt_limits(dut: DUT, chan_index: int):
     #Fault Count limits
-    chan = _chan[chan_index]
+    _psc = dut.psc_chan_prefix
+    chan = dut.channel_list[chan_index]
+
     flt = dut.model.calibration_parameters.fault_limits
     caput(f'{_psc}{chan}:OVC1_Flt_CntLim-SP', flt.ovc1_flt_cnt)
     caput(f'{_psc}{chan}:OVC2_Flt_CntLim-SP', flt.ovc2_flt_cnt)
@@ -76,7 +90,9 @@ def write_flt_cnt_limits(dut: DUT, chan_index: int):
 
 def initialize_gains_offsets(dut: DUT, chan_index: int):
     #set PSC gains to 1 and offsets to 0
-    chan = _chan[chan_index]
+    _psc = dut.psc_chan_prefix
+    chan = dut.channel_list[chan_index]
+
     caput(f'{_psc}{chan}:DACSetPt-Gain-SP', 1.0)
     caput(f'{_psc}{chan}:DCCT1-Gain-SP', 1.0)
     caput(f'{_psc}{chan}:DCCT2-Gain-SP', 1.0)
@@ -100,22 +116,21 @@ def initialize_gains_offsets(dut: DUT, chan_index: int):
 def run_calibration(dut: DUT):
     """Executes the calibration routine, but now using the DUT parameters
     instead of hard-coding"""
+    _num_chan = dut.num_channels
 
-    init_local_vars(dut)
-    
     now=datetime.datetime.now()
     formatted_date_time = now.strftime("%Y-%m-%d %H:%M:%S")
 
     cal_params = dut.model.calibration_parameters
 
     designation = dut.model.designation
-    Ndcct = cal_params.ndcct
-    Rb = cal_params.burden_resistors.as_list(_num_chan)
+    n_dcct = cal_params.ndcct
+    burden_resistor = cal_params.burden_resistors.as_list(_num_chan)
 
-    string1 = "Calibrating PSC model " + designation + "SN" + dut.psc_sn
+    string1 = f"Calibrating PSC model {designation} SN {dut.psc_sn}"
     print(string1)
 
-    N=5 # of runs per channel
+    num_runs=5 # of runs per channel
 
     ser1 = serial.Serial('/dev/ttyUSB0', 115200, timeout=30)
     x = ser1.write(b"++addr 24\n")
@@ -123,39 +138,39 @@ def run_calibration(dut: DUT):
     x = ser1.write(b"AZERO ON\n")
     x = ser1.write(b"NPLC 30\n")
 
-    IP = ATE_IP_ADDRESS
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.settimeout(3)
-        server_address = (IP, 5000)
+        server_address = (ATE_IP_ADDRESS, 5000)
         #sock.bind (server_address)
     except Exception as err:
-        print("Socket error: %s" % err)
+        print(f"Socket error: {err}s")
 
-    def get_3458A():
-        x = ser1.write("TARM SGL\n".encode('utf-8'))
+    def get_dmm():
+        ser1.write("TARM SGL\n".encode('utf-8'))
         time.sleep(1)
-        x = ser1.write(b"++auto 1\n")
+        ser1.write(b"++auto 1\n")
         data = ser1.read_until(b'\n',1000)
-        x = ser1.write(b"++auto 0\n")
+        ser1.write(b"++auto 0\n")
         return data
 
-    def set_atsdac_cal_source(Ival):
-        y = str(Ival*50) # 50V/A
+    def set_atsdac_cal_source(setpoint_amps):
+        y = str(setpoint_amps*50) # 50V/A
         sock.sendto(b'CALDAC' + y.encode('UTF-8') + b'\n', server_address)
 
-    def measure_testpoints(I, sp, chan_index, verbose, verification):
+    def measure_testpoints(current_measured, sp, verbose, verification):
+        _psc = dut.psc_chan_prefix
         #print("%3.6f" % I)
-        #i0 = -Ifs*0.1 # unipolar
+        #i0 = -current_full_scale*0.1 # unipolar
         #set_keithley2401(I)
         for i in range(4):
-            set_atsdac_cal_source(I)
+            set_atsdac_cal_source(current_measured)
             time.sleep(0.5)
         adc1 = caget(f'{_psc}{physical_chan}:DCCT1-I')
         #print(adc1)
-        #print(I*Ndcct)
+        #print(I*n_dcct)
         time.sleep(1)
-        if (abs(adc1)-abs(I*Ndcct)) > 0.3*abs(I*Ndcct):
+        if (abs(adc1)-abs(current_measured*n_dcct)) > 0.3*abs(current_measured*n_dcct):
             print("Error setting calibration DAC setpoint. Try again.")
             sys.exit()
         #time.sleep(5)
@@ -169,20 +184,16 @@ def run_calibration(dut: DUT):
         time.sleep(td)
         err = caget(f'{_psc}{physical_chan}:Error-I') # get err
         #for i in range(3):
-        # choose Ifs*2 as max allowable value of error for null. i==0 condition ensures that loop runs once.
-        while abs(err)>Ifs*2 and i<12 or i==0:
-            #if verbose:
-            if(True):
-                print("adjustment %d" % i)
-            #caput(f'{_psc}{physical_chan}:SF:AmpsperSec-SP', R[i]) #set ramp rate
-            #time.sleep(td[i])
+        # choose current_full_scale*2 as max allowable value of error for null. i==0 condition ensures that loop runs once.
+        while abs(err)>current_full_scale*2 and i<12 or i==0:
+            print(f"adjustment {i}")
             dac = sp - err/400*p_scale
             sp = dac
             caput(f'{_psc}{physical_chan}:DAC_SetPt-SP', sp)    # set DAC
             time.sleep(td)
             err = caget(f'{_psc}{physical_chan}:Error-I') # get err
             i+=1
-            #print(i)
+
         if i == 12:
             print("Calibration failed. Could not null error. Try again.")
             sys.exit()
@@ -194,19 +205,19 @@ def run_calibration(dut: DUT):
                 adc1 = caget(f'{_psc}{physical_chan}:DCCT1-I')
                 adc2 = caget(f'{_psc}{physical_chan}:DCCT2-I')
                 adc3 = caget(f'{_psc}{physical_chan}:DAC-I')
-                dmm = float(get_3458A().decode('utf-8')) - dmm_offs  # reference current i0
+                dmm = float(get_dmm().decode('utf-8')) - dmm_offs  # reference current i0
                 i+=1
-                if abs(adc1+sp) < 0.02*Ifs*Ndcct and abs(adc2+sp) < 0.02*Ifs*Ndcct and \
-                abs(adc3-sp) < 0.02*Ifs*Ndcct and abs(dmm*gtarget*p_scale+sp) < 0.02*Ifs*Ndcct:
+                if abs(adc1+sp) < 0.02*current_full_scale*n_dcct and abs(adc2+sp) < 0.02*current_full_scale*n_dcct and \
+                abs(adc3-sp) < 0.02*current_full_scale*n_dcct and abs(dmm*gtarget*p_scale+sp) < 0.02*current_full_scale*n_dcct:
                     x=1 # if all readings good, break loop
                 time.sleep(1)
             if i == 4:
-                print("adc1 = %3.5f" % adc1)
-                print("adc2 = %3.5f" % adc2)
-                print("adc3 = %3.5f" % adc3)
-                print("sp = %3.5f" % sp)
+                print(f"adc1 = {adc1:3.5f}")
+                print(f"adc2 = {adc2:3.5f}")
+                print(f"adc3 = {adc3:3.5f}")
+                print(f"sp = {sp:3.5f}")
                 dmm_scaled = dmm*gtarget*p_scale
-                print("dmm = %3.5f" % dmm_scaled)
+                print(f"dmm = {dmm_scaled:3.5f}")
                 print("Calibration failed. Bad initial measurement(s). Try again.")
                 sys.exit()
 
@@ -215,17 +226,17 @@ def run_calibration(dut: DUT):
                 adc1 = caget(f'{_psc}{physical_chan}:DCCT1-I')
                 adc2 = caget(f'{_psc}{physical_chan}:DCCT2-I')
                 adc3 = caget(f'{_psc}{physical_chan}:DAC-I')
-                dmm = float(get_3458A().decode('utf-8')) - dmm_offs # reference current i0
+                dmm = float(get_dmm().decode('utf-8')) - dmm_offs # reference current i0
                 i+=1
-                if abs(adc1+sp) < 0.0002*Ifs*Ndcct and abs(adc2+sp) < 0.0002*Ifs*Ndcct and \
-                abs(adc3-sp) < 0.0002*Ifs*Ndcct and abs(dmm*gtarget*p_scale+sp) < 0.0002*Ifs*Ndcct:
+                if abs(adc1+sp) < 0.0002*current_full_scale*n_dcct and abs(adc2+sp) < 0.0002*current_full_scale*n_dcct and \
+                abs(adc3-sp) < 0.0002*current_full_scale*n_dcct and abs(dmm*gtarget*p_scale+sp) < 0.0002*current_full_scale*n_dcct:
                     x=1 # if all readings good, break loop
                 time.sleep(1)
             if i == 4:
-                print("adc1 = %3.5f" % adc1)
-                print("adc2 = %3.5f" % adc2)
-                print("adc3 = %3.5f" % adc3)
-                print("sp = %3.5f" % sp)
+                print(f"adc1 = {adc1:3.5f}")
+                print(f"adc2 = {adc2:3.5f}")
+                print(f"adc3 = {adc3:3.5f}")
+                print(f"sp = {sp:3.5f}")
                 print("Calibration failed. Bad verification measurement(s). Try again.")
                 sys.exit()
 
@@ -251,24 +262,24 @@ def run_calibration(dut: DUT):
         return -mdac, m1, m2, m3, -bdac, b1, b2, b3
 
     def print_testpoints(y, v):
-        if(v=='v'):
+        if v=='v':
             print(f"{'Itest':>14}{'dacSP':>14}{'dcct1':>14}{'dcct2':>14}{'dacRB':>14}{'err':>14}")
         print(f"{y[0]:>14.6f}{y[1]:>14.6f}{y[2]:>14.6f}{y[3]:>14.6f}{y[4]:>14.6f}{y[5]:>14.6f}")
 
     def fprint_testpoints(y, v):
-        if(v=='v'):
+        if v=='v':
             fp.write(f"{'Itest':>12}{'dacSP':>12}{'dcct1':>12}{'dcct2':>12}{'dacRB':>12}{'err':>12}\n")
         fp.write(f"{y[0]:>12.6f}{y[1]:>12.6f}{y[2]:>12.6f}{y[3]:>12.6f}{y[4]:>12.6f}{y[5]:>12.6f}\n")
 
 
     #now = datetime.now()
     #date_str = now.strftime("%Y-%m-%d_%H.%M.%S")
-    
+
     #file_str = "psc_calibration_temp_" + SN + ".doc"
     file_str = "psc_calibration_temp.doc"
     fp = open(file_str, "w")
     fp.write("Report of Calibration\n")
-    fp.write("PSC %sS/N %s\n" % (designation, dut.psc_sn))
+    fp.write(f"PSC {designation} S/N {dut.psc_sn}\n")
     fp.write(formatted_date_time+"\n\n")
     #fp.write("Calibration Current standard: Keithley 2401\n")
     fp.write("Calibration Current standard: BNL PSC ATE S/N 001\n")
@@ -277,15 +288,17 @@ def run_calibration(dut: DUT):
     fp.write("Calibration Resistance standard: Fluke 742A-1 S/N 1063008\n")
     fp.write("End Header\n\n\n")
 
-    for chan_index in range(len(_chan)): # loop through channels
-        physical_chan = _chan[chan_index]
+    for chan_index, physical_chan in enumerate(dut.channel_list): # loop through channels
+        _psc = dut.psc_chan_prefix
+        _num_chan = dut.num_channels
+
         #turn all channels off
         caput(_psc+'1:DigOut_ON1-SP', 0)
         caput(_psc+'2:DigOut_ON1-SP', 0)
         caput(_psc+'3:DigOut_ON1-SP', 0)
         caput(_psc+'4:DigOut_ON1-SP', 0)
         print("Turning all channels off...")
-    
+
         #put all ATE channels in test mode
         for x in ['1', '2', '3', '4']:
             sock.sendto(b'T' + x.encode('UTF-8') + b'0' + b'\n', server_address)
@@ -296,9 +309,9 @@ def run_calibration(dut: DUT):
         time.sleep(1)
 
         #get dmm zero reading
-        dmm_offs = float(get_3458A().decode('utf-8')) # reference current i0
-        print("DMM zero offset reading: %1.7f" % dmm_offs)
-        
+        dmm_offs = float(get_dmm().decode('utf-8')) # reference current i0
+        print(f"DMM zero offset reading: {dmm_offs:.7f}")
+
         #set channel j to cal mode
         #sock.sendto(b'T' + str(chan_index+1).encode('UTF-8') + b'1' + b'\n', server_address)
         sock.sendto(b'T' + physical_chan.encode('UTF-8') + b'1' + b'\n', server_address)
@@ -308,64 +321,62 @@ def run_calibration(dut: DUT):
         sock.sendto(b'CAL1\n', server_address)
         time.sleep(1)
 
-        #gtarget = Rb[chan_index]*10.0 # V/A
+        #gtarget = burden_resistor[chan_index]*10.0 # V/A
         gtarget = dut.model.calc.get_s_scale_factor(physical_chan)
-        
-        #G = Ndcct/gtarget # power supply scale factor A/V
-        p_scale = dut.model.calc.get_p_scale_factor(physical_chan)
-        
-        Ifs = 1.0/Rb[chan_index] # max burden current
-        #print(Ifs)
-        I0 = -1.0/Ndcct # 1 A
-        sp0 = 1.0
-        I1 = -(float(round(Ifs*0.9*1000)/1000)) # round to nearest mA
 
-        #sp1 = float(int(10*G*0.9)) #  must be close to current setting to keep error from saturating
+        #G = n_dcct/gtarget # power supply scale factor A/V
+        p_scale = dut.model.calc.get_p_scale_factor(physical_chan)
+
+        current_full_scale = 1.0/burden_resistor[chan_index] # max burden current
+        #print(current_full_scale)
+        current_low_ref = -1.0/n_dcct # 1 A
+        sp0 = 1.0
+        current_high_ref = -(float(round(current_full_scale*0.9*1000)/1000)) # round to nearest mA
+
+        # sp1 = float(int(10*G*0.9)) # must be close to current
+        # setting to keep error from saturating
         sp1 = float(round(10*p_scale*0.9))
-        #print("%3.6f   %.6f   %3.6f   %3.6f" % (sp0, sp1, I0, I1))
+        #print("%3.6f   %.6f   %3.6f   %3.6f" % (sp0, sp1, current_low_ref, current_high_ref))
         y0 = np.zeros(6) # readbacks
         y1 = np.zeros(6)
-        M = np.zeros((N,8)) # gains/offsets multiple runs
-        if abs(I1) > 0.11:
+        cal_results = np.zeros((num_runs,8)) # gains/offsets multiple runs
+        if abs(current_high_ref) > 0.11:
             x = ser1.write(b"RANGE 1.0\n")
-        if abs(I1) <= 0.11:
+        if abs(current_high_ref) <= 0.11:
             x = ser1.write(b"RANGE 0.1\n")
 
         print(_psc+physical_chan)
-        print("Burden resistor = %3.4f" % Rb[chan_index])
-        
+        print(f"Burden resistor = {burden_resistor[chan_index]:3.4f}")
+
         write_scale_factor(dut, chan_index)
         write_flt_thresholds(dut, chan_index)
         write_flt_cnt_limits(dut, chan_index)
 
-        for k in range(N): # N runs on each channel
+        for k in range(num_runs): # N runs on each channel
             print("")
-            print("Run #: %d" % (k+1) )
+            print(f"Run #: {k+1}")
             #CHx
             #Calibration
 
-
             initialize_gains_offsets(dut, chan_index)
 
-
-
             print("Measuring initial gains and offsets")
-            if k==N-1:
+            if k==num_runs-1:
                 fp.write(_psc+physical_chan+"\n")
-                fp.write("Burden resistor = %3.4f\n\n" % Rb[chan_index])
+                fp.write(f"Burden resistor = {burden_resistor[chan_index]:%3.4f}\n\n")
                 fp.write("Measuring initial gains and offsets\n")
             #print("Measuring i0")
-            y0 = measure_testpoints(I0, sp0, chan_index, 0, 0) # [dmm dac adc1 adc2 adc3 err]
+            y0 = measure_testpoints(current_low_ref, sp0, 0, 0) # [dmm dac adc1 adc2 adc3 err]
             print_testpoints(y0,'v')
-            if k==N-1:
+            if k==num_runs-1:
                 fprint_testpoints(y0,'v')
 
             #print("")
             #print("Measuring i1")
-            y1 = measure_testpoints(I1, sp1, chan_index, 0, 0) # [dmm dac adc1 adc2 adc3 err]
+            y1 = measure_testpoints(current_high_ref, sp1, 0, 0) # [dmm dac adc1 adc2 adc3 err]
             #print("   I      dacSP      dcct1      dcct2      dacRB      err")
             print_testpoints(y1,'')
-            if k==N-1:
+            if k==num_runs-1:
                 fprint_testpoints(y1,'')
 
             #Initial measured gains/offsets
@@ -381,7 +392,7 @@ def run_calibration(dut: DUT):
             print("")
             print("Writing gain and offset corrections for dacSP, dcct1, and dcct2 to PSC")
 
-            if k==N-1:
+            if k==num_runs-1:
                 fp.write("\n")
                 fp.write(f"{'dacSP':>40}{'dcct1':>14}{'dcct2':>14}{'dacRB':>14}\n")
                 fp.write(f"{'Initial measured offsets: '}{bdac:>14.6f}{b1:>14.6f}{b2:>14.6f}{0:>14.6f}\n") #initial measured offsets
@@ -412,31 +423,31 @@ def run_calibration(dut: DUT):
             adc3 = caget(f'{_psc}{physical_chan}:DAC-I')
             y0[4] = adc3
             print("DAC SP   DAC RB")
-            print("%2.6f   %2.6f " % (sp0, y0[4]))
+            print(f"{sp0:2.6f}   {y0[4]:2.6f} ")
 
-            if k==N-1:
+            if k==num_runs-1:
                 fp.write("\n")
                 fp.write("Measuring DAC readback gain and offset\n")
                 #fp.write("Measuring sp0\n")
                 fp.write("DAC SP   DAC RB\n")
-                fp.write("%2.6f   %2.6f \n" % (sp0, y0[4]))
+                fp.write(f"{sp0:2.6f}   {y0[4]:2.6f} \n")
 
             #print("Measuring sp1")
             caput(f'{_psc}{physical_chan}:DAC_SetPt-SP', sp1)
             time.sleep(1)
             adc3 = caget(f'{_psc}{physical_chan}:DAC-I')
             y1[4] = adc3
-            print("%2.6f   %2.6f " % (sp1, y1[4]), end="")
+            print(f"{sp1:2.6f}   {y1[4]:2.6f} ", end="")
             print("")
-            if k==N-1:
-                fp.write("%2.6f   %2.6f \n" % (sp1, y1[4]))
+            if k==num_runs-1:
+                fp.write(f"{sp1:2.6f}   {y1[4]:2.6f} \n")
 
             m3 = (y1[4]-y0[4])/(sp1-sp0)
             b3 = y0[4]-m3*sp0
 
-            print("Measured offset: %f" % (b3) ) #initial measured offsets
-            print("Measured gain: %f" % (m3) ) #initial measured gains
-            print("Gain correction: %f" % (1/m3) )
+            fp.write(f"Measured offset: {b3}\n") #initial measured offsets
+            fp.write(f"Measured gain: {m3}\n") #initial measured gains
+            fp.write(f"Gain correction: {1/m3}\n")
 
             print("")
             print("Writing gain and offset constants for dacRB to PSC")
@@ -445,11 +456,11 @@ def run_calibration(dut: DUT):
             caput(f'{_psc}{physical_chan}:DAC-Gain-SP', 1/m3)
             caput(f'{_psc}{physical_chan}:DAC-Offset-SP', b3)
 
-            if k==N-1:
+            if k==num_runs-1:
                 fp.write("\n")
-                fp.write("Measured offset: %f\n" % (b3) ) #initial measured offsets
-                fp.write("Measured gain: %f\n" % (m3) ) #initial measured gains
-                fp.write("Gain correction: %f\n" % (1/m3) )
+                fp.write(f"Measured offset: {b3}\n") #initial measured offsets
+                fp.write(f"Measured gain: {m3}\n") #initial measured gains
+                fp.write(f"Gain correction: {1/m3}\n")
                 fp.write("\n")
                 fp.write("Writing gain and offset constants for dacRB to PSC\n\n")
 
@@ -457,16 +468,16 @@ def run_calibration(dut: DUT):
             # Verification
             print("\n\n")
             print("Verification")
-            if k==N-1:
+            if k==num_runs-1:
                 fp.write("Verification\n")
-            y0 = measure_testpoints(I0, sp0, chan_index, 0, 1) # [dmm dac adc1 adc2 adc3 err]
+            y0 = measure_testpoints(current_low_ref, sp0, 0, 1) # [dmm dac adc1 adc2 adc3 err]
             print_testpoints(y0,'v')
-            if k==N-1:
+            if k==num_runs-1:
                 fprint_testpoints(y0,'v')
 
-            y1 = measure_testpoints(I1, sp1, chan_index, 0, 1) # [dmm dac adc1 adc2 adc3 err]
+            y1 = measure_testpoints(current_high_ref, sp1, 0, 1) # [dmm dac adc1 adc2 adc3 err]
             print_testpoints(y1,'')
-            if k==N-1:
+            if k==num_runs-1:
                 fprint_testpoints(y1,'')
 
 
@@ -481,7 +492,7 @@ def run_calibration(dut: DUT):
             #print initial measured gain errors in percent (gtarget-m1)/gtarget*100, (gtarget-m2)/gtarget*100 ...
             print("\n\n")
 
-            if k==N-1:
+            if k==num_runs-1:
                 fp.write("\n")
                 fp.write("\n")
                 fp.write(f"{'dacSP':>38}{'dcct1':>14}{'dcct2':>14}{'dacRB':>14}\n")
@@ -490,43 +501,43 @@ def run_calibration(dut: DUT):
                 #fp.write initial measured gain errors in percent (gtarget-m1)/gtarget*100, (gtarget-m2)/gtarget*100 ...
                 fp.write("\n\n")
 
-            M[k,:] = [mdac, m1, m2, m3, bdac, b1, b2, b3]
+            cal_results[k,:] = [mdac, m1, m2, m3, bdac, b1, b2, b3]
 
 
         #np.set_printoptions(precision=6, suppress=True)
 
-        Mavg = np.mean(M, axis=0) # 0 is mean of each column. 1 is mean of each row
-        Mstd = np.std(M, axis=0)
+        m_avg = np.mean(cal_results, axis=0) # 0 is mean of each column. 1 is mean of each row
+        m_std = np.std(cal_results, axis=0)
         print("")
         print("")
         print("")
         print(f"{'dacSP':>38}{'dcct1':>14}{'dcct2':>14}{'dacRB':>14}")
-        print(f"{'Final meas. offsets mean: '}{Mavg[4]:>9.6f}{Mavg[5]:>14.6f}{Mavg[6]:>14.6f}{Mavg[7]:>14.6f}")
-        print(f"{'Final meas. offsets stdev:'}{Mstd[4]:>9.6f}{Mstd[5]:>14.6f}{Mstd[6]:>14.6f}{Mstd[7]:>14.6f}")
-        print(f"{'Final meas. gains mean:   '}{Mavg[0]:>9.6f}{Mavg[1]:>14.6f}{Mavg[2]:>14.6f}{Mavg[3]:>14.6f}")
-        print(f"{'Final meas. gains stdev:  '}{Mstd[0]:>9.6f}{Mstd[1]:>14.6f}{Mstd[2]:>14.6f}{Mstd[3]:>14.6f}")
+        print(f"{'Final meas. offsets mean: '}{m_avg[4]:>9.6f}{m_avg[5]:>14.6f}{m_avg[6]:>14.6f}{m_avg[7]:>14.6f}")
+        print(f"{'Final meas. offsets stdev:'}{m_std[4]:>9.6f}{m_std[5]:>14.6f}{m_std[6]:>14.6f}{m_std[7]:>14.6f}")
+        print(f"{'Final meas. gains mean:   '}{m_avg[0]:>9.6f}{m_avg[1]:>14.6f}{m_avg[2]:>14.6f}{m_avg[3]:>14.6f}")
+        print(f"{'Final meas. gains stdev:  '}{m_std[0]:>9.6f}{m_std[1]:>14.6f}{m_std[2]:>14.6f}{m_std[3]:>14.6f}")
 
 
         #print initial measured gain errors in percent (gtarget-m1)/gtarget*100, (gtarget-m2)/gtarget*100 ...
         print("")
 
-        #if k==N-1:
+        #if k==num_runs-1:
         fp.write("\n")
         fp.write(f"{'dacSP':>38}{'dcct1':>14}{'dcct2':>14}{'dacRB':>14}\n")
-        fp.write(f"{'Final measured offsets mean: '}{Mavg[4]:>9.6f}{Mavg[5]:>14.6f}{Mavg[6]:>14.6f}{Mavg[7]:>14.6f}\n")
-        fp.write(f"{'Final measured offsets stdev:'}{Mstd[4]:>9.6f}{Mstd[5]:>14.6f}{Mstd[6]:>14.6f}{Mstd[7]:>14.6f}\n")
-        fp.write(f"{'Final measured gains mean:   '}{Mavg[0]:>9.6f}{Mavg[1]:>14.6f}{Mavg[2]:>14.6f}{Mavg[3]:>14.6f}\n")
-        fp.write(f"{'Final measured gains stdev:  '}{Mstd[0]:>9.6f}{Mstd[1]:>14.6f}{Mstd[2]:>14.6f}{Mstd[3]:>14.6f}\n")
+        fp.write(f"{'Final measured offsets mean: '}{m_avg[4]:>9.6f}{m_avg[5]:>14.6f}{m_avg[6]:>14.6f}{m_avg[7]:>14.6f}\n")
+        fp.write(f"{'Final measured offsets stdev:'}{m_std[4]:>9.6f}{m_std[5]:>14.6f}{m_std[6]:>14.6f}{m_std[7]:>14.6f}\n")
+        fp.write(f"{'Final measured gains mean:   '}{m_avg[0]:>9.6f}{m_avg[1]:>14.6f}{m_avg[2]:>14.6f}{m_avg[3]:>14.6f}\n")
+        fp.write(f"{'Final measured gains stdev:  '}{m_std[0]:>9.6f}{m_std[1]:>14.6f}{m_std[2]:>14.6f}{m_std[3]:>14.6f}\n")
         fp.write("\n")
 
-        print("Saving channel %s calibration data to qspi\n" % (physical_chan))
-        fp.write("Saving channel %s calibration constants to qspi\n" % (physical_chan))
+        print(f"Saving channel {physical_chan} calibration data to qspi\n")
+        fp.write(f"Saving channel {physical_chan} calibration constants to qspi\n")
         if chan_index>0:
             fp.write("\n\n\n\n\n")
-        if chan_index==(len(_chan)-1):
+        if chan_index==(dut.num_channels-1):
             fp.write("Test data reviewed by ______________________________   Date_____________")
         fp.write("\n\n")
-        fp.write("\nPage %d of %d" % ((chan_index+1), len(_chan)))
+        fp.write(f"\nPage {chan_index+1} of {dut.num_channels}")
         caput(f'{_psc}{physical_chan}:WriteQspi-SP', 1) # write all data to qspi
 
         if chan_index<3:
@@ -554,5 +565,4 @@ def run_calibration(dut: DUT):
 if __name__ == "__main__":
     local_dut = DUT()
     local_dut.prompt_inputs()
-    init_local_vars(local_dut)
     run_calibration(local_dut)
