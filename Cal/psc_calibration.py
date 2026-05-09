@@ -4,10 +4,11 @@ import time
 import sys
 import socket
 import os
-import datetime
+from datetime import datetime
 import numpy as np
 from epics import caget, caput
 import serial
+from Common.instrument_addresses import ATE_IP_ADDRESS
 
 # flake8: noqa: E402
 ###############################################################################
@@ -20,9 +21,6 @@ if __name__ == "__main__":
         sys.path.append(parent_dir)
 ###############################################################################
 from Common.initialize_dut import DUT
-
-
-ATE_IP_ADDRESS = '10.69.26.3'
 
 def initialize_qspi(dut: DUT):
     """Writes gains and offsets of 1 and 0, and sets QSPI parameters 
@@ -118,8 +116,7 @@ def run_calibration(dut: DUT):
     instead of hard-coding"""
     _num_chan = dut.num_channels
 
-    now=datetime.datetime.now()
-    formatted_date_time = now.strftime("%Y-%m-%d %H:%M:%S")
+    formatted_date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     cal_params = dut.model.calibration_parameters
 
