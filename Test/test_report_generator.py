@@ -24,7 +24,7 @@ from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
 from reportlab.platypus import Flowable, KeepTogether
 
-from Common.initialize_dut import DUT
+from common.initialize_dut import DUT
 
 # -----------------------------
 # Define a small container for visual style dictionaries

@@ -35,7 +35,7 @@ from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.styles import ParagraphStyle
 
 from Test.test_report_generator import ReportContext
-from Common.initialize_dut import DUT
+from common.initialize_dut import DUT
 
 # -----------------------------
 # Small EPICS helpers
@@ -156,7 +156,7 @@ def fofb_daisy_packet_monotonic_test(dut: DUT, ctx: ReportContext):
     except Exception as e:
         return "FAIL", "", str(e), 999, cmd
 
-    cmd = "./Functional_Tests/caen_fast_genpacket_loop_inf.sh"
+    cmd = "./functional_tests/caen_fast_genpacket_loop_inf.sh"
     process = subprocess.Popen(
         cmd, shell=True, text=True, stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL

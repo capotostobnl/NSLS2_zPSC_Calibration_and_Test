@@ -7,12 +7,13 @@ import os
 from datetime import datetime
 import numpy as np
 from epics import caget, caput
-import serial
-from Common.instrument_addresses import ATE_IP_ADDRESS
+from Instrument_Modules.hp3458a_prologix import HP3458A
+from Instrument_Modules.instrument_addresses import ATE_IP_ADDRESS
+from Instrument_Modules.instrument_addresses import DMM_PORT, DMM_BAUD, DMM_GPIB_ADDR
 
 # flake8: noqa: E402
 ###############################################################################
-#   Add outer directory to path, so app can find Common dir when run standalone
+#   Add outer directory to path, so app can find common dir when run standalone
 if __name__ == "__main__":
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -20,7 +21,7 @@ if __name__ == "__main__":
     if parent_dir not in sys.path:
         sys.path.append(parent_dir)
 ###############################################################################
-from Common.initialize_dut import DUT
+from common.initialize_dut import DUT
 
 #  Formatting Constants for tables
 HEAD_FMT = "{:>38}{:>14}{:>14}{:>14}"
@@ -117,7 +118,9 @@ def initialize_gains_offsets(dut: DUT, chan_index: int):
 def run_calibration(dut: DUT):
     """Executes the calibration routine, but now using the DUT parameters
     instead of hard-coding"""
-    _num_chan = dut.num_channels
+
+    dmm = HP3458A(DMM_PORT, DMM_BAUD, 30, DMM_GPIB_ADDR)
+    dmm.initialize()
 
     formatted_date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -125,40 +128,25 @@ def run_calibration(dut: DUT):
 
     designation = dut.model.designation
     n_dcct = cal_params.ndcct
-    burden_resistor = cal_params.burden_resistors.as_list(_num_chan)
+    burden_resistor = cal_params.burden_resistors.as_list(dut.num_channels)
 
-    string1 = f"Calibrating PSC model {designation} SN {dut.psc_sn}"
-    print(string1)
+    print(f"Calibrating PSC model {designation} SN {dut.psc_sn}")
 
     num_runs=5 # of runs per channel
-
-    ser1 = serial.Serial('/dev/ttyUSB0', 115200, timeout=30)
-    x = ser1.write(b"++addr 24\n")
-    x = ser1.write(b"++auto 0\n")
-    x = ser1.write(b"AZERO ON\n")
-    x = ser1.write(b"NPLC 30\n")
 
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.settimeout(3)
         server_address = (ATE_IP_ADDRESS, 5000)
-        #sock.bind (server_address)
+
     except Exception as err:
         print(f"Socket error: {err}s")
-
-    def get_dmm():
-        ser1.write("TARM SGL\n".encode('utf-8'))
-        time.sleep(1)
-        ser1.write(b"++auto 1\n")
-        data = ser1.read_until(b'\n',1000)
-        ser1.write(b"++auto 0\n")
-        return data
 
     def set_atsdac_cal_source(setpoint_amps):
         y = str(setpoint_amps*50) # 50V/A
         sock.sendto(b'CALDAC' + y.encode('UTF-8') + b'\n', server_address)
 
-    def measure_testpoints(current_measured, sp, verbose, verification):
+    def measure_testpoints(current_measured, sp, verbose, verification, dmm: HP3458A):
         _psc = dut.psc_chan_prefix
         #print("%3.6f" % I)
         #i0 = -current_full_scale*0.1 # unipolar
@@ -205,10 +193,10 @@ def run_calibration(dut: DUT):
                 adc1 = caget(f'{_psc}{physical_chan}:DCCT1-I')
                 adc2 = caget(f'{_psc}{physical_chan}:DCCT2-I')
                 adc3 = caget(f'{_psc}{physical_chan}:DAC-I')
-                dmm = float(get_dmm().decode('utf-8')) - dmm_offs  # reference current i0
+                dmm_rb = dmm.get_reading - dmm_offs  # reference current i0
                 i+=1
                 if abs(adc1+sp) < 0.02*current_full_scale*n_dcct and abs(adc2+sp) < 0.02*current_full_scale*n_dcct and \
-                abs(adc3-sp) < 0.02*current_full_scale*n_dcct and abs(dmm*gtarget*p_scale+sp) < 0.02*current_full_scale*n_dcct:
+                abs(adc3-sp) < 0.02*current_full_scale*n_dcct and abs(dmm_rb*gtarget*p_scale+sp) < 0.02*current_full_scale*n_dcct:
                     x=1 # if all readings good, break loop
                 time.sleep(1)
             if i == 4:
@@ -216,7 +204,7 @@ def run_calibration(dut: DUT):
                 print(f"adc2 = {adc2:3.5f}")
                 print(f"adc3 = {adc3:3.5f}")
                 print(f"sp = {sp:3.5f}")
-                dmm_scaled = dmm*gtarget*p_scale
+                dmm_scaled = dmm_rb*gtarget*p_scale
                 print(f"dmm = {dmm_scaled:3.5f}")
                 print("Calibration failed. Bad initial measurement(s). Try again.")
                 sys.exit()
@@ -226,7 +214,7 @@ def run_calibration(dut: DUT):
                 adc1 = caget(f'{_psc}{physical_chan}:DCCT1-I')
                 adc2 = caget(f'{_psc}{physical_chan}:DCCT2-I')
                 adc3 = caget(f'{_psc}{physical_chan}:DAC-I')
-                dmm = float(get_dmm().decode('utf-8')) - dmm_offs # reference current i0
+                dmm_rb = dmm.get_reading() - dmm_offs # reference current i0
                 i+=1
                 if abs(adc1+sp) < 0.0002*current_full_scale*n_dcct and abs(adc2+sp) < 0.0002*current_full_scale*n_dcct and \
                 abs(adc3-sp) < 0.0002*current_full_scale*n_dcct and abs(dmm*gtarget*p_scale+sp) < 0.0002*current_full_scale*n_dcct:
@@ -290,7 +278,7 @@ def run_calibration(dut: DUT):
 
     for chan_index, physical_chan in enumerate(dut.channel_list): # loop through channels
         _psc = dut.psc_chan_prefix
-        _num_chan = dut.num_channels
+        dut.num_channels = dut.num_channels
 
         #turn all channels off
         caput(_psc+'1:DigOut_ON1-SP', 0)
@@ -309,7 +297,7 @@ def run_calibration(dut: DUT):
         time.sleep(1)
 
         #get dmm zero reading
-        dmm_offs = float(get_dmm().decode('utf-8')) # reference current i0
+        dmm_offs = dmm.get_reading() # reference current i0
         print(f"DMM zero offset reading: {dmm_offs:.7f}")
 
         #set channel j to cal mode
@@ -341,9 +329,9 @@ def run_calibration(dut: DUT):
         y1 = np.zeros(6)
         cal_results = np.zeros((num_runs,8)) # gains/offsets multiple runs
         if abs(current_high_ref) > 0.11:
-            x = ser1.write(b"RANGE 1.0\n")
+            dmm.set_range(1.0)
         if abs(current_high_ref) <= 0.11:
-            x = ser1.write(b"RANGE 0.1\n")
+            dmm.set_range(0.1)
 
         print(_psc+physical_chan)
         print(f"Burden resistor = {burden_resistor[chan_index]:3.4f}")
@@ -366,14 +354,14 @@ def run_calibration(dut: DUT):
                 fp.write(f"Burden resistor = {burden_resistor[chan_index]:%3.4f}\n\n")
                 fp.write("Measuring initial gains and offsets\n")
             #print("Measuring i0")
-            y0 = measure_testpoints(current_low_ref, sp0, 0, 0) # [dmm dac adc1 adc2 adc3 err]
+            y0 = measure_testpoints(current_low_ref, sp0, 0, 0, dmm) # [dmm dac adc1 adc2 adc3 err]
             print_testpoints(y0,'v')
             if k==num_runs-1:
                 fprint_testpoints(y0,'v')
 
             #print("")
             #print("Measuring i1")
-            y1 = measure_testpoints(current_high_ref, sp1, 0, 0) # [dmm dac adc1 adc2 adc3 err]
+            y1 = measure_testpoints(current_high_ref, sp1, 0, 0, dmm) # [dmm dac adc1 adc2 adc3 err]
             #print("   I      dacSP      dcct1      dcct2      dacRB      err")
             print_testpoints(y1,'')
             if k==num_runs-1:
@@ -470,12 +458,12 @@ def run_calibration(dut: DUT):
             print("Verification")
             if k==num_runs-1:
                 fp.write("Verification\n")
-            y0 = measure_testpoints(current_low_ref, sp0, 0, 1) # [dmm dac adc1 adc2 adc3 err]
+            y0 = measure_testpoints(current_low_ref, sp0, 0, 1, dmm) # [dmm dac adc1 adc2 adc3 err]
             print_testpoints(y0,'v')
             if k==num_runs-1:
                 fprint_testpoints(y0,'v')
 
-            y1 = measure_testpoints(current_high_ref, sp1, 0, 1) # [dmm dac adc1 adc2 adc3 err]
+            y1 = measure_testpoints(current_high_ref, sp1, 0, 1, dmm) # [dmm dac adc1 adc2 adc3 err]
             print_testpoints(y1,'')
             if k==num_runs-1:
                 fprint_testpoints(y1,'')

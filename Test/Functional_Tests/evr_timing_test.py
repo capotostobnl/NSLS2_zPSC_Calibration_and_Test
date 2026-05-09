@@ -10,7 +10,7 @@ from matplotlib import pyplot as plt
 from reportlab.platypus import Image
 from reportlab.lib.units import inch
 
-from Common.initialize_dut import DUT
+from common.initialize_dut import DUT
 from Test.test_report_generator import ReportContext
 
 #######################################################################

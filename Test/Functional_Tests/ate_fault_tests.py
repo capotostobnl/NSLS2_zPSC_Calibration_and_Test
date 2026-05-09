@@ -31,8 +31,8 @@ from reportlab.lib.units import inch
 from reportlab.platypus import Table, Spacer
 from reportlab.lib import colors
 
-from Common.initialize_dut import DUT
-from Common.EPICS_Adapters.ate_epics import ATE
+from common.initialize_dut import DUT
+from common.epics_adapters.ate_epics import ATE
 
 # =============================================================================
 # camonitor helpers

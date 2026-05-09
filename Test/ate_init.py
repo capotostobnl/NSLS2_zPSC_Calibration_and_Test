@@ -4,8 +4,8 @@ Original: T. Caracappa
 """
 
 from time import sleep
-from Common.EPICS_Adapters.ate_epics import ATE
-from Common.initialize_dut import DUT
+from common.epics_adapters.ate_epics import ATE
+from common.initialize_dut import DUT
 
 
 def ate_init(ate: ATE, dut: DUT) -> None:

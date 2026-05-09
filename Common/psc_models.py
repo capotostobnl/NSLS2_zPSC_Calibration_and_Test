@@ -126,7 +126,7 @@ class WaveformFlags(NamedTuple):
 @dataclass(frozen=True)
 class SmoothRampTestParams:
     """
-    Encapsulates configuration parameters for the Smooth Ramp Test.
+    Encapsulates configuration parameters for the Smooth Ramp test.
 
     Validates that the PSC can transition between a 'Start' and 'End'
     setpoint at a specific rate without regulation errors.
@@ -340,7 +340,7 @@ class PSCCalculator:
 @dataclass(frozen=True)
 class JumpTestParams:
     """
-    Configuration for the Jump (Step Response) Test.
+    Configuration for the Jump (Step Response) test.
     
     Used to evaluate the control loop stability by measuring overshoot, 
     ringing, and settling time during a sudden current step.
@@ -402,7 +402,7 @@ class PSCModel:
     """
 
     ################################################################################
-    #      Common Parameters
+    #      common Parameters
     ################################################################################
     model_id: str         # Internal ID (e.g., "R1-HSS")
     display_name: str     # Short name for menu (e.g., "R1 2Ch")
@@ -477,7 +477,7 @@ MODELS = {
                 ndcct=1000.0,
                 burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
                             ch3=83.333333, ch4=83.333333),
-                
+
                 fault_limits=PSCFaultThresholdsLimits(
                     ovc1_threshold=ChannelValues(ch1=12, ch2=12, ch3=12, ch4=12),
                     ovc2_threshold=ChannelValues(ch1=24.5, ch2=24.5, ch3=24.5, ch4=24.5),
@@ -607,7 +607,7 @@ MODELS = {
                 ndcct=1000.0,
                 burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
                             ch3=83.333333, ch4=83.333333),
-                
+
                 fault_limits=PSCFaultThresholdsLimits(
                     ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
                     ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
@@ -675,13 +675,13 @@ MODELS = {
         calibration_parameters=CalibrationParameters(
                 ndcct=1000.0,
                 burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333),
-                
+
                 fault_limits=PSCFaultThresholdsLimits(
                     ovc1_threshold=ChannelValues(ch1=10, ch2=10),
                     ovc2_threshold=ChannelValues(ch1=10, ch2=10),
                     ovv_threshold=ChannelValues(ch1=15, ch2=15),
                 ),
-                
+
                 scale_factors=PSCScaleFactors(
                     sf_vout=ChannelValues(ch1=1.9, ch2=1.9),
                     sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0),
@@ -731,7 +731,7 @@ MODELS = {
             ndcct=1000.0,
             burden_resistors=ChannelValues(ch1=33.333333, ch2=33.333333,
                         ch3=33.333333, ch4=33.333333),
-            
+
             fault_limits=PSCFaultThresholdsLimits(
                 ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
                 ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
@@ -800,7 +800,7 @@ MODELS = {
             ndcct=1000.0,
             burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
                                             ch3=83.333333, ch4=83.333333),
-            
+
             fault_limits=PSCFaultThresholdsLimits(
                 ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
                 ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),

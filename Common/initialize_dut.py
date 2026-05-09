@@ -18,8 +18,8 @@ from datetime import datetime
 from dataclasses import dataclass, field
 from typing import Tuple
 from time import sleep
-from Common.EPICS_Adapters.psc_epics import PSC
-from Common.psc_models import get_psc_model_from_user, PSCModel
+from common.epics_adapters.psc_epics import PSC
+from common.psc_models import get_psc_model_from_user, PSCModel
 
 
 @dataclass
@@ -79,19 +79,19 @@ class DUT:
 
     def __post_init__(self):
         """Initialize project-relative paths after the object is created."""
-        # 1. Start at Common/initialize_dut.py
+        # 1. Start at common/initialize_dut.py
         this_file_path = os.path.abspath(__file__)
 
         # 2. Go up one level to get to the project root
         self._project_root = os.path.dirname(os.path.dirname(this_file_path))
 
         # 3. Anchor our data folder to the project root
-        self._data_root = os.path.join(self._project_root, "Test_Data")
+        self._data_root = os.path.join(self._project_root, "test_data")
 
     @property
     def cal_report_dir(self) -> str:
-        """Returns path and creates Cal_Reports ONLY when accessed."""
-        path = os.path.join(self._project_root, "Cal_Reports")
+        """Returns path and creates cal_reports ONLY when accessed."""
+        path = os.path.join(self._project_root, "cal_reports")
         os.makedirs(path, exist_ok=True)
         return path
 

@@ -16,9 +16,9 @@ from reportlab.platypus import Paragraph, Spacer
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER
 
-from Test.test_report_generator import ReportContext
-from Common.initialize_dut import DUT
-from Common.EPICS_Adapters.ate_epics import ATE
+from test.test_report_generator import ReportContext
+from common.initialize_dut import DUT
+from common.epics_adapters.ate_epics import ATE
 
 #######################################################################
 # ******Disable Scientific Notation Conversions on X/Y Axis Plots******
@@ -123,9 +123,9 @@ def jump_test(dut: DUT,
     try:
         flags = getattr(dut.model.jump.waveforms, f"ch{readback_chan}")
         if flags and not getattr(flags, "DAC", True):
-            if getattr(flags, "REG", False): 
+            if getattr(flags, "REG", False):
                 trigger_pv = wfm_pvs.REG
-            elif getattr(flags, "VOLT", False): 
+            elif getattr(flags, "VOLT", False):
                 trigger_pv = wfm_pvs.VOLT
     except AttributeError:
         pass # Keep default
@@ -134,13 +134,13 @@ def jump_test(dut: DUT,
 
     # 2. Fetch Trigger Data and Calculate Window
     trigger_data = np.asarray(dut.psc.get_wfm(readback_chan, trigger_pv))
-    
+
     try:
         # Find the index of maximum change (the jump)
         jump_idx = int(np.argmax(np.abs(np.diff(trigger_data))))
     except ValueError:
         jump_idx = 0
-    
+
     print(f"Detected Jump at Sample Index: {jump_idx}")
 
     # Define the shared window for ALL plots

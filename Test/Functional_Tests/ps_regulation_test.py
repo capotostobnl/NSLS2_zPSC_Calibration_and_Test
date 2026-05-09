@@ -13,9 +13,9 @@ from reportlab.platypus import Paragraph, Spacer
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER
 
-from Test.test_report_generator import ReportContext
-from Common.initialize_dut import DUT
-from Common.EPICS_Adapters.ate_epics import ATE
+from test.test_report_generator import ReportContext
+from common.initialize_dut import DUT
+from common.epics_adapters.ate_epics import ATE
 
 #######################################################################
 # ******Disable Scientific Notation Conversions on X/Y Axis Plots******
@@ -110,7 +110,7 @@ def ps_regulation_test(dut: DUT,
     tolerance = dut.model.reg.tolerance
 
     run = 0
-    
+
     sp_sat = False
 
     while run < 6:
@@ -131,11 +131,11 @@ def ps_regulation_test(dut: DUT,
         elif sp_sat:
             print("SP Satisfied...continuing...")
             break
-    
-    if not sp_sat: 
+
+    if not sp_sat:
         raise RuntimeError("DAC RB Unable to be satisfied after 6 attempts! Exiting!")
     run = 0
-    
+
     # Collect 1 minute of data:
     collection_time = samples * interval
     print(f"Preparing to collect {collection_time} seconds of data "

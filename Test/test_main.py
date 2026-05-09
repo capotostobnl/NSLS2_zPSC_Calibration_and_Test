@@ -8,7 +8,7 @@ import sys
 # pylint: disable=wrong-import-position
 # flake8: noqa: E402
 ###############################################################################
-#   Add outer directory to path, so app can find Common dir when run standalone
+#   Add outer directory to path, so app can find common dir when run standalone
 if __name__ == "__main__":
 
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -17,17 +17,17 @@ if __name__ == "__main__":
         sys.path.append(parent_dir)
 ###############################################################################
 import subprocess
-from Common.EPICS_Adapters.ate_epics import ATE
-from Common.initialize_dut import DUT
-from Test.test_report_generator import start_report, finalize_report, \
+from common.epics_adapters.ate_epics import ATE
+from common.initialize_dut import DUT
+from test.test_report_generator import start_report, finalize_report, \
     channel_section
-from Test.ate_init import ate_init
-from Test.Functional_Tests.evr_timing_test import evr_timing_test
-from Test.Functional_Tests.ate_fault_tests import ate_fault_tests
-from Test.Functional_Tests.ps_regulation_test import ps_regulation_test
-from Test.Functional_Tests.jump_test import jump_test
-from Test.Functional_Tests.smooth_ramp_test import smooth_ramp_test
-from Test.Functional_Tests.fofb_test import \
+from test.ate_init import ate_init
+from test.functional_tests.evr_timing_test import evr_timing_test
+from test.functional_tests.ate_fault_tests import ate_fault_tests
+from test.functional_tests.ps_regulation_test import ps_regulation_test
+from test.functional_tests.jump_test import jump_test
+from test.functional_tests.smooth_ramp_test import smooth_ramp_test
+from test.functional_tests.fofb_test import \
     fofb_daisy_packet_monotonic_test
 
 
@@ -53,7 +53,7 @@ def run_psc_test_suite(dut_instance=None):
         # The launcher passed us a DUT object ready to go.
         dut = dut_instance
 
-    # Initialize hardware connection 
+    # Initialize hardware connection
     dut.init()
 
     ctx, pdf_path = start_report(dut)
@@ -66,7 +66,7 @@ def run_psc_test_suite(dut_instance=None):
                                      dut.model.drive_channels,
                                      dut.model.readback_channels
                                      ):
-    
+
 #    for chan, drive, readback in zip((3, 4), (3, 4), (3, 4)):
         with channel_section(ctx, chan) as sec:
             print("\n\n*******************************************"
@@ -101,7 +101,7 @@ def run_psc_test_suite(dut_instance=None):
 
     finalize_report(ctx)
     print(f"Test complete! See folder for report: {pdf_path}")
-    
+
     try:
         if os.environ.get("DISPLAY"):
             subprocess.Popen(["xdg-open", pdf_path],

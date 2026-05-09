@@ -22,7 +22,7 @@ This application provides a unified interface to calibrate and test PSC units. I
 ### 2. Dependencies
 Install the required Python packages via pip:
 ```bash
-pip install -r Common/requirements.txt
+pip install -r common/requirements.txt
 ```
 *(Note: Ensure your `requirements.txt` is updated and present in the project)*
 
@@ -53,7 +53,7 @@ Upon launching, you will be prompted to select a mode:
 * **Calibrate and Test:** Performs full end-to-end verification.
 
 ### 4. Data Output
-Generated reports and logs are saved dynamically to their respective target directories (e.g., `Cal/Calibration_Data` or `Test_Data`). The system utilizes the following naming convention for PDF reports:
+Generated reports and logs are saved dynamically to their respective target directories (e.g., `Cal/Calibration_Data` or `test_data`). The system utilizes the following naming convention for PDF reports:
 `Calibration_[Model]_SN[Serial]_[Timestamp].pdf`
 
 ---
@@ -61,17 +61,17 @@ Generated reports and logs are saved dynamically to their respective target dire
 ## Architecture Notes
 
 ### The DUT (Device Under Test) Object
-Located in `Common/initialize_dut.py`, the `DUT` class acts as the centralized session manager and state handler for the entire application. 
+Located in `common/initialize_dut.py`, the `DUT` class acts as the centralized session manager and state handler for the entire application. 
 * **Session Persistence:** Operator inputs (such as Serial Number and network details) are captured once upon instantiation and shared across all active sub-modules.
 * **Dynamic Pathing:** It utilizes Python `@property` decorators for attributes like `cal_report_dir` and `test_report_dir`. This "lazy instantiation" ensures that empty directories are not created unless a test actually runs and generates a report.
 
-### Shared Infrastructure (`/Common`)
-The `/Common` directory houses the foundational modules and configurations required by both the testing and calibration routines:
+### Shared Infrastructure (`/common`)
+The `/common` directory houses the foundational modules and configurations required by both the testing and calibration routines:
 * **`initialize_dut.py`:** Instantiates the core `DUT` object.
 * **`psc_models.py`:** A data class serving as a registry of PSC hardware specifications, test toggles, and tolerances.
 
 ### EPICS Communication Layer
-All EPICS communication is abstracted into wrappers located in `/Common/EPICS_Adapters/`:
+All EPICS communication is abstracted into wrappers located in `/common/epics_adapters/`:
 * **`ate_epics.py`:** A driver dedicated to interacting with the ATE Tester IOC.
 * **`psc_epics.py`:** A driver dedicated to interacting with the PSC IOC.
 
@@ -153,18 +153,18 @@ NSLS-II_PSC_CAL_AND_TEST/
 ├── Cal/                    # Calibration-specific logic and reports
 |   ├── psc_calibration_temp.doc  # Temporary calibration document
 │   └── psc_calibration.py  # Primary calibration orchestration
-├── Cal_Reports/            # Generated calibration reports will go here
-├── Common/                 # Shared utilities and hardware definitions
+├── cal_reports/            # Generated calibration reports will go here
+├── common/                 # Shared utilities and hardware definitions
 │   ├── initialize_dut.py   # DUT class (Session management & Path anchoring)
 │   ├── psc_models.py       # Registry of PSC hardware specifications
-│   └── EPICS_Adapters/     # Low-level EPICS communication layers
+│   └── epics_adapters/     # Low-level EPICS communication layers
 │       ├── ate_epics.py    # Driver: Adapter for ATE Tester IOC
 │       └── psc_epics.py    # Driver: Adapter for PSC IOC 
 ├── Test/                   # Functional verification suite
 │   ├── test_main.py        # Primary test orchestration
 │   ├── test_report_generator.py # PDF report generation utilities
 │   ├── ate_init.py         # ATE initialization sequence
-│   └── Functional_Tests/   # Specific test modules
+│   └── functional_tests/   # Specific test modules
 │       ├── ate_fault_tests.py              # Hardware Interlock Validation
 │       ├── evr_timing_test.py              # EVR 1Hz Timestamp check
 │       ├── fofb_test.py                    # FOFB Integration (UDP capture & HDF5)
@@ -173,7 +173,7 @@ NSLS-II_PSC_CAL_AND_TEST/
 │       ├── smooth_ramp_test.py             # Ramp Tracking & FOFB Packet Generation
 │       ├── caen_fast_genpacket.c           # Low-level UDP packet generator (C)
 │       └── caen_fast_genpacket_loop_inf.sh # Shell wrapper for packet generation
-├── Test_Data/              # Functional Test Data and Reports Directory
+├── test_data/              # Functional Test Data and Reports Directory
 ├── .gitignore              # Git ignore rules
 └── README.md               # This file
 ```
