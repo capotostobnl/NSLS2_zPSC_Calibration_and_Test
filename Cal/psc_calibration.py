@@ -1,4 +1,9 @@
-# pylint: disable = missing-module-docstring, missing-function-docstring, missing-class-docstring
+"""
+PSC Calibration Module
+This module loads values for QSPI flash, and calculates required gains and
+offsets to calibrate PSC ADCs and DACs using external traceable calibrated
+instruments and reference standards. 
+"""
 from typing import List
 import time
 import sys
@@ -31,7 +36,7 @@ VAL_FMT  = "{:>14.6f}{:>14.6f}{:>14.6f}{:>14.6f}{:>14.6f}{:>14.6f}"
 
 def initialize_qspi(dut: DUT):
     """Writes gains and offsets of 1 and 0, and sets QSPI parameters 
-    for initial testing"""
+    for initial testing without requiring a full calibration"""
 
     for i, chan_name in enumerate(dut.channel_list):
         write_scale_factor(dut, i)
@@ -42,6 +47,7 @@ def initialize_qspi(dut: DUT):
         print("QSPI Written")
 
 def write_scale_factor(dut: DUT, chan_index: int):
+    """Write the scale factors set in psc_models.py"""
     sf = dut.model.calibration_parameters.scale_factors
     chan = int(dut.channel_list[chan_index])
 
@@ -55,6 +61,7 @@ def write_scale_factor(dut: DUT, chan_index: int):
     dut.psc.set_sf_error(chan, sf.sf_error)
 
 def write_flt_thresholds(dut: DUT, chan_index: int):
+    """Write the fault threhold values set in psc_models.py"""
     #Fault thresholds
     chan = dut.channel_list[chan_index]
 
@@ -67,6 +74,7 @@ def write_flt_thresholds(dut: DUT, chan_index: int):
     dut.psc.set_threshold_ignd(chan, flt.ignd_threshold)
 
 def write_flt_cnt_limits(dut: DUT, chan_index: int):
+    """write the fault count limit values set in psc_models.py"""
     #Fault Count limits
     chan = dut.channel_list[chan_index]
 
@@ -87,6 +95,7 @@ def write_flt_cnt_limits(dut: DUT, chan_index: int):
     dut.psc.set_averaging(chan, 1) #PSC average mode, 167 samples
 
 def initialize_gains_offsets(dut: DUT, chan_index: int):
+    """Set all gains and offsets to unity gains and no offset"""
     #set PSC gains to 1 and offsets to 0
     chan = dut.channel_list[chan_index]
 
@@ -257,7 +266,7 @@ def run_calibration(dut: DUT):
 
     #file_str = "psc_calibration_temp_" + SN + ".doc"
     file_str = "psc_calibration_temp.doc"
-    fp = open(file_str, "w")
+    fp = open(file_str, "w", encoding="utf-8")
     fp.write("Report of Calibration\n")
     fp.write(f"PSC {designation} S/N {dut.psc_sn}\n")
     fp.write(formatted_date_time+"\n\n")

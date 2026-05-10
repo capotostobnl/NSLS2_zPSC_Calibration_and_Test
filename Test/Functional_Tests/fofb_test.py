@@ -36,6 +36,9 @@ from reportlab.lib.styles import ParagraphStyle
 
 from test.test_report_generator import ReportContext
 from common.initialize_dut import DUT
+from instrument_modules.instrument_addresses import FOFB_UDP_IFACE, FOFB_PORT
+
+
 
 # -----------------------------
 # Small EPICS helpers
@@ -121,7 +124,7 @@ def read_pv_array(name):
 # -----------------------------
 
 
-def capture_udp_packets(iface="enp115s0", port=12345, timeout_s=10):
+def capture_udp_packets(iface=FOFB_UDP_IFACE, port=FOFB_PORT, timeout_s=10):
     """
     Capture ALL UDP packets on `port` for `timeout_s` seconds.
     Returns: (status, out, err, returncode, cmd)
