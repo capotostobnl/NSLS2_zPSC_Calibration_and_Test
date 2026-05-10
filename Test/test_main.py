@@ -5,6 +5,7 @@ M. Capotosto 11/11/2025
 
 import os
 import sys
+import subprocess
 # pylint: disable=wrong-import-position
 # flake8: noqa: E402
 ###############################################################################
@@ -16,9 +17,6 @@ if __name__ == "__main__":
     if parent_dir not in sys.path:
         sys.path.append(parent_dir)
 ###############################################################################
-import subprocess
-from common.epics_adapters.ate_epics import ATE
-from common.initialize_dut import DUT
 from test.test_report_generator import start_report, finalize_report, \
     channel_section
 from test.ate_init import ate_init
@@ -29,6 +27,9 @@ from test.functional_tests.jump_test import jump_test
 from test.functional_tests.smooth_ramp_test import smooth_ramp_test
 from test.functional_tests.fofb_test import \
     fofb_daisy_packet_monotonic_test
+
+from common.epics_adapters.ate_epics import ATE
+from common.initialize_dut import DUT
 
 
 def run_psc_test_suite(dut_instance=None):

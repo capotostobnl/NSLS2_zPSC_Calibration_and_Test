@@ -97,8 +97,8 @@ class DUT:
 
     @property
     def test_report_dir(self) -> str:
-        """Returns path and creates Test_Reports ONLY when accessed."""
-        path = os.path.join(self._project_root, "Test_Reports")
+        """Returns path and creates test_reports ONLY when accessed."""
+        path = os.path.join(self._project_root, "test_reports")
         os.makedirs(path, exist_ok=True)
         return path
 

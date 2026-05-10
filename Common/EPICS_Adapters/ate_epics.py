@@ -9,7 +9,7 @@ from typing import Literal, Iterable, Optional, Any
 from dataclasses import dataclass
 from epics import caget, caput
 from epics.ca import ChannelAccessException
-from Common.initialize_dut import DUT
+from common.initialize_dut import DUT
 
 Mode = Literal["TEST", "CAL"]
 Polarity = Literal["BPC", "UPC"]  # bo ZNAM/ONAM

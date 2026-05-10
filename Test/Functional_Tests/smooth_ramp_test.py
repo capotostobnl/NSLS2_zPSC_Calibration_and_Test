@@ -13,7 +13,7 @@ from reportlab.platypus import Paragraph, Spacer
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.enums import TA_CENTER
 
-from Test.test_report_generator import ReportContext
+from test.test_report_generator import ReportContext
 from common.initialize_dut import DUT
 from common.epics_adapters.ate_epics import ATE
 

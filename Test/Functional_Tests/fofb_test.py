@@ -34,7 +34,7 @@ from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.styles import ParagraphStyle
 
-from Test.test_report_generator import ReportContext
+from test.test_report_generator import ReportContext
 from common.initialize_dut import DUT
 
 # -----------------------------

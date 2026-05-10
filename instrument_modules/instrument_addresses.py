@@ -1,7 +1,7 @@
 """Library of equipment addresses, serial, IP, or otherwise"""
 
 #  ATE
-ATE_IP_ADDRESS = '10.69.26.3'
+ATE_PREFIX = "PSCtest:"
 
 #  DMM
 DMM_PORT = '/dev/ttyUSB0'
