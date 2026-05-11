@@ -1,3 +1,4 @@
+//caen_fast_genpacket.c
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

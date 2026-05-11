@@ -22,6 +22,8 @@ Dependencies:
 
 import os
 import sys
+import socket
+import struct
 from datetime import datetime
 from time import sleep
 import subprocess
@@ -34,6 +36,7 @@ from reportlab.platypus import Table, Paragraph, Preformatted
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.styles import ParagraphStyle
+
 
 # flake8: noqa: E402
 # pylint: disable=wrong-import-position
@@ -52,9 +55,30 @@ if __name__ == "__main__":
 from testing.test_report_generator import ReportContext
 from common.initialize_dut import DUT
 from instrument_modules.instrument_addresses import FOFB_UDP_IFACE, FOFB_PORT
-from testing.test_report_generator import start_report
+from testing.test_report_generator import start_report, finalize_report
 
 
+def send_fofb_packet(ip, port, protocol_id, command, nonce, setpoint_pairs):
+    """
+    Replaces caen_fast_genpacket.c.
+    Packs data into Big-Endian binary format and sends via UDP.
+    """
+    # Header: Protocol ID (H), Command (H), Nonce (Q)
+    # '>' indicates Big-Endian (Standard for network protocols)
+    packet = struct.pack(">HHQ", protocol_id, command, nonce)
+
+    # Append pairs: Address (H), Setpoint (f - IEEE 754 float)
+    for addr, val in setpoint_pairs:
+        packet += struct.pack(">Hf", addr, val)
+
+    # Standard UDP socket (does not require sudo for high ports)
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+        sock.sendto(packet, (ip, port))
+
+# Example usage to match your main() logic:
+target_ip = "10.69.26.55"
+target_port = 12345
+pairs = [(0x0, 11.50000), (0x1, 11.50001), (0x2, 11.50002), (0x3, 11.50003)]
 
 # -----------------------------
 # Small EPICS helpers
@@ -175,12 +199,17 @@ def fofb_daisy_packet_monotonic_test(dut: DUT, ctx: ReportContext):
     except Exception as e:
         return "FAIL", "", str(e), 999, cmd
 
-    cmd = "./Functional_Tests/caen_fast_genpacket_loop_inf.sh"
-    process = subprocess.Popen(
-        cmd, shell=True, text=True, stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
-    )
 
+    #####################################################################################
+    #  Packet Generator
+    #####################################################################################
+    target_ip = "10.69.26.55"
+    target_port = 12345
+    pairs = [(0x0, 11.5), (0x1, 11.50001), (0x2, 11.50002), (0x3, 11.50003)]
+    send_fofb_packet(target_ip, target_port, 0x7631, 0x0010, 0x00000000BA5EBA11, pairs)
+
+    #####################################################################################
+    
     num_channels = int(dut.num_channels)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -321,7 +350,6 @@ def fofb_daisy_packet_monotonic_test(dut: DUT, ctx: ReportContext):
              colors.lightgreen if status == "PASS" else colors.red)
         ])
         ctx.elements.append(t_udp)
-        process.terminate()
 
     return ctx.elements
 
@@ -334,3 +362,4 @@ if __name__ == "__main__":
 
     ctx, pdf_path = start_report(dut)
     fofb_daisy_packet_monotonic_test(dut, ctx)
+    finalize_report(ctx)
