@@ -37,38 +37,43 @@ DATA_FMT = "{:<29}{:>9.6f}{:>14.6f}{:>14.6f}{:>14.6f}"
 VAL_FMT  = "{:>14.6f}{:>14.6f}{:>14.6f}{:>14.6f}{:>14.6f}{:>14.6f}"
 
 def save_report_with_reportlab(txt_path, pdf_path):
-    """Converts the text report into a PDF using Liberation Mono 10pt."""
+    """Converts report to PDF with a guaranteed page break and footer placement."""
     
-    # Register the font (adjust path if your distro stores them elsewhere)
     font_path = "/usr/share/fonts/truetype/liberation/LiberationMono-Regular.ttf"
     try:
         pdfmetrics.registerFont(TTFont('LibMono', font_path))
         font_name = 'LibMono'
     except:
-        print("Warning: Liberation Mono not found, falling back to Courier.")
         font_name = 'Courier'
 
     c = canvas.Canvas(pdf_path, pagesize=letter)
-    c.setFont(font_name, 10) # Set to 10pt as requested
-    
-    y_position = 750
-    line_height = 13  # Increased slightly for 10pt text
-    
+
+    start_y = 750
+    line_height = 12
+    y_position = start_y
+
     with open(txt_path, "r", encoding="utf-8") as f:
-        for line in f:
-            if "\f" in line:
-                c.showPage()
-                c.setFont(font_name, 10)
-                y_position = 750
+        content = f.read()
+        
+    pages = content.split('\f')
+
+    for page_index, page_content in enumerate(pages):
+        c.setFont(font_name, 10)
+        y_position = start_y
+        
+        lines = page_content.splitlines()
+        
+        for line in lines:
+            if "Page " in line and " of " in line:
+                c.drawString(50, 72, line.strip())
             else:
+                # Normal line drawing
                 c.drawString(50, y_position, line.rstrip())
                 y_position -= line_height
-                
-            if y_position < 50:
-                c.showPage()
-                c.setFont(font_name, 10)
-                y_position = 750
-                
+
+        if page_index < len(pages) - 1:
+            c.showPage()
+
     c.save()
 
 def initialize_qspi(dut: DUT):
@@ -189,6 +194,7 @@ def run_calibration(dut: DUT):
     print(f"Calibrating PSC model {designation} SN {dut.psc_sn}")
 
     num_runs=5 # of runs per channel
+    #num_runs=1 # of runs per channel
 
     def set_atsdac_cal_source(setpoint_amps):
         ate.set_cal_dac(setpoint_amps * 50)  # 50V/A
@@ -232,6 +238,7 @@ def run_calibration(dut: DUT):
         error_limit = current_full_scale * 2
 
         for adj_attempt in range(13):  # 0 to 12...
+        #for adj_attempt in range(1):  # 0 to 12...
             dut.psc.set_dac_setpt(physical_chan, setpoint)
             sleep(settling_time)
             err = dut.psc.get_error_i(physical_chan)
@@ -328,6 +335,7 @@ def run_calibration(dut: DUT):
     fp.write("Calibration Resistance standard: Fluke 742A-1 S/N 1063008\n")
     fp.write("End Header\n\n\n")
 
+    #for chan_index, physical_chan in enumerate(['1']):
     for chan_index, physical_chan in enumerate(dut.channel_list): # loop through channels
         _psc = dut.psc_chan_prefix
         dut.num_channels = dut.num_channels
@@ -469,15 +477,15 @@ def run_calibration(dut: DUT):
             adc3 = dut.psc.get_dac(physical_chan)
             sleep(0.5)
             y0[4] = adc3
-            print("DAC SP   DAC RB")
-            print(f"{sp0:2.6f}   {y0[4]:2.6f} ")
+            print(f"{'DAC SP':>12} {'DAC RB':>12}\n")
+            print(f"{sp0:>12.6f}   {y0[4]:>12.6f} ")
 
             if k==num_runs-1:
                 fp.write("\n")
                 fp.write("Measuring DAC readback gain and offset\n")
                 #fp.write("Measuring sp0\n")
-                fp.write("DAC SP   DAC RB\n")
-                fp.write(f"{sp0:2.6f}   {y0[4]:2.6f} \n")
+                fp.write(f"{'DAC SP':>12} {'DAC RB':>12}\n")
+                fp.write(f"{sp0:>12.6f} {y0[4]:>12.6f}\n")
 
             #print("Measuring sp1")
             dut.psc.set_dac_setpt(physical_chan, sp1)
@@ -485,17 +493,13 @@ def run_calibration(dut: DUT):
             adc3 = adc3 = dut.psc.get_dac(physical_chan)
             sleep(0.5)
             y1[4] = adc3
-            print(f"{sp1:2.6f}   {y1[4]:2.6f} ", end="")
+            print(f"{sp1:>12.6f}   {y1[4]:>12.6f} ", end="")
             print("")
             if k==num_runs-1:
-                fp.write(f"{sp1:2.6f}   {y1[4]:2.6f} \n")
+                fp.write(f"{sp1:>12.6f}   {y1[4]:>12.6f} \n")
 
             m3 = (y1[4]-y0[4])/(sp1-sp0)
             b3 = y0[4]-m3*sp0
-
-            fp.write(f"Measured offset: {b3}\n") #initial measured offsets
-            fp.write(f"Measured gain: {m3}\n") #initial measured gains
-            fp.write(f"Gain correction: {1/m3}\n")
 
             print("")
             print("Writing gain and offset constants for dacRB to PSC")
@@ -507,9 +511,9 @@ def run_calibration(dut: DUT):
 
             if k==num_runs-1:
                 fp.write("\n")
-                fp.write(f"Measured offset: {b3}\n") #initial measured offsets
-                fp.write(f"Measured gain: {m3}\n") #initial measured gains
-                fp.write(f"Gain correction: {1/m3}\n")
+                fp.write(f"Measured offset: {b3:.6f}\n") #initial measured offsets
+                fp.write(f"Measured gain: {m3:.6f}\n") #initial measured gains
+                fp.write(f"Gain correction: {1/m3:.6f}\n")
                 fp.write("\n")
                 fp.write("Writing gain and offset constants for dacRB to PSC\n\n")
 

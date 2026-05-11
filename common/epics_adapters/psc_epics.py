@@ -158,6 +158,10 @@ class PSC:
         """Set Park Command (1/True=Park, 0/False=Unpark)."""
         return self.safe_put("DigOut_Park-SP", int(val), ch=ch)
 
+    def set_rate(self, ch: int, rate: float) -> bool:
+        """Set the current ramp rate (Amps/second)."""
+        return self.safe_put("SF:AmpsperSec-SP", rate, ch=ch)
+
     def set_op_mode(self, ch: int, mode: int | str) -> bool:
         """Set the operational mode (e.g., 3 for Jump/Waveform)."""
         return self.safe_put("DAC_OpMode-SP", mode, ch=ch, wait=True)
