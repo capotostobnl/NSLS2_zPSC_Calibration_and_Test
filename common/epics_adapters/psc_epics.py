@@ -108,7 +108,7 @@ class PSC:
     def put(self, suffix: str, value: Any, *, ch: Optional[int] = None,
             wait: bool = True, timeout: Optional[float] = None) -> bool:
         """Raw wrapper around caput."""
-        print(f"DBUG: PV: {self.pv(suffix, ch=ch)}, Value: {value}")
+        #print(f"DBUG: PV: {self.pv(suffix, ch=ch)}, Value: {value}")
         return bool(caput(self.pv(suffix, ch=ch), value, wait=wait,
                           timeout=timeout or self.timeout))
 

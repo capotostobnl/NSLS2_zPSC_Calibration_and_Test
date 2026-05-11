@@ -58,11 +58,6 @@ class DUT:
     model: PSCModel = field(init=False)
 
     @property
-    def num_channels(self) -> int:
-        """Returns number of channels for the model, used in cal script primarily"""
-        return len(self.model.channels)
-
-    @property
     def channel_list(self) -> list:
         """Returns a list of channels as strings, used in cal script primarily"""
         return [str(c) for c in self.model.channels]
@@ -131,7 +126,7 @@ class DUT:
         self.model = get_psc_model_from_user(self.num_channels)
 
         # Raw Logs are created immediately
-        raw_logs_root = os.path.join(self._data_root, "Raw_Logs")
+        raw_logs_root = os.path.join(self._data_root, "raw_logs")
         self.raw_data_dir, self.dir_timestamp = \
             self.make_rawdata_subdir(raw_logs_root)
 

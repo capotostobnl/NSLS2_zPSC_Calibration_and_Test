@@ -11,7 +11,7 @@ class HP3458A:
                  gpib_addr: int =24
                  ) -> None:
 
-        self.ser = serial.Serial(port, baud_rate, timeout)
+        self.ser = serial.Serial(port=port, baudrate=baud_rate, timeout=timeout)
         self.gpib_addr = gpib_addr
 
     def initialize(self) -> None:
@@ -33,7 +33,7 @@ class HP3458A:
         self.ser.write(b"++auto 1\n")
         data = self.ser.read_until(b'\n', 1000)
         self.ser.write(b"++auto 0\n")
-        return float(data.decode('ascii').stirp())
+        return float(data.decode('ascii').strip())
 
     def close(self) -> None:
         """Close connection"""
