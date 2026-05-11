@@ -391,9 +391,12 @@ def run_calibration(dut: DUT):
             dmm.set_range(0.1)
             sleep(0.5)
 
+        print("*******************************************************************")
+        print("*******************************************************************")
         print(_psc+physical_chan)
         print(f"Burden resistor = {burden_resistor[chan_index]:3.4f}")
-
+        print("*******************************************************************")
+        print("*******************************************************************")
         write_scale_factor(dut, chan_index)
         write_flt_thresholds(dut, chan_index)
         write_flt_cnt_limits(dut, chan_index)
