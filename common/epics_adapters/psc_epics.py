@@ -488,9 +488,9 @@ class PSC:
         raw = self.safe_get("Bandwidth-Mode", as_string=True)
         return str(raw)[:1]
 
-    def get_polarity(self) -> str:
+    def get_polarity(self, ch: int) -> str:
         """Read Polarity-Mode string."""
-        raw = self.safe_get("Polarity-Mode", as_string=True)
+        raw = self.safe_get("Polarity-Mode", ch=ch, as_string=True)
         return str(raw)
 
     def get_error_i(self, ch: int) -> float:

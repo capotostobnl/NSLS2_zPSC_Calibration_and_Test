@@ -104,7 +104,7 @@ class DUT:
     num_channels: int = field(init=False, default=2)
     resolution: str = field(init=False, default="")
     bandwidth: str = field(init=False, default="")
-    polarity: str = field(init=False, default="")
+    polarity: list[str] = field(init=False, default_factory=list)
 
     # --- operator input ---
     def prompt_inputs(self):
@@ -138,14 +138,17 @@ class DUT:
         self.num_channels = self.psc.get_num_channels()
         self.resolution = self.psc.get_resolution()
         self.bandwidth = self.psc.get_bandwidth()
-        self.polarity = self.psc.get_polarity()
+        self.polarity = []
+        for chan in range(1, self.num_channels + 1):
+            pol = self.psc.get_polarity(chan)
+            self.polarity.append(pol)
 
         # Test that EEPROM Values aren't Zeroed...
         print("\n\n\n Reading EEPROM...")
         print(f"EEPROM # Of Channels: {self.num_channels}")
         print(f"EEPROM Resolution: {self.resolution}")
         print(f"EEPROM Bandwidth: {self.bandwidth}")
-        print(f"EEPROM Polarity: {self.polarity}")
+        print(f"EEPROM Polarity: {', '.join(self.polarity)}")
         print("\n\n\n")
         if self.num_channels not in [2, 4]:
             raise ConnectionError("Could not detect valid PSC channels at "
@@ -159,7 +162,7 @@ class DUT:
             raise ConnectionError("Could not detect valid PSC at "
                                   f"{self.pv_prefix}. Check EEPROM is "
                                   "Configured, PSC is connected. ")
-        if self.polarity[:1] not in ["B", "U"]:
+        if not all(p[:1] in ["B", "U"] for p in self.polarity):
             raise ConnectionError("Could not detect valid PSC at "
                                   f"{self.pv_prefix}. Check EEPROM is "
                                   "Configured, PSC is connected. ")
