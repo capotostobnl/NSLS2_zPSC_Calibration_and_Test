@@ -1,7 +1,6 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{}%
 \contentsline {chapter}{\numberline {2}zPSC Chassis Overview}{3}{}%
 \contentsline {section}{\numberline {2.1}Introduction}{3}{}%
-\contentsline {section}{\numberline {2.2}Mechanical Specifications}{3}{}%
-\contentsline {section}{\numberline {2.3}Internal Component Layout}{3}{}%
+\contentsline {section}{\numberline {2.2}Internal Component Layout}{3}{}%
 \contentsline {chapter}{\numberline {3}zPSC Connections}{5}{}%
 \contentsline {chapter}{\numberline {4}ATE Connections}{7}{}%

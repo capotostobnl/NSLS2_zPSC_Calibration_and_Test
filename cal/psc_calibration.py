@@ -212,14 +212,15 @@ def run_calibration(dut: DUT):
         assert dut.psc is not None
 
         # Set Local Parameters for the DUT object
+        burden_resistor = cal_params.burden_resistors.as_list(dut.num_channels)
         n_dcct = dut.model.calibration_parameters.ndcct
-        p_scale = dut.model.calc.get_p_scale_factor(physical_chan)
-        current_full_scale = 1.0 / burden_resistor[chan_index] # max burden current
+        p_scale = dut.model.calc.get_p_scale_factor(int(physical_chan))
+        current_full_scale = 1.0 / burden_resistor[int(physical_chan)-1] # max burden current
 
-
+        
         # Set Calibration Source
         for _ in range(4):
-            set_atsdac_cal_source(-current_measured)
+            set_atsdac_cal_source(current_measured)
             sleep(0.5)
 
         # Validate source config
@@ -233,27 +234,28 @@ def run_calibration(dut: DUT):
 
         settling_time=2
 
-        # choose current_full_scale*2 as max allowable value of
-        # error for null.
-        error_limit = current_full_scale * 2
+        dut.psc.set_dac_setpt(physical_chan, setpoint)
+        sleep(settling_time)
 
-        for adj_attempt in range(13):  # 0 to 12...
-        #for adj_attempt in range(1):  # 0 to 12...
+        error = dut.psc.get_error_i(physical_chan)
+
+        adj_attempt = 0
+        while (abs(error) > (current_full_scale * 2) and adj_attempt < 12) or adj_attempt == 0:
+            if adj_attempt > 0: # Don't print adjustment 0
+                print(f"  adjustment {adj_attempt}")
+                
+            setpoint = setpoint - (error / 400.0 * p_scale)
             dut.psc.set_dac_setpt(physical_chan, setpoint)
             sleep(settling_time)
-            err = dut.psc.get_error_i(physical_chan)
-            sleep(0.5)
-
-            # Exit condition: Error is low enough (skip first run to ensure update)
-            if adj_attempt > 0 and abs(err) <= error_limit:
-                break
+            error = dut.psc.get_error_i(physical_chan)
+            adj_attempt += 1
+            
+            #print(f"DBUG: setpoint = {setpoint}")
+            #print(f"DBUG: error = {error}")
 
             if adj_attempt == 12:
-                raise RuntimeError("Calibration failed. Could not null error. Try again.")
-
-
-            setpoint = setpoint - (err/400*p_scale)
-            print(f"adjustment {adj_attempt}") # : Error ={err:.6f}")
+                print("Calibration failed. Could not null error. Try again.")
+                sys.exit()
 
         #  Measurement Loop
         if verification:
@@ -263,38 +265,38 @@ def run_calibration(dut: DUT):
 
         threshold = tolerance * current_full_scale * n_dcct
 
-        for _ in range(4):  # 4 attempts
+        check_attempt = 0
+        success = False
 
+        while check_attempt < 4 and not success:
             adc1 = dut.psc.get_dcct1(physical_chan)
-            sleep(0.5)
             adc2 = dut.psc.get_dcct2(physical_chan)
-            sleep(0.5)
             adc3 = dut.psc.get_dac(physical_chan)
-            sleep(0.5)
-            dmm_raw = dmm.get_reading()
-            sleep(0.5)
 
-            # Calculate scaled DMM current
-            dmm_current = (dmm_raw - dmm_offs) * gtarget * p_scale
+            dmm_raw = float(dmm.get_reading()) - dmm_offs
+            dmm_scaled = dmm_raw * n_dcct
 
-            # Validate readings
-            check1 = abs(abs(adc1) - setpoint) < threshold
-            check2 = abs(abs(adc2) - setpoint) < threshold
-            check3 = abs(abs(adc3) - setpoint) < threshold
-            check4 = abs(abs(dmm_current) - setpoint) < threshold
+            check_attempt += 1
 
-            if all([check1, check2, check3, check4]):
-                return[dmm_current, setpoint, adc1, adc2, adc3, err]
+            check1 = abs(adc1 - setpoint) < threshold
+            check2 = abs(adc2 - setpoint) < threshold
+            check3 = abs(adc3 - setpoint) < threshold
+            check4 = abs(dmm_scaled + setpoint) < threshold
 
-            sleep(1.0)
+            if check1 and check2 and check3 and check4:
+                success = True
+            else:
+                if check_attempt < 4:
+                    sleep(1)
 
-        # If all three attempts fail...
-        print(f"adc1 = {adc1:3.5f}")
-        print(f"adc2 = {adc2:3.5f}")
-        print(f"adc3 = {adc3:3.5f}")
-        print(f"sp = {setpoint:3.5f}")
-        print("")
-        raise RuntimeError("Calibration failed. Bad verification measurement(s). Try again.")
+        if not success:
+            print(f"    Target: {-setpoint:3.5f}")
+            print(f"    ADC1:   {adc1:3.5f} | ADC2: {adc2:3.5f}")
+            print(f"    DAC RB: {adc3:3.5f} | DMM:  {dmm_scaled:3.5f}")
+            print(f"    Tolerance: {tolerance:3.6f}")
+            sys.exit("Calibration failed. Bad verification measurement(s). Try again.")
+
+        return[dmm_scaled, setpoint, adc1, adc2, adc3, error]
 
 
     def compute_m_b(y0, y1):
@@ -302,12 +304,15 @@ def run_calibration(dut: DUT):
         m2 = (y1[3]-y0[3])/(y1[0]-y0[0])
         m3 = (y1[4]-y0[4])/(y1[1]-y0[1])
         mdac = (y1[1]-y0[1])/(y1[0]-y0[0])
-        b1 = y0[2]-m1*y0[0]
-        b2 = y0[3]-m2*y0[0]
+        b1_raw = y0[2]-m1*y0[0]
+        b1 = b1_raw if m1 >0 else -b1_raw
+        b2_raw = y0[3]-m2*y0[0]
+        b2 = b2_raw if m2 >0 else -b2_raw
         b3 = y0[4]-m3*y0[1]
-        bdac = y0[1]-mdac*y0[0]
-
-        return abs(mdac), abs(m1), abs(m2), abs(m3), bdac, b1, b2, b3
+        bdac_raw = y0[1]-mdac*y0[0]
+        bdac = bdac_raw if mdac > 0 else -bdac_raw
+        #print(f"DBUG: mdac={mdac:.4f}, m1={m1:.4f}, m2={m2:.4f}")
+        return mdac, m1, m2, m3, bdac, b1, b2, b3
 
     def print_testpoints(y, v):
         if v=='v':
@@ -352,8 +357,6 @@ def run_calibration(dut: DUT):
             ate.set_mode(_chan, 0)
             sleep(.5)
 
-        dut.psc.set_op_mode(physical_chan, 3)
-
         #turn calibration source off
         ate.set_cal_state(0)
         sleep(0.5)
@@ -368,17 +371,15 @@ def run_calibration(dut: DUT):
         #turn on cal source
         ate.set_cal_state(1)
         sleep(0.5)
-        #gtarget = burden_resistor[chan_index]*10.0 # V/A
-        gtarget = dut.model.calc.get_s_scale_factor(physical_chan)
 
         #G = n_dcct/gtarget # power supply scale factor A/V
         p_scale = dut.model.calc.get_p_scale_factor(physical_chan)
 
         current_full_scale = 1.0/burden_resistor[chan_index] # max burden current
         #print(current_full_scale)
-        current_low_ref = 1.0/n_dcct # 1 A
+        current_low_ref = -1.0/n_dcct # 1 A
         sp0 = 1.0
-        current_high_ref = (float(round(current_full_scale*0.9*1000)/1000)) # round to nearest mA
+        current_high_ref = -(float(round(current_full_scale*0.9*1000)/1000)) # round to nearest mA
 
         # sp1 = float(int(10*G*0.9)) # must be close to current
         # setting to keep error from saturating
@@ -464,9 +465,9 @@ def run_calibration(dut: DUT):
             sleep(2)
             # offset constants are subtracted from ADC readings and DAC setpoint
             # write m1, m2, mdac, b1, b2, bdac to PSC (do not write m3, b3)
-            dut.psc.set_gain_dcct1(physical_chan, 1/m1)
-            dut.psc.set_gain_dcct2(physical_chan, 1/m2)
-            dut.psc.set_gain_dac_setpoint(physical_chan, mdac)
+            dut.psc.set_gain_dcct1(physical_chan, abs(1/m1))
+            dut.psc.set_gain_dcct2(physical_chan, abs(1/m2))
+            dut.psc.set_gain_dac_setpoint(physical_chan, abs(mdac))
             sleep(1)
             dut.psc.set_offset_dcct1(physical_chan, b1)
             dut.psc.set_offset_dcct2(physical_chan, b2)
@@ -510,7 +511,7 @@ def run_calibration(dut: DUT):
             print("Writing gain and offset constants for dacRB to PSC")
             sleep(2)
             # write m3, b3 to PSC
-            dut.psc.set_gain_dac_readback(physical_chan, 1/m3)
+            dut.psc.set_gain_dac_readback(physical_chan, abs(1/m3))
             dut.psc.set_offset_dac_readback(physical_chan, b3)
             sleep(1)
 
