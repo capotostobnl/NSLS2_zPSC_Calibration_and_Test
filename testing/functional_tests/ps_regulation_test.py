@@ -269,8 +269,9 @@ def _save_stability_plot(data, avg, target, tolerance, title, label,
              fontsize=10, verticalalignment="top", bbox=ctx.theme.props)
 
     # Pass/Fail Logic
-    # Loopback is positive (avg - target), DCCTs are negative (avg + target)
-    err = abs(avg - target) if "Loopback" in label else abs(avg + target)
+    # Loopback is positive (avg - target), 
+    # DCCTs are *now* positive with new FW...(avg + target)
+    err = abs(avg - target) if "Loopback" in label else abs(avg - target)
 
     tol_ma = tolerance * 1000
     is_pass = err < tolerance
