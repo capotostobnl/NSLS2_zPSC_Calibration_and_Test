@@ -57,6 +57,8 @@ def jump_test(dut: DUT,
 
     assert dut.psc is not None
 
+    ate.set_polarity(dut.psc.get_polarity(chan))
+
     # --- HARDWARE INITIALIZATION ---
     # Configure ground current monitoring and snapshot window
     jump_params = dut.model.jump
@@ -70,8 +72,8 @@ def jump_test(dut: DUT,
     ate.set_ignd_channel(drive_chan)
     sleep(0.5)
     ate.set_ignd_value(ignd_setpoint, drive_chan, dut)
-    print(f"Set CH{drive_chan} ignd to {ignd_setpoint}, waiting 5 seconds settling"
-          " time...")
+    print(f"Set CH{drive_chan} ignd to {ignd_setpoint}, waiting 5 "
+          "seconds settling time...")
     sleep(5)
 
     wfm_pvs = dut.psc.WfmPV
@@ -83,7 +85,8 @@ def jump_test(dut: DUT,
     # --- BASELINE STABILIZATION ---
     # Ensure the PSC is at the starting current before the jump
     dut.psc.set_dac_setpt(drive_chan, start_sp)
-    print(f"DAC SP: {start_sp} \nDAC RB: {dut.psc.get_dac(drive_chan)}(ramping)")
+    print(f"DAC SP: {start_sp} \nDAC RB: {dut.psc.get_dac(drive_chan)}"
+          "(ramping)")
     dut.psc.flush_io()
     sleep(10)
 
@@ -96,7 +99,8 @@ def jump_test(dut: DUT,
         sleep(1)
         if timeout == 30:
             print("Unable to reach Start SP in 30 seconds..."
-                  f"DAC SP: {start_sp}A, DAC RB: {dut.psc.get_dac(drive_chan)}")
+                  f"DAC SP: {start_sp}A, DAC RB: "
+                  f"{dut.psc.get_dac(drive_chan)}")
             raise SystemExit
 
     # --- TRANSIENT CAPTURE ---
@@ -119,7 +123,7 @@ def jump_test(dut: DUT,
 
     # --- DATA ANALYSIS & INDEXING ---
     # Detect jump location and define crop windows
-    trigger_pv = wfm_pvs.DAC # Default
+    trigger_pv = wfm_pvs.DAC  # Default
     try:
         flags = getattr(dut.model.jump.waveforms, f"ch{readback_chan}")
         if flags and not getattr(flags, "DAC", True):
@@ -128,7 +132,7 @@ def jump_test(dut: DUT,
             elif getattr(flags, "VOLT", False):
                 trigger_pv = wfm_pvs.VOLT
     except AttributeError:
-        pass # Keep default
+        pass  # Keep default
 
     print(f"Calculating Jump Index using Trigger PV: {trigger_pv}")
 
@@ -161,14 +165,15 @@ def jump_test(dut: DUT,
         # pylint: enable=line-too-long
     ]
 
-
     channel_flags = getattr(dut.model.jump.waveforms, f"ch{readback_chan}")
 
     waveform_configs = []
 
     for pv, y_label, f_title, z_title, label in waveform_metadata:
         # 2. Check the flag on the specific channel object, not the container
-        # If channel_flags is None (undefined in model), default to True (plot everything)
+        # If channel_flags is None (undefined in model), default to True
+        # (plot everything)
+
         if channel_flags is None or getattr(channel_flags, label, True):
             data = dut.psc.get_wfm(readback_chan, pv)
             waveform_configs.append((data, y_label, f_title, z_title, label))

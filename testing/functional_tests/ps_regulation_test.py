@@ -71,6 +71,8 @@ def ps_regulation_test(dut: DUT,
     """
     assert dut.psc is not None
 
+    ate.set_polarity(dut.psc.get_polarity(chan))
+
     print(f"Preparing PSC Channel {chan} for Regulation test...")
     dut.psc.set_fault_mask_all(drive_chan, 0)
     ate.set_ignd_channel(drive_chan)
@@ -133,7 +135,8 @@ def ps_regulation_test(dut: DUT,
             break
 
     if not sp_sat:
-        raise RuntimeError("DAC RB Unable to be satisfied after 6 attempts! Exiting!")
+        raise RuntimeError("DAC RB Unable to be satisfied after 6 attempts!"
+                           " Exiting!")
     run = 0
 
     # Collect 1 minute of data:

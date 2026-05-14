@@ -33,7 +33,6 @@ from reportlab.lib import colors
 
 from common.initialize_dut import DUT
 from common.epics_adapters.ate_epics import ATE
-
 # =============================================================================
 # camonitor helpers
 # =============================================================================
@@ -325,6 +324,7 @@ def ate_fault_tests(dut: DUT, ate: ATE, section: list, chan: int):
     print("==============================================")
     print(f"Channel: {chan}\n")
 
+    ate.set_polarity(dut.psc.get_polarity(chan))
     # Basic PSC setup
     dut.psc.set_dac_setpt(chan, 0)
     time.sleep(0.5)

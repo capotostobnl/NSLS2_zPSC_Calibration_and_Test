@@ -75,6 +75,8 @@ def smooth_ramp_test(dut: DUT,
     """
     assert dut.psc is not None
 
+    ate.set_polarity(dut.psc.get_polarity(chan))
+
     ignd_sp = 0.1
     ate.set_ignd_channel(chan)
     sleep(0.5)
@@ -151,7 +153,8 @@ def smooth_ramp_test(dut: DUT,
     waveform_configs = []
     for pv, y_label, title, label in waveform_metadata:
         # 2. Check the flag on the specific channel object, not the container
-        # If channel_flags is None (undefined in model), default to True (plot everything)
+        # If channel_flags is None (undefined in model), default to True
+        # (plot everything)
         if channel_flags is None or getattr(channel_flags, label, True):
             data = dut.psc.get_wfm(chan, pv)
             waveform_configs.append((data, y_label, title, label))

@@ -26,7 +26,8 @@ Workflow:
 import sys
 import time
 from testing.test_main import run_psc_test_suite
-from cal.psc_calibration import run_calibration, initialize_qspi
+from cal.psc_calibration import run_calibration
+from cal.initialize_qspi import initialize_qspi
 from common.initialize_dut import DUT
 
 

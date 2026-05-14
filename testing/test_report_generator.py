@@ -138,10 +138,14 @@ def _cover_table(dut: DUT) -> Table:
         ["Number of Channels", dut.num_channels],
         ["Resolution", dut.resolution],
         ["Bandwidth", dut.bandwidth],
-        ["Polarity", dut.polarity],
     ]
+    for chan in range(1, dut.num_channels + 1):
+        pol = dut.psc.get_polarity(chan)
+        tdata.append([f"Channel {chan} Polarity", pol])
 
-    row_h = [0.4*inch, 0.35*inch, *(0.27*inch for _ in range(6))]
+    _row_count = len(tdata) - 2
+
+    row_h = [0.4*inch, 0.35*inch, *(0.27*inch for _ in range(_row_count))]
 
     col_h = [3*inch, 3*inch]
 
@@ -151,11 +155,11 @@ def _cover_table(dut: DUT) -> Table:
             ("ALIGN", (0, 0), (1, 1), "CENTER"),
             ("FONTSIZE", (0, 0), (1, 0), 16),
             ("FONTSIZE", (0, 1), (1, 1), 14),
-            ("VALIGN", (0, 0), (1, 7), "MIDDLE"), 
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
             ("LINEABOVE", (0, 1), (1, 2), 2, colors.black),
             ("BACKGROUND", (0, 0), (1, 1), colors.lemonchiffon),
-            ("BACKGROUND", (0, 2), (0, 7), colors.lightblue),
-            ("FONTSIZE", (0, 1), (1, 7), 12),
+            ("BACKGROUND", (0, 2), (0, -1), colors.lightblue),
+            ("FONTSIZE", (0, 2), (1, -1), 12),
             ("GRID", (0, 0), (-1, -1), 1, colors.black),
             ("BOX", (0, 0), (-1, -1), 2, colors.black),
         ]
@@ -230,18 +234,16 @@ def finalize_report(ctx: ReportContext) -> str:
     Returns:
         str: The absolute filesystem path where the PDF was successfully saved.
     """
-def finalize_report(ctx: ReportContext) -> str:
-    """
-    Generates and saves the final PDF report to disk.
-    """
     # --- UPDATED DEBUG START ---
     def check_for_int(element_list, location_desc):
         for i, element in enumerate(element_list):
             if isinstance(element, int):
-                print(f"CRITICAL ERROR: Found integer '{element}' at index {i} in {location_desc}!")
+                print(f"CRITICAL ERROR: Found integer '{element}' at"
+                      f" index {i} in {location_desc}!")
             elif isinstance(element, KeepTogether):
                 # Recursively check inside KeepTogether buckets
-                check_for_int(element._content, f"{location_desc} -> KeepTogether")
+                check_for_int(element._content, f"{location_desc} \
+                              -> KeepTogether")
 
     check_for_int(ctx.elements, "ctx.elements")
     # --- DEBUG END ---

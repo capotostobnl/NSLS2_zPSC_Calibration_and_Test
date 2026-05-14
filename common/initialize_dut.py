@@ -59,7 +59,8 @@ class DUT:
 
     @property
     def channel_list(self) -> list:
-        """Returns a list of channels as strings, used in cal script primarily"""
+        """Returns a list of channels as strings, used in cal script
+        primarily"""
         return [str(c) for c in self.model.channels]
 
     @property
