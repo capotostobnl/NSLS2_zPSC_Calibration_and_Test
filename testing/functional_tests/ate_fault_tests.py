@@ -351,7 +351,6 @@ def ate_fault_tests(dut: DUT, ate: ATE, section: list, chan: int):
     for mask, label, method_name, setter_bool in FAULT_TESTS:
         print(f"\n--- Testing Fault {label} ---")
 
-        # Dynamic method retrieval
         setter = getattr(ate, method_name)
 
         result, color = _run_single_fault_test(
