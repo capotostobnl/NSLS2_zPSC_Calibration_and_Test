@@ -173,7 +173,10 @@ def fofb_daisy_packet_monotonic_test(dut: DUT, ctx: ReportContext):
     except Exception as e:
         return "FAIL", "", str(e), 999, cmd
 
-    cmd = "./testing/functional_tests/caen_fast_genpacket_loop_inf.sh"
+    if __name__=="__main__":
+        cmd = "./caen_fast_genpacket_loop_inf.sh"
+    else:
+        cmd = "./testing/functional_tests/caen_fast_genpacket_loop_inf.sh"
     process = subprocess.Popen(
         cmd, shell=True, text=True, stdout=subprocess.DEVNULL,
         stderr=None
