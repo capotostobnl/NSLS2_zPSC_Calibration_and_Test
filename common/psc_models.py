@@ -784,6 +784,62 @@ MODELS = {
             tolerance=0.05
         )
     ),
+        "EIC-HSS": PSCModel(
+        model_id="EIC_2-CH-HSS",
+        display_name="2CH-HSS-EIC",
+        description="PSC-2CH-HSS-EIC",
+        designation="PSC-2CH-HSS-EIC_",
+        channels=(1, 2),
+        drive_channels=(1, 2),
+        readback_channels=(1,2),
+
+        #######################################################################
+        #      Calibration                                                    #
+        #######################################################################
+        calibration_parameters=CalibrationParameters(
+            ndcct=1000.0,
+            burden_resistors=ChannelValues(ch1=33.333333, ch2=33.333333),
+
+            fault_limits=PSCFaultThresholdsLimits(
+                ovc1_threshold=ChannelValues(ch1=10, ch2=10),
+                ovc2_threshold=ChannelValues(ch1=10, ch2=10),
+                ovv_threshold=ChannelValues(ch1=15, ch2=15),
+            ),
+
+            scale_factors=PSCScaleFactors(
+                sf_vout=ChannelValues(ch1=1.9, ch2=1.9),
+                sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0),
+            ),
+        ),
+        #######################################################################
+        #      Test                                                           #
+        #######################################################################
+        reg=RegulatorTestParams(
+            setpoints=(reg_pts := ChannelValues(ch1=5,
+                                    ch2=5)),
+            settling_time=10),
+
+
+        smooth=SmoothRampTestParams(
+            start_setpoints=ChannelValues(ch1=0,
+                                            ch2=0),
+            end_setpoints=ChannelValues(ch1=9,
+                                        ch2=9),
+            ramp_rate=ChannelValues(ch1=10,
+                                    ch2=10),
+            settling_time=10,
+            tolerance=0.05),
+        jump=JumpTestParams(
+            start_setpoints=ChannelValues(
+                                    ch1=5,
+                                    ch2=5
+            ),
+            step_size=ChannelValues(ch1=0.05,
+                                    ch2=0.05),
+            sample_window=500,
+            tolerance=0.05
+        )
+    ),
     "NSLS-II-SKQ": PSCModel(
         model_id="NSLS-II-SK",
         display_name="4CH-MSS-SR-SK",
