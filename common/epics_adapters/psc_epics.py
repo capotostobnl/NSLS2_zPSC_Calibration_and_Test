@@ -108,7 +108,7 @@ class PSC:
     def put(self, suffix: str, value: Any, *, ch: Optional[int] = None,
             wait: bool = True, timeout: Optional[float] = None) -> bool:
         """Raw wrapper around caput."""
-        #print(f"DBUG: PV: {self.pv(suffix, ch=ch)}, Value: {value}")
+        # print(f"DBUG: PV: {self.pv(suffix, ch=ch)}, Value: {value}")
         return bool(caput(self.pv(suffix, ch=ch), value, wait=wait,
                           timeout=timeout or self.timeout))
 
@@ -183,6 +183,10 @@ class PSC:
         Write setpoints to QSPI
         """
         self.safe_put("WriteQspi-SP", 1, ch=chan)
+
+    def run_sequencer(self, chan: int):
+        """Runs sequencer for specified channel"""
+        self.safe_put("PSOnOff-SP", 1, ch=chan)
 
     # =========================================================================
     # Setters (Scale Factors)
@@ -497,6 +501,37 @@ class PSC:
         """Read Error Current FLOAT VAL"""
         raw = self.safe_get("Error-I", ch=ch, as_string=False)
         return float(raw)
+
+    def get_seq_messages(self, ch: int) -> str:
+        """Get sequencer message"""
+        pv_name = f"{self.prefix}{self.ch_fmt.format(ch)}_seq_messages"
+        try:
+            raw = caget(pv_name, as_string=True, timeout=self.timeout)
+            return str(raw) if raw is not None else ""
+
+        except (ChannelAccessException, OSError, ValueError) as e:
+            print(f"caget erorr {pv_name}: {e}")
+            return ""
+
+    def get_seq_status(self, ch: int) -> str:
+        """Get sequencer status"""
+        raw = self.safe_get("PSOnOff-STS", ch=ch, as_string=True)
+        return str(raw)
+
+    def get_flt_1_bit(self, ch: int) -> bool:
+        """Get FLT1 Bit Status"""
+        raw = self.safe_get("DigIn-I.B1", ch=ch)
+        return bool(raw)
+
+    def get_flt_2_bit(self, ch: int) -> bool:
+        """Get FLT1 Bit Status"""
+        raw = self.safe_get("DigIn-I.B2", ch=ch)
+        return bool(raw)
+
+    def get_flt_3_bit(self, ch: int) -> bool:
+        """Get FLT1 Bit Status"""
+        raw = self.safe_get("DigIn-I.B3", ch=ch)
+        return bool(raw)
 
     # =========================================================================
     # Faults
