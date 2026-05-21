@@ -1,4 +1,4 @@
-Report of Calibration
+﻿Report of Calibration
 PSC PSC-2CH-HSS-EIC_S/N 0007
 2026-05-20 21:25:05
 
@@ -56,7 +56,8 @@ Saving channel 1 calibration constants to qspi
 
 
 
-Page 1 of 2lab{2}Chan2
+Page 1 of 2
+lab{2}Chan2
 Burden resistor = 33.3333
 
 Measuring initial gains and offsets
@@ -109,4 +110,4 @@ Saving channel 2 calibration constants to qspi
 Test data reviewed by ______________________________   Date_____________
 
 
-Page 2 of 2
+Page 2 of 2

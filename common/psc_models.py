@@ -838,7 +838,7 @@ MODELS = {
                                     ch2=0.05),
             sample_window=500,
             tolerance=0.05
-        )
+        ),
     ),
     "NSLS-II-SKQ": PSCModel(
         model_id="NSLS-II-SK",
