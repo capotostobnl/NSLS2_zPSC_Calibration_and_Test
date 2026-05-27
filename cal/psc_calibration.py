@@ -548,7 +548,7 @@ def run_calibration(dut: DUT):
         sock.sendto(b'T' + x.encode('UTF-8') + b'0' + b'\n', server_address)
         time.sleep(0.5)
 
-    file_str1 = os.path.join(dut.cal_report_dir, f"{designation}{dut.psc_sn}_{dut.dir_timestamp}")
+    file_str1 = os.path.join(dut.cal_report_dir, f"psc_calibration_{designation}{dut.psc_sn}_{dut.dir_timestamp}")
     os.system(f'cp "{file_str}" "{file_str1}.doc"')
 
 
