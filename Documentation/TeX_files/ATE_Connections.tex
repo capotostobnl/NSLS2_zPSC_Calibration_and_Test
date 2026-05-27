@@ -26,9 +26,221 @@
 
 \section{Connections}
 \subsection{At the ATE}
-\includegraphics[width=\textwidth]{Pictures/ATE_Annotated}
 
-\subsection*{Current Measurement Loop/DMM Connection}
+\begin{figure}[htbp]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\begin{tikzpicture}[
+			>=latex,
+			chassis/.style={
+				draw,
+				rectangle,
+				line width=0.8pt,
+				align=center
+			},
+			module/.style={
+				draw,
+				rectangle,
+				minimum width=2.5cm,
+				minimum height=0.75cm,
+				align=center,
+				font=\small
+			},
+			block/.style={
+				draw,
+				rectangle,
+				minimum width=3.0cm,
+				minimum height=1.0cm,
+				align=center,
+				font=\small
+			},
+			shuntblock/.style={
+				draw,
+				rectangle,
+				minimum width=4cm,
+				minimum height=1.4cm,
+				align=center,
+				font=\small
+			}
+			]
+			
+			% ==================================================
+			% PSC CHASSIS
+			% ==================================================
+			\node[
+			chassis,
+			minimum width=3.4cm,
+			minimum height=6.6cm
+			] (psc) at (0,0) {};
+			
+			\node[font=\Large\bfseries] at (0,2.75) {PSC};
+			
+			\node[module] (dcct) at (0,1.7) {DCCT};
+			\node[module] (ch1)  at (0,0.7) {CH1};
+			\node[module] (ch2)  at (0,-0.3) {CH2};
+			\node[module] (ch3)  at (0,-1.3) {CH3};
+			\node[module] (ch4)  at (0,-2.3) {CH4};
+			
+			% ==================================================
+			% ATE CHASSIS
+			% ==================================================
+			\node[
+			chassis,
+			minimum width=3.8cm,
+			minimum height=13.5cm
+			] (ate) at (6.0,-2.5) {};
+			
+			\node[font=\Large\bfseries] at (6.0,3.4) {ATE};
+			
+			\node[module] (ate_dcct) at (6.0,1.7) {DCCT};
+			\node[module] (ate_ch1)  at (6.0,0.7) {CH1};
+			\node[module] (ate_ch2)  at (6.0,-0.3) {CH2};
+			\node[module] (ate_ch3)  at (6.0,-1.3) {CH3};
+			\node[module] (ate_ch4)  at (6.0,-2.3) {CH4};
+			
+			\node[module] (ate_pwr) at (6.0,-4.0) {$\pm15$ V};
+			\node[module] (ate_net) at (6.0,-5.4) {Network};
+			
+			% ATE Current Shunt block inside chassis
+			\node[
+			shuntblock,
+			minimum width=3.2cm,
+			minimum height=1.8cm
+			] (ate_shunt) at (6.0,-7.4)
+			{
+				ATE Current Shunt\\
+				Terminal Block
+			};
+			
+			% ==================================================
+			% PSC -> ATE CONNECTIONS
+			% ==================================================
+			\draw[->] (dcct.east) -- (ate_dcct.west);
+			\draw[->] (ch1.east)  -- (ate_ch1.west);
+			\draw[->] (ch2.east)  -- (ate_ch2.west);
+			\draw[->] (ch3.east)  -- (ate_ch3.west);
+			\draw[->] (ch4.east)  -- (ate_ch4.west);
+			
+			% ==================================================
+			% POWER SUPPLY + NETWORK SWITCH
+			% ==================================================
+			\node[block] (supply) at (0,-4.0)
+			{
+				$\pm15$ V\\
+				Power Supply
+			};
+			
+			\node[block] (switch) at (0,-5.4)
+			{
+				Network\\
+				Switch
+			};
+			
+			\draw[->] (supply.east) -- (ate_pwr.west);
+			\draw[->] (switch.east) -- (ate_net.west);
+			
+			% ==================================================
+			% RESISTANCE STANDARD
+			% ==================================================
+			\node[
+			block,
+			minimum width=6cm,
+			minimum height=4cm,
+			inner sep=12pt
+			] (resistor) at (14.0,-7.4)
+			{
+				4-Terminal\\[6pt]
+				Resistance Standard\\[6pt]
+				\quad Fluke 742A-1 or equivalent\quad\mbox{}\\[6pt]
+				1 Ohm
+			};
+			
+			% ==================================================
+			% DMM
+			% ==================================================
+			\node[
+			block,
+			minimum width=6cm,
+			minimum height=3.6cm
+			] (dmm) at (22.0,-7.4)
+			{
+				DMM\\[10pt]
+				HP 3458A or equivalent
+			};
+			
+			% GPIB block INSIDE DMM
+			\node[
+			draw,
+			rectangle,
+			minimum width=3.2cm,
+			minimum height=0.8cm,
+			font=\small
+			] (gpib) at ($(dmm.south)+(0,0.4)$)
+			{GPIB};
+			
+			% ==================================================
+			% PROLOGIX
+			% ==================================================
+			\node[
+			draw,
+			rectangle,
+			minimum width=5cm,
+			minimum height=1.2cm,
+			font=\small
+			] (prologix) at ($(dmm.south)+(0,-2.0)$)
+			{Prologix GPIB Adapter};
+			
+			\draw[->, thick] (gpib.south) -- (prologix.north);
+			
+			% ==================================================
+			% SIDE LABELS
+			% ==================================================
+			\node[
+			draw,
+			rotate=90,
+			fill=white,
+			inner sep=4pt
+			]
+			at ($(resistor.west)+(0.3,0)$)
+			{CURRENT};
+			
+			\node[
+			draw,
+			rotate=90,
+			fill=white,
+			inner sep=4pt
+			]
+			at ($(resistor.east)+(-0.3,0)$)
+			{SENSE};
+			
+			\node[
+			draw,
+			rotate=90,
+			fill=white,
+			inner sep=4pt
+			]
+			at ($(dmm.west)+(0.35,0)$)
+			{Input};
+			
+			% ==================================================
+			% MEASUREMENT CHAIN CONNECTIONS
+			% ==================================================
+			\draw[->, thick] (ate_shunt.east) -- (resistor.west);
+			\draw[->, thick] (resistor.east) -- (dmm.west);
+			
+		\end{tikzpicture}%
+	}
+	\caption{ATE Connection Block Diagram}
+	\label{fig:psc_ate_block_diagram}
+\end{figure}
+
+\begin{figure}[htbp]
+	\includegraphics[width=\textwidth]{Pictures/ATE_Annotated}
+	\caption{Annotated ATE Board}
+\end{figure}
+
+\subsection{Current Measurement Loop/DMM Connection}
+The DMM is connected to the workstation via a GPIB adapter from Prologix. These are available in both USB and Ethernet forms.\\
 \begin{figure}[H]
 	\centering
 	\resizebox{\textwidth}{!}{%
@@ -104,4 +316,5 @@
 			
 		\end{tikzpicture}%
 	}
+	\caption{ATE $\rightarrow$ DMM Current Loop}
 \end{figure}
