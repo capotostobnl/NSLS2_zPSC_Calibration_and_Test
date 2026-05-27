@@ -13,7 +13,7 @@
 	\item $\pm15V$ Supply: Connect this to a split supply, draws less than 400mA under full load
 	\item Network: Connect to the local test network
 	\item SD Card must be configured once, but does not require any regular changes
-	\item Jumpers?
+	\item Jumpers: Install jumpers in J8-9, J12-13,  J19-20, JJ23-24, J30-31, J34-35, J41-42, and J45-J46 for normal operations.
 \end{itemize}
 
 \noindent\textbf{\\\\For every device under test:}
@@ -243,37 +243,119 @@
 The DMM is connected to the workstation via a GPIB adapter from Prologix. These are available in both USB and Ethernet forms.\\
 \begin{figure}[H]
 	\centering
-	\resizebox{\textwidth}{!}{%
+		\resizebox{\textwidth}{!}{%
 		\begin{tikzpicture}[
+			>=latex,
+			chassis/.style={
+				draw,
+				rectangle,
+				line width=0.8pt,
+				align=center
+			},
+			module/.style={
+				draw,
+				rectangle,
+				minimum width=2.5cm,
+				minimum height=0.75cm,
+				align=center,
+				font=\small
+			},
 			block/.style={
 				draw,
 				rectangle,
-				minimum width=4cm,
-				minimum height=2.5cm,
-				align=center
+				minimum width=3.0cm,
+				minimum height=1.0cm,
+				align=center,
+				font=\small
 			},
-			>=latex
+			shuntblock/.style={
+				draw,
+				rectangle,
+				minimum width=4cm,
+				minimum height=1.4cm,
+				align=center,
+				font=\small
+			}
 			]
 			
-			% Main blocks
-			\node[block] (ate) {ATE Current Shunt\\Terminal Block};
+			% ==================================================
+			% ATE CHASSIS
+			% ==================================================
+			\node[
+			chassis,
+			minimum width=3.8cm,   % restored original width
+			minimum height=4.8cm
+			] (ate) at (6.0,-7.4) {};
 			
+			\node[font=\Large\bfseries] at (6.0,-5.8) {ATE};
+			
+			% ATE Current Shunt block inside chassis
+			\node[
+			shuntblock,
+			minimum width=3.2cm,   % restored original inner width
+			minimum height=1.2cm
+			] (ate_shunt) at (6.0,-7.4)   % moved up for horizontal arrow
+			{
+				ATE Current Shunt\\
+				Terminal Block
+			};
+			
+			% ==================================================
+			% RESISTANCE STANDARD
+			% ==================================================
 			\node[
 			block,
-			right=3cm of ate,
 			minimum width=6cm,
 			minimum height=4cm,
 			inner sep=12pt
-			] (resistor)
-			{4-Terminal\\[6pt]
+			] (resistor) at (14.0,-7.4)
+			{
+				4-Terminal\\[6pt]
 				Resistance Standard\\[6pt]
-				  \quad Fluke 742A-1 or equivalent\quad\mbox{}\\[6pt]
-				  1 Ohm};
+				\quad Fluke 742A-1 or equivalent\quad\mbox{}\\[6pt]
+				1 Ohm
+			};
 			
-			\node[block, minimum width=6cm, right=3cm of resistor] (dmm)
-			{DMM\\HP 3458A or equivalent};
+			% ==================================================
+			% DMM
+			% ==================================================
+			\node[
+			block,
+			minimum width=6cm,
+			minimum height=3.6cm
+			] (dmm) at (22.0,-7.4)
+			{
+				DMM\\[10pt]
+				HP 3458A or equivalent
+			};
 			
-			% CURRENT boxed label
+			% GPIB block INSIDE DMM
+			\node[
+			draw,
+			rectangle,
+			minimum width=3.2cm,
+			minimum height=0.8cm,
+			font=\small
+			] (gpib) at ($(dmm.south)+(0,0.4)$)
+			{GPIB};
+			
+			% ==================================================
+			% PROLOGIX
+			% ==================================================
+			\node[
+			draw,
+			rectangle,
+			minimum width=5cm,
+			minimum height=1.2cm,
+			font=\small
+			] (prologix) at ($(dmm.south)+(0,-2.0)$)
+			{Prologix GPIB Adapter};
+			
+			\draw[->, thick] (gpib.south) -- (prologix.north);
+			
+			% ==================================================
+			% SIDE LABELS
+			% ==================================================
 			\node[
 			draw,
 			rotate=90,
@@ -283,7 +365,6 @@ The DMM is connected to the workstation via a GPIB adapter from Prologix. These 
 			at ($(resistor.west)+(0.3,0)$)
 			{CURRENT};
 			
-			% SENSE boxed label
 			\node[
 			draw,
 			rotate=90,
@@ -302,17 +383,11 @@ The DMM is connected to the workstation via a GPIB adapter from Prologix. These 
 			at ($(dmm.west)+(0.35,0)$)
 			{Input};
 			
-			% Connection points
-			\coordinate (ateout) at ($(ate.east)+(0,0)$);
-			
-			\coordinate (resleft) at ($(resistor.west)+(0,0)$);
-			\coordinate (resright) at ($(resistor.east)+(0,0)$);
-			
-			\coordinate (dmmin) at ($(dmm.west)+(0,0)$);
-			
-			% Connections
-			\draw[->, thick] (ateout) -- (resleft);
-			\draw[->, thick] (resright) -- (dmmin);
+			% ==================================================
+			% MEASUREMENT CHAIN CONNECTIONS
+			% ==================================================
+			\draw[->, thick] (ate_shunt.east) -- (resistor.west);
+			\draw[->, thick] (resistor.east) -- (dmm.west);
 			
 		\end{tikzpicture}%
 	}
