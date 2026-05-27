@@ -802,9 +802,9 @@ MODELS = {
                                             ch3=33.333333, ch4=33.333333),
 
             fault_limits=PSCFaultThresholdsLimits(
-                ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                ovv_threshold=ChannelValues(ch1=16, ch2=16, ch3=16, ch4=16),
+                ovc1_threshold=ChannelValues(ch1=24.5, ch2=24.5, ch3=24.5, ch4=24.5),
+                ovc2_threshold=ChannelValues(ch1=24.5, ch2=24.5, ch3=24.5, ch4=24.5),
+                ovv_threshold=ChannelValues(ch1=18.5, ch2=18.5, ch3=18.5, ch4=18.5),
             ),
 
             scale_factors = PSCScaleFactors(
@@ -816,21 +816,21 @@ MODELS = {
         #      Test                                                           #
         #######################################################################
         reg=RegulatorTestParams(
-            setpoints=(reg_pts := ChannelValues(ch1=9,
-                                    ch2=9,
-                                    ch3=9,
-                                    ch4=9)),
+            setpoints=(reg_pts := ChannelValues(ch1=10,
+                                    ch2=10,
+                                    ch3=10,
+                                    ch4=10)),
             settling_time=10
                                     ),
         smooth=SmoothRampTestParams(
-            start_setpoints=ChannelValues(ch1=-9,
-                                            ch2=-9,
-                                            ch3=-9,
-                                            ch4=-9),
-            end_setpoints=ChannelValues(ch1=9,
-                                        ch2=9,
-                                        ch3=9,
-                                        ch4=9),
+            start_setpoints=ChannelValues(ch1=-23.9,
+                                            ch2=-23.9,
+                                            ch3=-23.9,
+                                            ch4=-23.9),
+            end_setpoints=ChannelValues(ch1=23.9,
+                                        ch2=23.9,
+                                        ch3=23.9,
+                                        ch4=23.9),
             ramp_rate=ChannelValues(ch1=10,
                                     ch2=10,
                                     ch3=10,
@@ -865,9 +865,9 @@ MODELS = {
                                             ch3=33.333333, ch4=33.333333),
 
             fault_limits=PSCFaultThresholdsLimits(
-                ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
-                ovv_threshold=ChannelValues(ch1=16, ch2=16, ch3=16, ch4=16),
+                ovc1_threshold=ChannelValues(ch1=24.5, ch2=24.5, ch3=24.5, ch4=24.5),
+                ovc2_threshold=ChannelValues(ch1=24.5, ch2=24.5, ch3=24.5, ch4=24.5),
+                ovv_threshold=ChannelValues(ch1=18.5, ch2=18.5, ch3=18.5, ch4=18.5),
             ),
 
             scale_factors = PSCScaleFactors(
@@ -879,21 +879,21 @@ MODELS = {
         #      Test                                                           #
         #######################################################################
         reg=RegulatorTestParams(
-            setpoints=(reg_pts := ChannelValues(ch1=9,
-                                    ch2=9,
-                                    ch3=9,
-                                    ch4=9)),
+            setpoints=(reg_pts := ChannelValues(ch1=10,
+                                    ch2=10,
+                                    ch3=10,
+                                    ch4=10)),
             settling_time=10
                                     ),
         smooth=SmoothRampTestParams(
-            start_setpoints=ChannelValues(ch1=-9,
-                                            ch2=-9,
-                                            ch3=-9,
-                                            ch4=-9),
-            end_setpoints=ChannelValues(ch1=9,
-                                        ch2=9,
-                                        ch3=9,
-                                        ch4=9),
+            start_setpoints=ChannelValues(ch1=-23.9,
+                                            ch2=-23.9,
+                                            ch3=-23.9,
+                                            ch4=-23.9),
+            end_setpoints=ChannelValues(ch1=23.9,
+                                        ch2=23.9,
+                                        ch3=23.9,
+                                        ch4=23.9),
             ramp_rate=ChannelValues(ch1=10,
                                     ch2=10,
                                     ch3=10,
@@ -927,9 +927,9 @@ MODELS = {
             burden_resistors=ChannelValues(ch1=33.333333, ch2=33.333333),
 
             fault_limits=PSCFaultThresholdsLimits(
-                ovc1_threshold=ChannelValues(ch1=10, ch2=10),
-                ovc2_threshold=ChannelValues(ch1=10, ch2=10),
-                ovv_threshold=ChannelValues(ch1=16, ch2=16),
+                ovc1_threshold=ChannelValues(ch1=24.5, ch2=24.5),
+                ovc2_threshold=ChannelValues(ch1=24.5, ch2=24.5),
+                ovv_threshold=ChannelValues(ch1=18.5, ch2=18.5),
             ),
 
             scale_factors = PSCScaleFactors(
@@ -941,14 +941,14 @@ MODELS = {
         #      Test                                                           #
         #######################################################################
         reg=RegulatorTestParams(
-            setpoints=(reg_pts := ChannelValues(ch1=9, ch2=9)),
+            setpoints=(reg_pts := ChannelValues(ch1=10, ch2=10)),
             settling_time=10
                                     ),
         smooth=SmoothRampTestParams(
             start_setpoints=ChannelValues(ch1=0,
                                             ch2=0),
-            end_setpoints=ChannelValues(ch1=9,
-                                        ch2=9),
+            end_setpoints=ChannelValues(ch1=23.9,
+                                        ch2=23.9),
             ramp_rate=ChannelValues(ch1=10,
                                     ch2=10),
             settling_time=10,
