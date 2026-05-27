@@ -784,67 +784,11 @@ MODELS = {
             tolerance=0.05
         )
     ),
-        "EIC-HSS": PSCModel(
-        model_id="EIC_2-CH-HSS",
-        display_name="2CH-HSS-EIC",
-        description="PSC-2CH-HSS-EIC",
-        designation="PSC-2CH-HSS-EIC_",
-        channels=(1, 2),
-        drive_channels=(1, 2),
-        readback_channels=(1,2),
-
-        #######################################################################
-        #      Calibration                                                    #
-        #######################################################################
-        calibration_parameters=CalibrationParameters(
-            ndcct=1000.0,
-            burden_resistors=ChannelValues(ch1=33.333333, ch2=33.333333),
-
-            fault_limits=PSCFaultThresholdsLimits(
-                ovc1_threshold=ChannelValues(ch1=10, ch2=10),
-                ovc2_threshold=ChannelValues(ch1=10, ch2=10),
-                ovv_threshold=ChannelValues(ch1=15, ch2=15),
-            ),
-
-            scale_factors=PSCScaleFactors(
-                sf_vout=ChannelValues(ch1=1.9, ch2=1.9),
-                sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0),
-            ),
-        ),
-        #######################################################################
-        #      Test                                                           #
-        #######################################################################
-        reg=RegulatorTestParams(
-            setpoints=(reg_pts := ChannelValues(ch1=5,
-                                    ch2=5)),
-            settling_time=10),
-
-
-        smooth=SmoothRampTestParams(
-            start_setpoints=ChannelValues(ch1=0,
-                                            ch2=0),
-            end_setpoints=ChannelValues(ch1=9,
-                                        ch2=9),
-            ramp_rate=ChannelValues(ch1=10,
-                                    ch2=10),
-            settling_time=10,
-            tolerance=0.05),
-        jump=JumpTestParams(
-            start_setpoints=ChannelValues(
-                                    ch1=5,
-                                    ch2=5
-            ),
-            step_size=ChannelValues(ch1=0.05,
-                                    ch2=0.05),
-            sample_window=500,
-            tolerance=0.05
-        ),
-    ),
-    "NSLS-II-SKQ": PSCModel(
-        model_id="NSLS-II-SK",
-        display_name="4CH-MSS-SR-SK",
-        description="PSC-4CH-MSS-SR-SK",
-        designation="4CH-MSS-SR-SK_",
+    "NSLS-II_TEST_4-CH-SLOW__MSS/HSS": PSCModel(
+        model_id="NSLS-II_TEST_4-CH-SLOW__MSS/HSS",
+        display_name="NSLS-II_TEST_4-CH-SLOW__MSS/HSS - BIPOLAR -- 33.3R/1k/2u2 BUR/COMP, 'SKQ' TUNING BRD",
+        description="PSC-4-CH-SLOW__MSS/HSS",
+        designation="NSLS-II_TEST_4-CH-SLOW__MSS/HSS",
         channels=(1, 2, 3, 4),
         drive_channels=(1, 2, 3, 4),
         readback_channels=(1,2, 3, 4),
@@ -854,8 +798,8 @@ MODELS = {
         #######################################################################
         calibration_parameters = CalibrationParameters(
             ndcct=1000.0,
-            burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
-                                            ch3=83.333333, ch4=83.333333),
+            burden_resistors=ChannelValues(ch1=33.333333, ch2=33.333333,
+                                            ch3=33.333333, ch4=33.333333),
 
             fault_limits=PSCFaultThresholdsLimits(
                 ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
@@ -899,6 +843,120 @@ MODELS = {
                                     ch2=0.05,
                                     ch3=0.05,
                                     ch4=0.05),
+            sample_window=500,
+            tolerance=0.05
+        )
+    ),
+    "NSLS-II_TEST_4-CH-FAST__MSF/HSF": PSCModel(
+        model_id="NSLS-II_TEST_4-CH-FAST__MSF/HSF",
+        display_name="NSLS-II_TEST_4-CH-FAST__MSF/HSF - BIPOLAR -- 33.3R/20k/0u1 BUR/COMP, 'MSF' TUNING BRD",
+        description="PSC-4-CH-SLOW__MSF/HSF",
+        designation="NSLS-II_TEST_4-CH-SLOW__MSF/HSF",
+        channels=(1, 2, 3, 4),
+        drive_channels=(1, 2, 3, 4),
+        readback_channels=(1,2, 3, 4),
+
+        #######################################################################
+        #      Calibration                                                    #
+        #######################################################################
+        calibration_parameters = CalibrationParameters(
+            ndcct=1000.0,
+            burden_resistors=ChannelValues(ch1=33.333333, ch2=33.333333,
+                                            ch3=33.333333, ch4=33.333333),
+
+            fault_limits=PSCFaultThresholdsLimits(
+                ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+                ovv_threshold=ChannelValues(ch1=16, ch2=16, ch3=16, ch4=16),
+            ),
+
+            scale_factors = PSCScaleFactors(
+                sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
+                sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+            ),
+        ),
+        #######################################################################
+        #      Test                                                           #
+        #######################################################################
+        reg=RegulatorTestParams(
+            setpoints=(reg_pts := ChannelValues(ch1=9,
+                                    ch2=9,
+                                    ch3=9,
+                                    ch4=9)),
+            settling_time=10
+                                    ),
+        smooth=SmoothRampTestParams(
+            start_setpoints=ChannelValues(ch1=-9,
+                                            ch2=-9,
+                                            ch3=-9,
+                                            ch4=-9),
+            end_setpoints=ChannelValues(ch1=9,
+                                        ch2=9,
+                                        ch3=9,
+                                        ch4=9),
+            ramp_rate=ChannelValues(ch1=10,
+                                    ch2=10,
+                                    ch3=10,
+                                    ch4=10),
+            settling_time=10,
+            tolerance=0.05),
+        jump=JumpTestParams(
+            start_setpoints=reg_pts,
+            step_size=ChannelValues(ch1=0.05,
+                                    ch2=0.05,
+                                    ch3=0.05,
+                                    ch4=0.05),
+            sample_window=500,
+            tolerance=0.05
+        )
+    ),
+    "NSLS-II_TEST_2-CH-SLOW__HSS": PSCModel(
+        model_id="NSLS-II_TEST_2-CH-SLOW__HSS",
+        display_name="NSLS-II_TEST_2-CH-SLOW__HSS - UNIPOLAR -- 33.3R/1k/2u2 BUR/COMP, 'SKQ' TUNING BRD",
+        description="PSC-2-CH-SLOW_HSS",
+        designation="NSLS-II_TEST_2-CH-SLOW_HSS",
+        channels=(1, 2),
+        drive_channels=(1, 2),
+        readback_channels=(1,2),
+
+        #######################################################################
+        #      Calibration                                                    #
+        #######################################################################
+        calibration_parameters = CalibrationParameters(
+            ndcct=1000.0,
+            burden_resistors=ChannelValues(ch1=33.333333, ch2=33.333333),
+
+            fault_limits=PSCFaultThresholdsLimits(
+                ovc1_threshold=ChannelValues(ch1=10, ch2=10),
+                ovc2_threshold=ChannelValues(ch1=10, ch2=10),
+                ovv_threshold=ChannelValues(ch1=16, ch2=16),
+            ),
+
+            scale_factors = PSCScaleFactors(
+                sf_vout=ChannelValues(ch1=1.9, ch2=1.9),
+                sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0),
+            ),
+        ),
+        #######################################################################
+        #      Test                                                           #
+        #######################################################################
+        reg=RegulatorTestParams(
+            setpoints=(reg_pts := ChannelValues(ch1=9, ch2=9)),
+            settling_time=10
+                                    ),
+        smooth=SmoothRampTestParams(
+            start_setpoints=ChannelValues(ch1=0,
+                                            ch2=0),
+            end_setpoints=ChannelValues(ch1=9,
+                                        ch2=9),
+            ramp_rate=ChannelValues(ch1=10,
+                                    ch2=10),
+            settling_time=10,
+            tolerance=0.05),
+        jump=JumpTestParams(
+            start_setpoints=reg_pts,
+            step_size=ChannelValues(ch1=0.05,
+                                    ch2=0.05),
             sample_window=500,
             tolerance=0.05
         )
