@@ -30,3 +30,7 @@
 \contentsline {section}{\numberline {6.2}Installing Phoebus}{23}{section.6.2}%
 \contentsline {chapter}{\numberline {7}Networking}{25}{chapter.7}%
 \contentsline {section}{\numberline {7.1}Overview}{25}{section.7.1}%
+\contentsline {chapter}{\numberline {8}Installing Minicom}{27}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Overview}{27}{section.8.1}%
+\contentsline {chapter}{\numberline {9}Calibration and Test Scripts}{29}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Overview}{29}{section.9.1}%
