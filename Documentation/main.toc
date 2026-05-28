@@ -1,14 +1,20 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{}%
-\contentsline {chapter}{\numberline {2}zPSC Chassis Overview}{3}{}%
-\contentsline {section}{\numberline {2.1}Introduction}{3}{}%
-\contentsline {section}{\numberline {2.2}Front Panels (2- and 4-Channel PSCs)}{3}{}%
-\contentsline {section}{\numberline {2.3}Rear Panel - 2 Channel}{3}{}%
-\contentsline {section}{\numberline {2.4}Rear Panel - 4 Channel}{4}{}%
-\contentsline {section}{\numberline {2.5}Internal Component Layout - 2 Channel}{4}{}%
-\contentsline {section}{\numberline {2.6}Internal Component Layout - 4 Channel}{4}{}%
-\contentsline {chapter}{\numberline {3}zPSC Connections}{5}{}%
-\contentsline {chapter}{\numberline {4}ATE Connections}{7}{}%
-\contentsline {section}{\numberline {4.1}Overview}{8}{}%
-\contentsline {section}{\numberline {4.2}Connections}{9}{}%
-\contentsline {subsection}{\numberline {4.2.1}At the ATE}{9}{}%
-\contentsline {subsection}{\numberline {4.2.2}Current Measurement Loop/DMM Connection}{11}{}%
+\contentsline {chapter}{\numberline {2}ATE Connections}{3}{}%
+\contentsline {section}{\numberline {2.1}Overview}{4}{}%
+\contentsline {section}{\numberline {2.2}Connections}{5}{}%
+\contentsline {subsection}{\numberline {2.2.1}At the ATE}{5}{}%
+\contentsline {subsection}{\numberline {2.2.2}Current Measurement Loop/DMM Connection}{7}{}%
+\contentsline {chapter}{\numberline {3}zPSC Chassis Overview}{9}{}%
+\contentsline {section}{\numberline {3.1}Introduction}{9}{}%
+\contentsline {section}{\numberline {3.2}Front Panels (2- and 4-Channel PSCs)}{9}{}%
+\contentsline {section}{\numberline {3.3}Rear Panel - 2 Channel}{9}{}%
+\contentsline {section}{\numberline {3.4}Internal Component Layout - 2 Channel}{10}{}%
+\contentsline {subsection}{\numberline {3.4.1}Analog Board Components}{10}{}%
+\contentsline {section}{\numberline {3.5}Rear Panel - 4 Channel}{11}{}%
+\contentsline {section}{\numberline {3.6}Internal Component Layout - 4 Channel}{11}{}%
+\contentsline {subsection}{\numberline {3.6.1}Analog Board Components}{12}{}%
+\contentsline {chapter}{\numberline {4}EPICS Base and IOCs}{13}{}%
+\contentsline {section}{\numberline {4.1}Introduction}{13}{}%
+\contentsline {section}{\numberline {4.2}EPICS Installation Overview}{13}{}%
+\contentsline {section}{\numberline {4.3}Installing EPICS Base and Required Modules}{13}{}%
+\contentsline {section}{\numberline {4.4}Installing the ATE IOC}{15}{}%
