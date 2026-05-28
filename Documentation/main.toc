@@ -1,24 +1,32 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
-\contentsline {chapter}{\numberline {2}ATE Connections}{3}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Overview}{4}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Connections}{5}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}At the ATE}{5}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Current Measurement Loop/DMM Connection}{7}{subsection.2.2.2}%
-\contentsline {chapter}{\numberline {3}zPSC Chassis Overview}{9}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Introduction}{9}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Front Panels (2- and 4-Channel PSCs)}{9}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Rear Panel - 2 Channel}{9}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Internal Component Layout - 2 Channel}{10}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Analog Board Components}{10}{subsection.3.4.1}%
-\contentsline {section}{\numberline {3.5}Rear Panel - 4 Channel}{11}{section.3.5}%
-\contentsline {section}{\numberline {3.6}Internal Component Layout - 4 Channel}{11}{section.3.6}%
-\contentsline {subsection}{\numberline {3.6.1}Analog Board Components}{12}{subsection.3.6.1}%
-\contentsline {chapter}{\numberline {4}EPICS Base and IOCs}{13}{chapter.4}%
+\contentsline {chapter}{\numberline {2}Cable Assemblies and Harnesses}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Overview}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}2-Channel DCCT Cable}{3}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}4-Channel DCCT Cable}{4}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Power Supply Channels 1 through 4 ATE Interface Cables}{4}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}SFP Transceivers}{4}{subsection.2.1.4}%
+\contentsline {subsection}{\numberline {2.1.5}Other Miscellaneous Cables}{5}{subsection.2.1.5}%
+\contentsline {chapter}{\numberline {3}ATE Connections}{7}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Overview}{7}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Connections}{9}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Current Measurement Loop/DMM Connection}{10}{subsection.3.2.1}%
+\contentsline {chapter}{\numberline {4}zPSC Chassis Overview}{13}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Introduction}{13}{section.4.1}%
-\contentsline {section}{\numberline {4.2}EPICS Installation Overview}{13}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Installing EPICS Base and Required Modules}{13}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Installing the ATE IOC}{15}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Installing the PSC IOC}{16}{section.4.5}%
-\contentsline {chapter}{\numberline {5}CS-Studio - Phoebus}{17}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Introduction}{17}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Installing Phoebus}{17}{section.5.2}%
+\contentsline {section}{\numberline {4.2}Front Panels (2- and 4-Channel PSCs)}{13}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Rear Panel - 2 Channel}{13}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Internal Component Layout - 2 Channel}{14}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Analog Board Components}{15}{subsection.4.4.1}%
+\contentsline {section}{\numberline {4.5}Rear Panel - 4 Channel}{16}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Internal Component Layout - 4 Channel}{16}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Analog Board Components}{17}{subsection.4.6.1}%
+\contentsline {chapter}{\numberline {5}EPICS Base and IOCs}{19}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Introduction}{19}{section.5.1}%
+\contentsline {section}{\numberline {5.2}EPICS Installation Overview}{19}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Installing EPICS Base and Required Modules}{19}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Installing the ATE IOC}{21}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Installing the PSC IOC}{22}{section.5.5}%
+\contentsline {chapter}{\numberline {6}CS-Studio - Phoebus}{23}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Introduction}{23}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Installing Phoebus}{23}{section.6.2}%
+\contentsline {chapter}{\numberline {7}Networking}{25}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Overview}{25}{section.7.1}%
