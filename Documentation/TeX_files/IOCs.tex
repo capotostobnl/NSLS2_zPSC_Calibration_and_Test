@@ -113,7 +113,33 @@ There are two IOCs associated with the calibration and test of the zPSC: The ATE
 		\item And if you want other information on the ioc: \texttt{manage-iocs report}
 	\end{enumerate}
 
-
+\section{Installing the PSC IOC}
+\begin{enumerate}
+	\item Change to IOC directory \texttt{cd /epics/iocs}
+	\item Clone the repo:\\
+	\hspace*{1em} \texttt{git clone https://github.com/jamead/zpsc-ioc.git zpsc\_ioc}
+	\item \texttt{cd zpsc\_ioc}
+	\item Create the \texttt{RELEASE.local} file, \texttt{touch configure/RELEASE.local}
+	\item \texttt{echo "EPICS\_BASE = /epics/base}\\
+		\hspace*{2em}\texttt{PSCDRV = /epics/modules/pscdrv}\\
+		\hspace*{2em}\texttt{SEQ = /epics/modules/seq" >}\\
+		\hspace*{2em} \texttt{/epics/iocs/zpsc\_ioc/configure/RELEASE.local}
+	\item Build the IOC: \texttt{make clean}, \texttt{make}
+	\item Update the st.cmd file as needed: \texttt{cd iocBoot/ioczpsc}
+	\begin{enumerate}
+		\item Edit the st.cmd file: \texttt{nano st.cmd}
+		\item Update as needed
+	\end{enumerate}
+	
+	\item Find the next available port: \texttt{manage-iocs nextport}
+	\item Configure this in the config file: \texttt{nano config}
+	\item Set the \texttt{NAME=zpsc\_ioc}, \texttt{PORT=} your next port
+	\item Update the directory path in the root-level st.cmd to the \texttt{iocBoot/ioczpsc/st.cmd}
+	\item Enroll in manage-iocs as a service: \texttt{sudo manage-iocs install zpsc\_ioc}
+	\item Enable auto-start on boot: \texttt{sudo manage-iocs enable zpsc\_ioc}
+	\item Check the status, it should be running! \texttt{manage-iocs status}
+	\item And if you want other information on the ioc: \texttt{manage-iocs report}
+\end{enumerate}
 
 
 

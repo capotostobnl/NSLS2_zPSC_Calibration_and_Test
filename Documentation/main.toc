@@ -1,20 +1,24 @@
-\contentsline {chapter}{\numberline {1}Introduction}{1}{}%
-\contentsline {chapter}{\numberline {2}ATE Connections}{3}{}%
-\contentsline {section}{\numberline {2.1}Overview}{4}{}%
-\contentsline {section}{\numberline {2.2}Connections}{5}{}%
-\contentsline {subsection}{\numberline {2.2.1}At the ATE}{5}{}%
-\contentsline {subsection}{\numberline {2.2.2}Current Measurement Loop/DMM Connection}{7}{}%
-\contentsline {chapter}{\numberline {3}zPSC Chassis Overview}{9}{}%
-\contentsline {section}{\numberline {3.1}Introduction}{9}{}%
-\contentsline {section}{\numberline {3.2}Front Panels (2- and 4-Channel PSCs)}{9}{}%
-\contentsline {section}{\numberline {3.3}Rear Panel - 2 Channel}{9}{}%
-\contentsline {section}{\numberline {3.4}Internal Component Layout - 2 Channel}{10}{}%
-\contentsline {subsection}{\numberline {3.4.1}Analog Board Components}{10}{}%
-\contentsline {section}{\numberline {3.5}Rear Panel - 4 Channel}{11}{}%
-\contentsline {section}{\numberline {3.6}Internal Component Layout - 4 Channel}{11}{}%
-\contentsline {subsection}{\numberline {3.6.1}Analog Board Components}{12}{}%
-\contentsline {chapter}{\numberline {4}EPICS Base and IOCs}{13}{}%
-\contentsline {section}{\numberline {4.1}Introduction}{13}{}%
-\contentsline {section}{\numberline {4.2}EPICS Installation Overview}{13}{}%
-\contentsline {section}{\numberline {4.3}Installing EPICS Base and Required Modules}{13}{}%
-\contentsline {section}{\numberline {4.4}Installing the ATE IOC}{15}{}%
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}ATE Connections}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Overview}{4}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Connections}{5}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}At the ATE}{5}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Current Measurement Loop/DMM Connection}{7}{subsection.2.2.2}%
+\contentsline {chapter}{\numberline {3}zPSC Chassis Overview}{9}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Introduction}{9}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Front Panels (2- and 4-Channel PSCs)}{9}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Rear Panel - 2 Channel}{9}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Internal Component Layout - 2 Channel}{10}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Analog Board Components}{10}{subsection.3.4.1}%
+\contentsline {section}{\numberline {3.5}Rear Panel - 4 Channel}{11}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Internal Component Layout - 4 Channel}{11}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Analog Board Components}{12}{subsection.3.6.1}%
+\contentsline {chapter}{\numberline {4}EPICS Base and IOCs}{13}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Introduction}{13}{section.4.1}%
+\contentsline {section}{\numberline {4.2}EPICS Installation Overview}{13}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Installing EPICS Base and Required Modules}{13}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Installing the ATE IOC}{15}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Installing the PSC IOC}{16}{section.4.5}%
+\contentsline {chapter}{\numberline {5}CS-Studio - Phoebus}{17}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Introduction}{17}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Installing Phoebus}{17}{section.5.2}%
