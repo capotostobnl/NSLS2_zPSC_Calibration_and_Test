@@ -25,14 +25,14 @@ The network topology is generally as follows:
 		
 		\node[node] (ate) at (-6,-0.5) {ATE\\IP Address: xxx};
 		
-		\node[node] (fofb2) at (-6,4.8) {PSC FOFB \#2\\IP Address: xxx};
+		\node[node] (fofb1) at (-6,4.8) {PSC FOFB \#1\\IP Address: xxx};
 		
 		% ======================
 		% RIGHT SIDE
 		% ======================
 		\node[node] (pscnet) at (6,1.5) {PSC Network\\IP Address: xxx};
 		
-		\node[node] (fofb1) at (6,0) {PSC FOFB \#1\\IP Address: xxx};
+		\node[node] (fofb2) at (6,0) {PSC FOFB \#2\\IP Address: xxx};
 		
 		% ======================
 		% CONNECTIONS
@@ -40,16 +40,16 @@ The network topology is generally as follows:
 		\draw[line] (workstation) -- (sw);
 		\draw[line] (ate) -- (sw);
 		\draw[line] (pscnet) -- (sw);
-		\draw[line] (fofb1) -- (sw);
+		\draw[line] (fofb2) -- (sw);
 		
 		% ======================
 		% DIRECT CONNECTION
 		% ======================
-		\draw[line, dashed, red, thick] (fofb2) -- (workstation);
+		\draw[line, dashed, red, thick] (fofb1) -- (workstation);
 		
 		\node[red, font=\small, align=center]
-		at ($(fofb2)!0.5!(workstation) + (2.6,0.4)$)
-		{Direct connection\\FOFB \#2 $\leftrightarrow$ Workstation};
+		at ($(fofb1)!0.5!(workstation) + (2.6,0.4)$)
+		{Direct connection\\FOFB \#1 $\leftrightarrow$ Workstation};
 		
 	\end{tikzpicture}
 	\caption{Network Topology with Clean FOFB Direct Link}

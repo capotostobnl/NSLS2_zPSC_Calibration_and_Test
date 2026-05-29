@@ -2,11 +2,6 @@
 \chapter{ATE Connections}
 \label{chap:ATE}
 \section{Overview}
-	\begin{figure}[htbp]
-		\centering
-		\includegraphics[width=\textwidth]{Pictures/ATE_Cropped}
-		\caption{ATE \#1}
-	\end{figure}
 	\noindent\textbf{On initial setup,} there are a few fixed connections that need to be made to the ATE:
 	\begin{itemize}[noitemsep, topsep=0pt]
 		\item Current Shunt: Connect this to a resistance standard for calibrations, or to a wire loop if not being used for current measurement
@@ -15,15 +10,30 @@
 		\item SD Card must be configured once, but does not require any regular changes
 		\item Jumpers: Install jumpers in J8-9, J12-13,  J19-20, JJ23-24, J30-31, J34-35, J41-42, and J45-J46 for normal operations.
 	\end{itemize}
-	
+
 	\noindent\textbf{\\\\For every device under test:}
 	\begin{itemize}[noitemsep, topsep=0pt]
 		\item Channel 1, 2, 3, and 4 Power Supply Cables: These cables connect to each of the micro-D Power Supply I/O connectors on the rear of the PSC
 		\item Tuning Boards: Tuning boards must be installed to match the loads being tested.
 		\item DCCT Cable must be connected for every PSC. There are two cables - one for 4-Channel units, and another for 2-Channel units. 
 	\end{itemize}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=6in]{Pictures/ATE_Cropped}
+		\caption{ATE \#1}
+	\end{figure}
 
-
+	\subsection{ATE Test Rack at NSLS-II}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[
+			width=5.5in,
+			%height=0.85\textwidth,
+			keepaspectratio
+			]{Pictures/TestRackAnnotated}
+		\end{figure}
+		
 \section{Connections}
 	\begin{figure}[H]
 	\centering
@@ -237,8 +247,20 @@
 	\caption{Annotated ATE Board}
 \end{figure}
 
+\newpage
 \subsection{Current Measurement Loop/DMM Connection}
-The DMM is connected to the workstation via a GPIB adapter from Prologix. These are available in both USB and Ethernet forms.\\
+The DMM is connected to the workstation via a GPIB adapter from Prologix. These are available in both USB and Ethernet forms.\\\\
+%
+\begin{center}
+	\setlength{\fboxrule}{1.5pt}
+	\setlength{\fboxsep}{6pt}
+	\fbox{
+		\parbox{0.9\textwidth}{
+			\textbf{If the DMM/Resistance standard is not used, a jumper must be connected across this terminal block on the ATE if CALDAC is to be used!}
+		}
+	}
+\end{center}
+
 \begin{figure}[H]
 	\centering
 		\resizebox{\textwidth}{!}{%
