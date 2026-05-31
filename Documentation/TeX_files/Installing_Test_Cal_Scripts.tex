@@ -3,26 +3,4 @@
 \chapter{Calibration and Test Scripts}
 \label{chap:Calibration and Test Scripts}
 \section{Overview}
-The calibration and test scripts are broken into many parts; For ease of use, a simple module, 'launcher.py' was created. 
-
-The script is maintained in a Git repository at: \url{https://github.com/capotostobnl/NSLS2_zPSC_Calibration_and_Test}
-
-\section{Installing and Configuring Python, and the Python Environment}
-\subsection{Python Package Management}
-\subsubsection*{Installing Pip}
-These scripts were written using Python3. It is assumed that Python3 is already installed on your workstation.\\\\
-A Pip requirements file is included in the repository for ease of package management, but pip may not come bundled with the OS; to install Pip:\\
-\texttt{sudo apt install python3-pip}
-
-\subsubsection*{Installing Packages}
-Packages can be simply installed via pip now.\\\\
-If within a virtual environment, use: \texttt{pip install -r requirements.txt}\\
-If not using environments: \texttt{python3 -m pip install -r requirements.txt}\\
-If you run into permissions issues: \texttt{python3 -m pip install --user -r requirements.txt}
-
-
-\subsection*{Python Virtual Environments}
-It may be desireable to use a virtual environment, e.g., venv or Conda, especially if other scripts are used on this machine that may have overlapping or conflicting packages installed. venv can be installed with:\\
-\texttt{sudo apt install python3-venv}\\\\
-The environment can then be activated with \texttt{python3 -m venv my\_venv\_name}. You can then activate the environment with \texttt{source my\_venv/bin/activate}. 
 
