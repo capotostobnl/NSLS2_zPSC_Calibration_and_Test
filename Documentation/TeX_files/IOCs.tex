@@ -105,7 +105,7 @@ There are two IOCs associated with the calibration and test of the zPSC: The ATE
 
 		\item Find the next available port: \texttt{manage-iocs nextport}
 		\item Configure this in the config file: \texttt{nano config}
-		\item Set the \texttt{NAME=PSCTest}, \texttt{PORT=} your next port, \texttt{USER=softioc}, and \texttt{HOST=\$HOSTNAME}
+		\item Set the \texttt{NAME=PSCtest}, \texttt{PORT=} your next port, \texttt{USER=softioc}, and \texttt{HOST=\$HOSTNAME}
 		\item Update the directory path in the root-level st.cmd to point to the right binaries
 		\item Enroll in manage-iocs as a service: \texttt{sudo manage-iocs install PSCtest}
 		\item Enable auto-start on boot: \texttt{sudo manage-iocs enable PSCtest}
