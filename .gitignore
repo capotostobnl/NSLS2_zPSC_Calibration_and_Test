@@ -12,3 +12,6 @@ __pycache__
 #Shipment*
 venv/
 psc_calibration_temp.doc
+*.aux
+*.toc
+*.synctex.gz

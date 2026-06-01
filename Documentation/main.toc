@@ -26,21 +26,21 @@
 \contentsline {section}{\numberline {5.3}Installing EPICS Base and Required Modules}{19}{section.5.3}%
 \contentsline {section}{\numberline {5.4}Installing the ATE IOC}{21}{section.5.4}%
 \contentsline {section}{\numberline {5.5}Installing the PSC IOC}{22}{section.5.5}%
-\contentsline {chapter}{\numberline {6}CS-Studio - Phoebus}{23}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Introduction}{23}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Installing Phoebus}{23}{section.6.2}%
-\contentsline {chapter}{\numberline {7}Networking}{25}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Overview}{25}{section.7.1}%
-\contentsline {chapter}{\numberline {8}Installing and Configuring Minicom}{27}{chapter.8}%
-\contentsline {section}{\numberline {8.1}Overview}{27}{section.8.1}%
-\contentsline {section}{\numberline {8.2}Installation in a Linux environment}{27}{section.8.2}%
-\contentsline {subsection}{\numberline {8.2.1}Installing Minicom}{27}{subsection.8.2.1}%
-\contentsline {section}{\numberline {8.3}Configuring Minicom}{28}{section.8.3}%
-\contentsline {section}{\numberline {8.4}Running Minicom}{28}{section.8.4}%
-\contentsline {chapter}{\numberline {9}Python Installation and Configuration}{29}{chapter.9}%
-\contentsline {section}{\numberline {9.1}Overview}{29}{section.9.1}%
-\contentsline {section}{\numberline {9.2}Installing and Configuring Python, and the Python Environment}{29}{section.9.2}%
-\contentsline {subsection}{\numberline {9.2.1}Installing Python}{29}{subsection.9.2.1}%
-\contentsline {subsection}{\numberline {9.2.2}Python Package Management}{29}{subsection.9.2.2}%
-\contentsline {chapter}{\numberline {10}Calibration and Test Scripts}{31}{chapter.10}%
-\contentsline {section}{\numberline {10.1}Overview}{31}{section.10.1}%
+\contentsline {chapter}{\numberline {6}CS-Studio - Phoebus}{25}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Introduction}{25}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Installing Phoebus}{25}{section.6.2}%
+\contentsline {chapter}{\numberline {7}Networking}{27}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Overview}{27}{section.7.1}%
+\contentsline {chapter}{\numberline {8}Installing and Configuring Minicom}{29}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Overview}{29}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Installation in a Linux environment}{29}{section.8.2}%
+\contentsline {subsection}{\numberline {8.2.1}Installing Minicom}{29}{subsection.8.2.1}%
+\contentsline {section}{\numberline {8.3}Configuring Minicom}{30}{section.8.3}%
+\contentsline {section}{\numberline {8.4}Running Minicom}{30}{section.8.4}%
+\contentsline {chapter}{\numberline {9}Python Installation and Configuration}{31}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Overview}{31}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Installing and Configuring Python, and the Python Environment}{31}{section.9.2}%
+\contentsline {subsection}{\numberline {9.2.1}Installing Python}{31}{subsection.9.2.1}%
+\contentsline {subsection}{\numberline {9.2.2}Python Package Management}{31}{subsection.9.2.2}%
+\contentsline {chapter}{\numberline {10}Calibration and Test Scripts}{33}{chapter.10}%
+\contentsline {section}{\numberline {10.1}Overview}{33}{section.10.1}%

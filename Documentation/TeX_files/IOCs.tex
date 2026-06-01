@@ -24,6 +24,8 @@ There are two IOCs associated with the calibration and test of the zPSC: The ATE
 
 \section{Installing EPICS Base and Required Modules}
 	\begin{enumerate}
+		\item Install Dependencies for Build
+			\hspace*{2em} Install git, build-essential, and perl:\\ \texttt{sudo apt -y install git build-essential perl libtirpc-dev re2c libevent-dev autoconf automake libtool pkg-config}
 		\item Create the EPICS user group, and the empty EPICS directory: \\
 			\hspace*{2em} \texttt{sudo groupadd epics}\\
 			\hspace*{2em} \texttt{sudo usermod -aG epics \$USER}\\
@@ -91,8 +93,7 @@ There are two IOCs associated with the calibration and test of the zPSC: The ATE
 		\item \texttt{cd PSCtest}
 		\item \texttt{git switch Released,-UPC/BPC-Split-IOC-Ver-2}
 		\item Create the \texttt{RELEASE.local} file, \texttt{touch configure/RELEASE.local}
-		\item \texttt{echo "EPICS\_BASE=/epics/base
-			ASYN=/epics/modules/asyn" >}\\
+		\item \texttt{echo -e "EPICS\_BASE=/epics/base\textbackslash nASYN=/epics/modules/asyn" >}\\
 			\hspace*{2em} \texttt{ /epics/iocs/PSCtest/configure/RELEASE.local}
 		\item Build the IOC: \texttt{make clean}, \texttt{make}
 		\item Update the st.cmd file: \texttt{cd iocBoot/iocPSCtest}
@@ -104,7 +105,7 @@ There are two IOCs associated with the calibration and test of the zPSC: The ATE
 
 		\item Find the next available port: \texttt{manage-iocs nextport}
 		\item Configure this in the config file: \texttt{nano config}
-		\item Set the \texttt{NAME=PSCTest}, \texttt{PORT=} your next port
+		\item Set the \texttt{NAME=PSCTest}, \texttt{PORT=} your next port, \texttt{USER=softioc}, and \texttt{HOST=\$HOSTNAME}
 		\item Update the directory path in the root-level st.cmd to point to the right binaries
 		\item Enroll in manage-iocs as a service: \texttt{sudo manage-iocs install PSCtest}
 		\item Enable auto-start on boot: \texttt{sudo manage-iocs enable PSCtest}
@@ -119,20 +120,18 @@ There are two IOCs associated with the calibration and test of the zPSC: The ATE
 	\hspace*{1em} \texttt{git clone https://github.com/jamead/zpsc-ioc.git zpsc\_ioc}
 	\item \texttt{cd zpsc\_ioc}
 	\item Create the \texttt{RELEASE.local} file, \texttt{touch configure/RELEASE.local}
-	\item \texttt{echo "EPICS\_BASE = /epics/base}\\
-		\hspace*{2em}\texttt{PSCDRV = /epics/modules/pscdrv}\\
+	\item \texttt{echo -e "EPICS\_BASE = /epics/base\textbackslash n}\\
+		\hspace*{2em}\texttt{PSCDRV = /epics/modules/pscdrv\textbackslash n}\\
 		\hspace*{2em}\texttt{SEQ = /epics/modules/seq" >}\\
 		\hspace*{2em} \texttt{/epics/iocs/zpsc\_ioc/configure/RELEASE.local}
 	\item Build the IOC: \texttt{make clean}, \texttt{make}
 	\item Update the st.cmd file as needed: \texttt{cd iocBoot/ioczpsc}
-	\begin{enumerate}
-		\item Edit the st.cmd file: \texttt{nano st.cmd}
-		\item Update as needed
-	\end{enumerate}
-	
+	\item Create the st.cmd file used by systemd-softioc: \begin{verbatim}echo -e '#!/bin/bash\n\n
+		cd "/epics/iocs/zpsc_ioc/iocBoot/ioczpsc"\n./st.cmd' > st.cmd\end{verbatim}
+	\item Make the new st.cmd executable: \texttt{chmod +x st.cmd}
 	\item Find the next available port: \texttt{manage-iocs nextport}
 	\item Configure this in the config file: \texttt{nano config}
-	\item Set the \texttt{NAME=zpsc\_ioc}, \texttt{PORT=} your next port
+	\item Set the \texttt{NAME=zpsc\_ioc}, \texttt{PORT=} your next port, \texttt{USER=softioc}, and \texttt{HOST=\$HOSTNAME}
 	\item Update the directory path in the root-level st.cmd to the \texttt{iocBoot/ioczpsc/st.cmd}
 	\item Enroll in manage-iocs as a service: \texttt{sudo manage-iocs install zpsc\_ioc}
 	\item Enable auto-start on boot: \texttt{sudo manage-iocs enable zpsc\_ioc}

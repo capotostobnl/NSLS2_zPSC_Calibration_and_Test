@@ -11,20 +11,26 @@ CS-Studio Phoebus is installed using precompiled binaries. This application requ
 
 \section{Installing Phoebus}
 \begin{enumerate}
-	\item If not installed, install Java, e.g.:\\
+	\item If not installed, install Java, e.g.:\newline
 		\hspace*{2em}\texttt{sudo apt update \&\& sudo apt install openjdk-17-jdk}
-	\item Create the directory: \texttt{sudo mkdir /opt/phoebus}\\
-		\hspace*{2em}\texttt{chown \$USER:epics /opt/phoebus}\\
+	\item Create the directory: \texttt{sudo mkdir /opt/phoebus}\newline
+		\hspace*{2em}\texttt{sudo chown \$USER:epics /opt/phoebus}\newline
 		\hspace*{2em}\texttt{chmod 2775 /opt/phoebus}
-	\item Download Phoebus and extract to the \texttt{/opt/phoebus} directory\\
-	\href{https://github.com/ControlSystemStudio/phoebus/releases/download/v4.7.4/phoebus-4.7.4-linux.tar.gz}{https://github.com/ControlSystemStudio/phoebus/releases/download/v4.7.4/phoebus-4.7.4-linux.tar.gz}
+	\item Download Phoebus and extract to the \texttt{/opt/phoebus} directory\newline
+	\href{https://github.com/ControlSystemStudio/phoebus/releases/download/v4.7.4/phoebus-4.7.4-linux.tar.gz}{https://github.com/ControlSystemStudio/phoebus/releases/download/v4.7.4/phoebus-4.7.4-linux.tar.gz}\newline
+\begin{itemize}
+	\item[] \texttt{cd /opt/phoebus}
+	\item[] \path|wget https://github.com/ControlSystemStudio/phoebus/releases/download/v4.7.4/phoebus-4.7.4-linux.tar.gz|
+	\item[] \texttt{tar -xvzf phoebus-4.7.4-linux.tar.gz -C . --strip-components=1}
+\end{itemize}
 	\item{Make the shell script executable: \texttt{chmod +x phoebus.sh}}
 	\item Copy in necessary configuration changes from the template:\\
 		\hspace*{2em}\texttt{git clone }\\
 		\hspace*{2em}\texttt{https://github.com/capotostobnl/Phoebus-ALSU.git /opt/phoebus/config}
-	\item Update paths as necessary in the \texttt{settings.in}/\texttt{settings\_template.ini}
+	\item overwrite the defaults with the new template: \texttt{mv config/* .}
+	\item Update paths as necessary in the \texttt{settings.ini}
 	\item Alias Phoebus to run via command \texttt{run-phoebus}:\\
-		\hspace*{2em}\texttt{echo 'alias run-phoebus="/opt/phoebus/phoebus.sh"' >> ~/.bashrc}\\
+		\hspace*{2em}\texttt{echo 'alias run-phoebus="/opt/phoebus/phoebus.sh"' >> \textasciitilde/.bashrc}\\
 		\hspace*{2em}\texttt{source \textasciitilde/.bashrc}
 	\item{Now test! Try run-phoebus from a terminal, and then click the 'Home' button!}
 	
