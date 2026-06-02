@@ -1,6 +1,25 @@
 % !TeX root = ../main.tex
 
-\chapter{Calibration and Test Scripts}
-\label{chap:Calibration and Test Scripts}
+\chapter{Calibration and Test Script Installation}
+\label{chap:Calibration and Test Script Installation}
 \section{Overview}
 
+The repository for the calibration and test scripts can be found at: \url{https://github.com/capotostobnl/NSLS2_zPSC_Calibration_and_Test}
+
+Details regarding the use of the script will come in the following chapters on Calibration and on Functional Tests, though all scripts are launched from this one repository's 'launcher.py' script. 
+
+\section{Cloning the Script Repository}
+	\begin{enumerate}
+		\item Choose a location for the repo, and go there: \texttt{cd ~/}
+		\item Clone the repository: \texttt{git clone \url{https://github.com/capotostobnl/NSLS2_zPSC_Calibration_and_Test}}
+	\end{enumerate}
+	
+\section{Creating the Virtual Environment}
+If you choose to use a virtual environment, create it and then install the dependencies. If you choose to not use venv, you can skip to installing dependencies in the next section. 
+	\begin{enumerate}
+		\item Navigate to the repository and then: \texttt{python3 -m venv .venv}
+		\item Activate the environment: \texttt{source .venv/bin/activate}
+	\end{enumerate}
+
+\section{Installing Dependencies}
+Required Python modules can be installed via the requirements.txt from the repository via: \texttt{python3 -m pip install -r requirements.txt}

@@ -42,5 +42,15 @@
 \contentsline {section}{\numberline {9.2}Installing and Configuring Python, and the Python Environment}{31}{section.9.2}%
 \contentsline {subsection}{\numberline {9.2.1}Installing Python}{31}{subsection.9.2.1}%
 \contentsline {subsection}{\numberline {9.2.2}Python Package Management}{31}{subsection.9.2.2}%
-\contentsline {chapter}{\numberline {10}Calibration and Test Scripts}{33}{chapter.10}%
+\contentsline {chapter}{\numberline {10}Calibration and Test Script Installation}{33}{chapter.10}%
 \contentsline {section}{\numberline {10.1}Overview}{33}{section.10.1}%
+\contentsline {section}{\numberline {10.2}Cloning the Script Repository}{33}{section.10.2}%
+\contentsline {section}{\numberline {10.3}Creating the Virtual Environment}{33}{section.10.3}%
+\contentsline {section}{\numberline {10.4}Installing Dependencies}{33}{section.10.4}%
+\contentsline {chapter}{\numberline {11}Initial Booting of the PSC and Configuration of the EEPROM}{35}{chapter.11}%
+\contentsline {section}{\numberline {11.1}Overview}{35}{section.11.1}%
+\contentsline {chapter}{\numberline {12}Running the Calibration and Test Script}{37}{chapter.12}%
+\contentsline {section}{\numberline {12.1}Overview}{37}{section.12.1}%
+\contentsline {section}{\numberline {12.2}Running the Script: Launcher Menu}{37}{section.12.2}%
+\contentsline {subsection}{\numberline {12.2.1}Option 1: Initialize QSPI Only}{39}{subsection.12.2.1}%
+\contentsline {subsection}{\numberline {12.2.2}Option 2: Calibrate Only}{40}{subsection.12.2.2}%
