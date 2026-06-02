@@ -1,0 +1,29 @@
+% !TeX root = ../main.tex
+
+\chapter{Configuring the Test and Calibration Scripts}
+\label{chap:Configuring the Test and Calibration Scripts}
+\section{Overview}
+There are many places where changes may need to be made when bringing a new workstation up for the first time.\\\\
+After initial configuration, no further changes should be required, with the exception of the \texttt{psc\_models.py} class, which will be modified any time a new PSC is added, or a particular PSC's configuration requirements are changed.
+\section{The \texttt{common} Files Directory}
+This directory contains a number of modules which may need reconfiguration as outlined below.\\\\
+Files in this directory may be used by both the Calibration side and the Test side of the script package. 
+
+\subsection{EPICS Drivers}
+There are two modules, \texttt{ate\_epics.py} and \texttt{psc\_epics.py} which provide a library of function calls to read and write various EPICS PVs. As firmware and IOC changes are made, some changes may be required in these drivers to add new features, or fix features that are removed or break.\\\\
+These two modules are little more than a pyepics wrapper. 
+
+\subsection{The \texttt{initialize\_dut.py} Utility}
+This is a small utility that collects information from the PSC EEPROM, generate the filenames, timestamps, and directory structures to be used during calibration and test.
+ 
+\subsection{The \texttt{psc\_models.py} Class}
+
+
+\section{Calibration}
+\subsection{The \texttt{initialize\_qspi.py} Module}
+
+\subsection{The \texttt{psc\_calibration.py} Module}
+
+
+
+\section{Functional Test}

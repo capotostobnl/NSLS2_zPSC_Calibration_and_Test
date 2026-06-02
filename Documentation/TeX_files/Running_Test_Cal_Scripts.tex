@@ -56,13 +56,56 @@ In this example, a 4Ch High-Stability Fast EIC PSC was being configured, so we c
 
 \subsection{Option 2: Calibrate Only}
 An example screenshot is provided below.\\
-After selecting Menu Option 2, Calibrate Only, the script will sweep the network to detect PSCs. If only one PSC pings, it'll automatically select this unit. If it times out, it'll prompt for the PV prefix of the PSC.\\
+After selecting Menu Option 2, Calibrate Only, the script will sweep the network to detect PSCs. If only one PSC pings, it'll automatically select this unit. If it times out, it'll prompt for the PV prefix of the PSC.\\\\
+The script reads the EEPROM configuration, and trims the option list to those PSCs that match the EEPROM.\\\\
+In this example, a 4Ch High-Stability Slow PSC was being calibrated, so we chose Option 5.\\
 
-The script reads the EEPROM configuration, and trims the option list to those PSCs that match the EEPROM.\\
-
-In this example, a 4Ch High-Stability Fast EIC PSC was being calibrated, so we chose Option 4. 
+A few new prompts will appear:
+\begin{enumerate} 
+	\item How long do you want to sleep before beginning? (Minutes):\\
+	This is asking how long to delay the script's start. For example, if you want the script to wait 15 minutes for the unit to warm up and thermally stabilize, you can simply type 15 and hit \texttt{return}. The script will wait 15 minutes, and then start automatically. 
+	
+	\item Are the correct tuning boards installed in the ATE? $<$Y/N$>$:\\
+	This is a reminder to check and install the correct tuning boards in the ATE. This does not have any effect on the script's function - it does not perform any self tests or verification! It is simply a reminder. Incorrect tuning boards will cause the unit to behave unpredictably.\\
+	Install the correct tuning boards before proceeding.
+	
+	\item Have you run the DMM Self-Calibration within the last 8 hours? $<$Y/N$>$:\\
+	This is another reminder prompt. If you haven't, simply perform the auto-cal on the DC Volts range before proceeding. 
+	
+	\item The calibration script will now take the reigns from here. No further user input is required, the calibration will run, printing results to the terminal as it progresses. Once it completes, it will automatically generate a report text file, timestamped with the model and serial number of the PSC in the filename, located in the \texttt{/cal\_reports} directory. 
+\end{enumerate}
 
 \begin{figure}[H]
 	\centering
-%	\includegraphics[width=5.75in]{Python_Screenshots/Calibration_Menu}
+	\includegraphics[width=6in]{Python_Screenshots/Calibration_Launch}
+	\caption{Menu to launch a Calibrate Only calibration of a PSC}
 \end{figure}
+
+\newpage
+\subsection{Option 3: Test Only}
+An example screenshot is provided below.\\
+After selecting Menu Option 3, Test Only, the script will sweep the network to detect PSCs. If only one PSC pings, it'll automatically select this unit. If it times out, it'll prompt for the PV prefix of the PSC.\\\\
+The script reads the EEPROM configuration, and trims the option list to those PSCs that match the EEPROM.\\\\
+In this example, a 4Ch High-Stability Slow PSC was being tested, so we chose Option 5.\\
+
+A few new prompts will appear:
+\begin{enumerate} 
+	\item How long do you want to sleep before beginning? (Minutes):\\
+	This is asking how long to delay the script's start. For example, if you want the script to wait 15 minutes for the unit to warm up and thermally stabilize, you can simply type 15 and hit \texttt{return}. The script will wait 15 minutes, and then start automatically. 
+	
+	\item Are the correct tuning boards installed in the ATE? $<$Y/N$>$:\\
+	This is a reminder to check and install the correct tuning boards in the ATE. This does not have any effect on the script's function - it does not perform any self tests or verification! It is simply a reminder. Incorrect tuning boards will cause the unit to behave unpredictably.\\
+	Install the correct tuning boards before proceeding.
+	
+	\item The functional test script will now take the reigns from here. No further user input is required, the functional tests will run, printing results to the terminal as it progresses. Once it completes, it will automatically generate a report PDF file, timestamped with the model and serial number of the PSC in the filename, located in the \texttt{/test\_reports} directory.\\\\
+	There is one caveat - in that the Fast-bandwidth units will require one input from the user at the very end of the test. The user will be prompted for the SUDO password, as TCPDUMP requires root permission to sniff traffic. The script will pause while waiting for the password, before continuing. This last step requires less than 90 seconds to complete the test and generate the report once the password is entered. 
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=6in]{Python_Screenshots/Test_Launch}
+	\caption{Menu to launch a Test Only test of a PSC}
+\end{figure}
+
+\subsection{Option 4: Calibrate and Test}
+This option will have a menu identical to that of Option 2: Calibrate Only. This simply runs the calibration script, then on completion, runs the test script. No additional figures have been included for this.

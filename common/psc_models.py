@@ -786,7 +786,7 @@ MODELS = {
     ),
     "NSLS-II_TEST_4-CH-SLOW__MSS/HSS": PSCModel(
         model_id="NSLS-II_TEST_4-CH-SLOW__MSS/HSS",
-        display_name="NSLS-II_TEST_4-CH-SLOW__MSS/HSS - BIPOLAR -- 33.3R/1k/2u2 BUR/COMP, 'SKQ' TUNING BRD",
+        display_name="NSLS-II_TEST_4-CH-SLOW__MSS/HSS", # - BIPOLAR -- 33.3R/1k/2u2 BUR/COMP, 'SKQ' TUNING BRD",
         description="PSC-4-CH-SLOW__MSS/HSS",
         designation="NSLS-II_TEST_4-CH-SLOW__MSS/HSS",
         channels=(1, 2, 3, 4),
@@ -849,7 +849,7 @@ MODELS = {
     ),
     "NSLS-II_TEST_4-CH-FAST__MSF/HSF": PSCModel(
         model_id="NSLS-II_TEST_4-CH-FAST__MSF/HSF",
-        display_name="NSLS-II_TEST_4-CH-FAST__MSF/HSF - BIPOLAR -- 33.3R/20k/0u1 BUR/COMP, 'MSF' TUNING BRD",
+        display_name="NSLS-II_TEST_4-CH-FAST__MSF/HSF", # - BIPOLAR -- 33.3R/20k/0u1 BUR/COMP, 'MSF' TUNING BRD",
         description="PSC-4-CH-SLOW__MSF/HSF",
         designation="NSLS-II_TEST_4-CH-SLOW__MSF/HSF",
         channels=(1, 2, 3, 4),
@@ -912,7 +912,7 @@ MODELS = {
     ),
     "NSLS-II_TEST_2-CH-SLOW__HSS": PSCModel(
         model_id="NSLS-II_TEST_2-CH-SLOW__HSS",
-        display_name="NSLS-II_TEST_2-CH-SLOW__HSS - UNIPOLAR -- 33.3R/1k/2u2 BUR/COMP, 'SKQ' TUNING BRD",
+        display_name="NSLS-II_TEST_2-CH-SLOW__HSS", #- UNIPOLAR -- 33.3R/1k/2u2 BUR/COMP, 'SKQ' TUNING BRD",
         description="PSC-2-CH-SLOW_HSS",
         designation="NSLS-II_TEST_2-CH-SLOW_HSS",
         channels=(1, 2),

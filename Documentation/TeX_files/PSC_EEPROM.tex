@@ -20,11 +20,53 @@ First, a new SD card must be generated and installed in the PSC. We have been us
 	
 	\item Eject the SD card, and install in the zPSC, it should now be ready to boot. 
 	
-	\item Turn on the PSC, it should boot. It may take 60 to 90 seconds for the PSC to connect to the network and ping, be patient.\\The PSC will take an extended amount of time to boot the RTOS if no ethernet cable is connected at all.  
+	\item Turn on the PSC, it should boot, indicated by front panel LED D8 rapidly flashing. It may take 60 to 90 seconds for the PSC to connect to the network and ping, be patient.\\The PSC will take an extended amount of time to boot the RTOS if no ethernet cable is connected at all.  
 \end{enumerate}
 
 \subsection{Configuring the EEPROM}
 Once the PSC has booted, we can proceed to writing the EEPROM configuration.\\
 \begin{enumerate}
-	\item 
+	\item Connect the micro-USB cable to the front panel port of the PSC, and identify which serial port it appears as on your terminal.\\
+	You may need to do a directory list before and after plugging in, to see which serial device appears:\\
+	\texttt{ls /dev}\\
+	In this example, the PSC will appear as /dev/ttyUSB2.\\
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=\textwidth]{Python_Screenshots/ls_dev}
+	\end{figure}
+	\newpage
+	\item Open Minicom using the port you determined: \texttt{minicom -D /dev/ttyUSB2}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=4in]{Python_Screenshots/EEPROM_Terminal}
+		\end{figure}
+	\item  Set Items B through E for a standard PSC, and F, G as needed.
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=4in]{Python_Screenshots/minicom b}
+			\caption{Setting B}
+		\end{figure}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=4in]{Python_Screenshots/minicom c}
+			\caption{Setting C}
+		\end{figure}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=4in]{Python_Screenshots/minicom d}
+			\caption{Setting D}
+		\end{figure}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=4in]{Python_Screenshots/minicom e}
+			\caption{Setting E}
+		\end{figure}
+	\newpage
+	\item Verify the settings with Option A:
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=4in]{Python_Screenshots/minicom a}
+			\caption{Setting A}
+		\end{figure}
+	\item If satisfied, it is now safe to unplug the USB cable, no further action is necessary. To exit Minicom, press \texttt{ctrl+a}, release, press \texttt{x}, release, and finally press \texttt{<return>} for 'Yes' to exit.
 \end{enumerate}
