@@ -1,0 +1,61 @@
+% !TeX root = ../main.tex
+
+\newpage
+
+\medskip
+\noindent{\normalsize\bfseries Functional Test Parameters}
+\par\medskip
+The test parameters are configured in a few sections as follows:\\
+\noindent\normalsize\textbf{Test Enabling/Disabling:} By default, all functional tests will be run. Individual tests can be enabled or disabled by adding a call for \texttt{FuncSuite()} as follows:
+\begin{minted}{python}
+	func_tests=FuncSuite(
+	regulation=True,
+	smooth=True,
+	jump=True
+	)
+\end{minted}
+\medskip
+You may also disable specific channels: 
+\begin{minted}{python}
+	func_tests=FuncSuite(
+	jump=ChannelValues(
+		ch1=False,
+		ch2=False,
+		ch3=True,
+		ch4=True
+		)
+	)
+\end{minted}
+
+\medskip
+
+\noindent\normalsize\textbf{Regulator Test Parameters:} The regulator test parameters are as follows:
+\begin{minted}{python}
+	reg=RegulatorTestParams(
+		setpoints=(reg_pts := ChannelValues(ch1=5,
+                                                    ch2=5,
+                                                    ch3=5,
+                                                    ch4=5
+	                                            )
+	                    ),
+		settling_time=10
+	),
+\end{minted}
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{p{4cm}p{10cm}}
+		\toprule
+		\textbf{Parameter} & \textbf{Description} \\
+		\midrule
+		
+		\texttt{setpoints} &
+		Current setpoint, per channel, to run the stability test\\
+		
+		\texttt{settling\_time} &
+		Settling time in seconds, after setting the current before beginning data collection\\
+
+		\bottomrule
+	\end{tabular}
+	\caption{Regulator test parameters}
+	\label{tab:regulator-test-parameters}
+\end{table}

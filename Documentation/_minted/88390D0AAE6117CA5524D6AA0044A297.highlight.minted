@@ -1,0 +1,11 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+	\PYG{n}{reg}\PYG{o}{=}\PYG{n}{RegulatorTestParams}\PYG{p}{(}
+		\PYG{n}{setpoints}\PYG{o}{=}\PYG{p}{(}\PYG{n}{reg\PYGZus{}pts} \PYG{o}{:=} \PYG{n}{ChannelValues}\PYG{p}{(}\PYG{n}{ch1}\PYG{o}{=}\PYG{l+m+mi}{5}\PYG{p}{,}
+                                                    \PYG{n}{ch2}\PYG{o}{=}\PYG{l+m+mi}{5}\PYG{p}{,}
+                                                    \PYG{n}{ch3}\PYG{o}{=}\PYG{l+m+mi}{5}\PYG{p}{,}
+                                                    \PYG{n}{ch4}\PYG{o}{=}\PYG{l+m+mi}{5}
+	                                            \PYG{p}{)}
+	                    \PYG{p}{),}
+		\PYG{n}{settling\PYGZus{}time}\PYG{o}{=}\PYG{l+m+mi}{10}
+	\PYG{p}{),}
+\end{MintedVerbatim}

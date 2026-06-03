@@ -1,0 +1,154 @@
+% !TeX root = ../main.tex
+
+\newpage
+
+\medskip
+\noindent{\normalsize\bfseries Calibration Parameters}
+\par\medskip
+The calibration parameters are configured using the CalibrationParameters class. Many values are initialized to default values via the subclasses, which initialize the values to standard values, which may be modified in the calibration\_parameters instantiation if so desired:
+\begin{minted}{python}
+	calibration_parameters=CalibrationParameters(
+		ndcct=1000.0,
+		burden_resistors=ChannelValues(ch1=83.333333, ch2=83.333333,
+					       ch3=83.333333, ch4=83.333333),
+		
+		fault_limits=PSCFaultThresholdsLimits(
+			ovc1_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+			ovc2_threshold=ChannelValues(ch1=10, ch2=10, ch3=10, ch4=10),
+			ovv_threshold=ChannelValues(ch1=15, ch2=15, ch3=15, ch4=15),
+		),
+		
+		scale_factors=PSCScaleFactors(
+			sf_vout=ChannelValues(ch1=1.9, ch2=1.9, ch3=1.9, ch4=1.9),
+			sf_spare=ChannelValues(ch1=-5.0, ch2=-5.0, ch3=-5.0, ch4=-5.0),
+		),
+	),
+\end{minted}
+These parameters are as follows:\\
+\begin{table}[ht]
+	\centering
+	\begin{tabular}{p{4cm}p{10cm}}
+		\toprule
+		\textbf{Parameter} & \textbf{Description} \\
+		\midrule
+		\texttt{ndcct} &
+		Nominal DC current transformer turns ratio used during current scaling and calibration calculations. \\
+		
+		\texttt{burden\_resistors} &
+		Burden resistor values associated with DCCT channel. These values are used to convert sensed current into a measurable voltage. \\
+		
+		\texttt{fault\_limits} &
+		\\
+		
+		\texttt{scale\_factors} &
+		\\
+
+		\bottomrule
+	\end{tabular}
+	\caption{PSC calibration parameters}
+	\label{tab:psc-calibration-parameters}
+\end{table}
+
+\bigskip
+
+The \texttt{PSCFaultThresholdsLimits} are as follows:
+\begin{table}[H]
+	\centering
+	\begin{tabular}{p{4cm}p{10cm}}
+		\toprule
+		\textbf{Parameter} & \textbf{Description} \\
+		\midrule
+		\texttt{ovc1\_threshold} &
+		\\
+		
+		\texttt{ovc2\_threshold} &
+		\\
+		
+		\texttt{ovv\_threshold} &
+		\\
+		
+		\texttt{err1\_threshold} &
+		\\
+		
+		\texttt{err2\_threshold} &
+		\\
+		
+		\texttt{ignd\_threshold} &
+		\\
+		
+		\texttt{ovc1\_flt\_cnt} &
+		\\
+		
+		\texttt{ovc2\_flt\_cnt} &
+		\\
+		
+		\texttt{ovv\_flt\_cnt} &
+		\\
+		
+		\texttt{err1\_flt\_cnt} &
+		\\
+		
+		\texttt{err2\_flt\_cnt} &
+		\\
+		
+		\texttt{ignd\_flt\_cnt} &
+		\\
+		
+		\texttt{dcct\_flt\_cnt} &
+		\\
+		
+		\texttt{flt1\_flt\_cnt} &
+		\\
+		
+		\texttt{flt2\_flt\_cnt} &
+		\\
+		
+		\texttt{flt3\_flt\_cnt} &
+		\\
+		
+		\texttt{flt\_on\_cnt} &
+		\\
+		
+		\texttt{flt\_heartbeat\_cnt} &
+		\\
+
+		\bottomrule
+	\end{tabular}
+	\caption{\texttt{PSCFaultThresholdsLimits} parameters}
+	\label{tab:fault-limits}
+\end{table}
+
+\bigskip 
+
+The \texttt{PSCScaleFactors} are as follows:
+\begin{table}[H]
+	\centering
+	\begin{tabular}{p{4cm}p{10cm}}
+		\toprule
+		\textbf{Parameter} & \textbf{Description} \\
+		\midrule
+		\texttt{sf\_ramp\_rate} &
+		\\
+		
+		\texttt{sf\_dcct\_scale} &
+		\\
+		
+		\texttt{sf\_vout} &
+		\\
+		
+		\texttt{sf\_ignd} &
+		\\
+		
+		\texttt{sf\_spare} &
+		\\
+		
+		\texttt{sf\_regulator} &
+		\\
+		\texttt{sf\_error} &
+		\\
+		
+		\bottomrule
+	\end{tabular}
+	\caption{\texttt{PSCScaleFactors} parameters}
+	\label{tab:scale-factors}
+\end{table}

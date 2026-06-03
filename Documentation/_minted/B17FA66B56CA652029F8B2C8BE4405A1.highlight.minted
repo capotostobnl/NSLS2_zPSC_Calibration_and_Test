@@ -1,0 +1,18 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{n}{calibration\PYGZus{}parameters}\PYG{o}{=}\PYG{n}{CalibrationParameters}\PYG{p}{(}
+	\PYG{n}{ndcct}\PYG{o}{=}\PYG{l+m+mf}{1000.0}\PYG{p}{,}
+	\PYG{n}{burden\PYGZus{}resistors}\PYG{o}{=}\PYG{n}{ChannelValues}\PYG{p}{(}\PYG{n}{ch1}\PYG{o}{=}\PYG{l+m+mf}{83.333333}\PYG{p}{,} \PYG{n}{ch2}\PYG{o}{=}\PYG{l+m+mf}{83.333333}\PYG{p}{,}
+				       \PYG{n}{ch3}\PYG{o}{=}\PYG{l+m+mf}{83.333333}\PYG{p}{,} \PYG{n}{ch4}\PYG{o}{=}\PYG{l+m+mf}{83.333333}\PYG{p}{),}
+
+	\PYG{n}{fault\PYGZus{}limits}\PYG{o}{=}\PYG{n}{PSCFaultThresholdsLimits}\PYG{p}{(}
+		\PYG{n}{ovc1\PYGZus{}threshold}\PYG{o}{=}\PYG{n}{ChannelValues}\PYG{p}{(}\PYG{n}{ch1}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{n}{ch2}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{n}{ch3}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{n}{ch4}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{),}
+		\PYG{n}{ovc2\PYGZus{}threshold}\PYG{o}{=}\PYG{n}{ChannelValues}\PYG{p}{(}\PYG{n}{ch1}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{n}{ch2}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{n}{ch3}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{,} \PYG{n}{ch4}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{),}
+		\PYG{n}{ovv\PYGZus{}threshold}\PYG{o}{=}\PYG{n}{ChannelValues}\PYG{p}{(}\PYG{n}{ch1}\PYG{o}{=}\PYG{l+m+mi}{15}\PYG{p}{,} \PYG{n}{ch2}\PYG{o}{=}\PYG{l+m+mi}{15}\PYG{p}{,} \PYG{n}{ch3}\PYG{o}{=}\PYG{l+m+mi}{15}\PYG{p}{,} \PYG{n}{ch4}\PYG{o}{=}\PYG{l+m+mi}{15}\PYG{p}{),}
+	\PYG{p}{),}
+
+	\PYG{n}{scale\PYGZus{}factors}\PYG{o}{=}\PYG{n}{PSCScaleFactors}\PYG{p}{(}
+		\PYG{n}{sf\PYGZus{}vout}\PYG{o}{=}\PYG{n}{ChannelValues}\PYG{p}{(}\PYG{n}{ch1}\PYG{o}{=}\PYG{l+m+mf}{1.9}\PYG{p}{,} \PYG{n}{ch2}\PYG{o}{=}\PYG{l+m+mf}{1.9}\PYG{p}{,} \PYG{n}{ch3}\PYG{o}{=}\PYG{l+m+mf}{1.9}\PYG{p}{,} \PYG{n}{ch4}\PYG{o}{=}\PYG{l+m+mf}{1.9}\PYG{p}{),}
+		\PYG{n}{sf\PYGZus{}spare}\PYG{o}{=}\PYG{n}{ChannelValues}\PYG{p}{(}\PYG{n}{ch1}\PYG{o}{=\PYGZhy{}}\PYG{l+m+mf}{5.0}\PYG{p}{,} \PYG{n}{ch2}\PYG{o}{=\PYGZhy{}}\PYG{l+m+mf}{5.0}\PYG{p}{,} \PYG{n}{ch3}\PYG{o}{=\PYGZhy{}}\PYG{l+m+mf}{5.0}\PYG{p}{,} \PYG{n}{ch4}\PYG{o}{=\PYGZhy{}}\PYG{l+m+mf}{5.0}\PYG{p}{),}
+	\PYG{p}{),}
+\PYG{p}{),}
+\end{MintedVerbatim}
