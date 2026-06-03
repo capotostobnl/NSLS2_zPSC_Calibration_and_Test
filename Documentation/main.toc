@@ -56,23 +56,23 @@
 \contentsline {subsubsection}{\numberline {11.2.1.1}Overview}{36}{subsubsection.11.2.1.1}%
 \contentsline {subsubsection}{\numberline {11.2.1.2}PSC Model Structure}{36}{subsubsection.11.2.1.2}%
 \contentsline {subsubsection}{\numberline {11.2.1.3}Adding a New PSC Model}{36}{subsubsection.11.2.1.3}%
-\contentsline {subsection}{\numberline {11.2.2}EPICS Adapters/Drivers}{41}{subsection.11.2.2}%
-\contentsline {subsection}{\numberline {11.2.3}The \texttt {initialize\_dut.py} Utility}{41}{subsection.11.2.3}%
-\contentsline {section}{\numberline {11.3}Calibration}{41}{section.11.3}%
-\contentsline {subsection}{\numberline {11.3.1}The \texttt {initialize\_qspi.py} Module}{41}{subsection.11.3.1}%
-\contentsline {subsection}{\numberline {11.3.2}The \texttt {psc\_calibration.py} Module}{41}{subsection.11.3.2}%
-\contentsline {section}{\numberline {11.4}Functional Test}{41}{section.11.4}%
-\contentsline {chapter}{\numberline {12}Initial Booting of the PSC and Configuration of the EEPROM}{43}{chapter.12}%
-\contentsline {section}{\numberline {12.1}Overview}{43}{section.12.1}%
-\contentsline {subsection}{\numberline {12.1.1}Creating the SD Card}{43}{subsection.12.1.1}%
-\contentsline {subsection}{\numberline {12.1.2}Configuring the EEPROM}{44}{subsection.12.1.2}%
-\contentsline {chapter}{\numberline {13}Running the Calibration and Test Script}{49}{chapter.13}%
-\contentsline {section}{\numberline {13.1}Overview}{49}{section.13.1}%
-\contentsline {section}{\numberline {13.2}Running the Script: Launcher Menu}{49}{section.13.2}%
-\contentsline {subsection}{\numberline {13.2.1}Option 1: Initialize QSPI Only}{52}{subsection.13.2.1}%
-\contentsline {subsection}{\numberline {13.2.2}Option 2: Calibrate Only}{53}{subsection.13.2.2}%
-\contentsline {subsection}{\numberline {13.2.3}Option 3: Test Only}{55}{subsection.13.2.3}%
-\contentsline {subsection}{\numberline {13.2.4}Option 4: Calibrate and Test}{56}{subsection.13.2.4}%
-\contentsline {chapter}{\numberline {A}Example Secondary Ops Checklist}{57}{chapter.A}%
-\contentsline {chapter}{\numberline {B}Example Calibration Report}{93}{chapter.B}%
-\contentsline {chapter}{\numberline {C}Example Test Report}{99}{chapter.C}%
+\contentsline {subsection}{\numberline {11.2.2}EPICS Adapters/Drivers}{45}{subsection.11.2.2}%
+\contentsline {subsection}{\numberline {11.2.3}The \texttt {initialize\_dut.py} Utility}{45}{subsection.11.2.3}%
+\contentsline {section}{\numberline {11.3}Calibration}{45}{section.11.3}%
+\contentsline {subsection}{\numberline {11.3.1}The \texttt {initialize\_qspi.py} Module}{45}{subsection.11.3.1}%
+\contentsline {subsection}{\numberline {11.3.2}The \texttt {psc\_calibration.py} Module}{45}{subsection.11.3.2}%
+\contentsline {section}{\numberline {11.4}Functional Test}{46}{section.11.4}%
+\contentsline {chapter}{\numberline {12}Initial Booting of the PSC and Configuration of the EEPROM}{47}{chapter.12}%
+\contentsline {section}{\numberline {12.1}Overview}{47}{section.12.1}%
+\contentsline {subsection}{\numberline {12.1.1}Creating the SD Card}{47}{subsection.12.1.1}%
+\contentsline {subsection}{\numberline {12.1.2}Configuring the EEPROM}{48}{subsection.12.1.2}%
+\contentsline {chapter}{\numberline {13}Running the Calibration and Test Script}{53}{chapter.13}%
+\contentsline {section}{\numberline {13.1}Overview}{53}{section.13.1}%
+\contentsline {section}{\numberline {13.2}Running the Script: Launcher Menu}{53}{section.13.2}%
+\contentsline {subsection}{\numberline {13.2.1}Option 1: Initialize QSPI Only}{56}{subsection.13.2.1}%
+\contentsline {subsection}{\numberline {13.2.2}Option 2: Calibrate Only}{57}{subsection.13.2.2}%
+\contentsline {subsection}{\numberline {13.2.3}Option 3: Test Only}{59}{subsection.13.2.3}%
+\contentsline {subsection}{\numberline {13.2.4}Option 4: Calibrate and Test}{60}{subsection.13.2.4}%
+\contentsline {chapter}{\numberline {A}Example Secondary Ops Checklist}{61}{chapter.A}%
+\contentsline {chapter}{\numberline {B}Example Calibration Report}{65}{chapter.B}%
+\contentsline {chapter}{\numberline {C}Example Test Report}{71}{chapter.C}%
