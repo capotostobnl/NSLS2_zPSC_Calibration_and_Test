@@ -9,9 +9,15 @@
 \raggedbottom
 \usepackage{url}
 \usepackage{hyperref}
+\newcommand{\appref}[1]{\hyperref[#1]{Appendix~\ref*{#1}}}
 %\usepackage{showframe}
 \usepackage{listings}
 \usepackage{pdfpages}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+\usepackage{minted}
+\usepackage{booktabs}
+
 \begin{document}
 
 \author{Michael Capotosto}
@@ -39,6 +45,7 @@
 
 \appendix
 
+\include{./TeX_files/Appendix_Secondary_Ops}
 \include{./TeX_files/Appendix_Calibration_Report}
 \include{./TeX_files/Appendix_Test_Report}
 

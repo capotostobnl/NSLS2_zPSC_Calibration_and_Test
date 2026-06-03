@@ -9,14 +9,20 @@ After initial configuration, no further changes should be required, with the exc
 This directory contains a number of modules which may need reconfiguration as outlined below.\\\\
 Files in this directory may be used by both the Calibration side and the Test side of the script package. 
 
-\subsection{EPICS Drivers}
+\newpage
+
+\subsection{The \texttt{psc\_models.py} Class}
+\input{./TeX_files/psc_models_subsection}
+
+\newpage
+
+\subsection{EPICS Adapters/Drivers}
 There are two modules, \texttt{ate\_epics.py} and \texttt{psc\_epics.py} which provide a library of function calls to read and write various EPICS PVs. As firmware and IOC changes are made, some changes may be required in these drivers to add new features, or fix features that are removed or break.\\\\
-These two modules are little more than a pyepics wrapper. 
+These two modules are little more than a pyepics wrapper, providing easier formatting, less repetition in the code manually creating PV strings, and providing typehinting/typechecking and auto-complete suggestions. 
 
 \subsection{The \texttt{initialize\_dut.py} Utility}
-This is a small utility that collects information from the PSC EEPROM, generate the filenames, timestamps, and directory structures to be used during calibration and test.
- 
-\subsection{The \texttt{psc\_models.py} Class}
+This is a small utility that collects information from the PSC EEPROM, generate the filenames, timestamps, and directory structures to be used during calibration and test. It shouldn't require any changes in the forseeable future. The directory structures are created dynamically based on the directory it lives in, and should resolve without issue both on Linux and Windows. The utility will create the \texttt{cal\_reports}, \texttt{test\_reports}, and \texttt{test\_data} directories. 
+
 
 
 \section{Calibration}
