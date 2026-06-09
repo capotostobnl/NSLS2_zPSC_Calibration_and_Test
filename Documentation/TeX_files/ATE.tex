@@ -263,7 +263,7 @@ The DMM is connected to the workstation via a GPIB adapter from Prologix. These 
 
 \begin{figure}[H]
 	\centering
-		\resizebox{\textwidth}{!}{%
+		\resizebox{0.75\textwidth}{!}{%
 		\begin{tikzpicture}[
 			>=latex,
 			chassis/.style={
@@ -413,3 +413,11 @@ The DMM is connected to the workstation via a GPIB adapter from Prologix. These 
 	}
 	\caption{ATE $\rightarrow$ DMM Current Loop}
 \end{figure}
+
+\subsection{Tuning Boards}
+	The ATE contains four Tuning Board sockets, one per channel. Tuning boards must be installed for each channel under test.\\\\ The tuning boards must be matched to the PSC configuration. Each channel's tuning board must be installed as a counterpart to the burdens and comps installed in the PSC, as it simulates the response of the magnet load.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=3in]{Pictures/Tuning_Board}
+		\caption{ATE Tuning Board for the ALSu SHD-XY Magnet}
+	\end{figure}
