@@ -1,16 +1,1 @@
- M Documentation/TeX_files/ATE.aux
- M Documentation/TeX_files/CS-Studio-Phoebus.aux
- M Documentation/TeX_files/Cable_Assemblies.aux
- M Documentation/TeX_files/IOCs.aux
- M Documentation/TeX_files/Installing_Minicom.aux
- M Documentation/TeX_files/Installing_Test_Cal_Scripts.aux
- M Documentation/TeX_files/Introduction.aux
- M Documentation/TeX_files/Networking.aux
- M Documentation/TeX_files/Python.aux
- M Documentation/TeX_files/zPSC.aux
- M Documentation/main.aux
- M Documentation/main.out
- M Documentation/main.pdf
- M Documentation/main.tex
- M Documentation/main.toc
-?? Documentation/main.gitstatus
+ M Documentation/main.gitstatus
