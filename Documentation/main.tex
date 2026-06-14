@@ -1,4 +1,7 @@
+% !TeX document-id = {774b65cd-7beb-4446-a11b-6d182c132ee4}
+% !TeX TXS-program:compile = txs:///pdflatex/[--shell-escape]
 \documentclass[letterpaper,12pt]{book}
+\setlength{\parindent}{0pt}
 \usepackage[margin=1in]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
@@ -13,52 +16,85 @@
 %\usepackage{showframe}
 \usepackage{listings}
 \usepackage{pdfpages}
+\pdfminorversion=7
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{2}
 \usepackage{minted}
 \setminted{
-	fontsize=\small,
-	linenos,
-	breaklines,
-	breakanywhere,
-	autogobble
+    fontsize=\small,
+    linenos,
+    breaklines,
+    breakanywhere,
+    autogobble
 }
 
 \usepackage{booktabs}
 
-\begin{document}
+\usepackage[missing={unknown},dirty={-dirty}]{gitinfo2}
+
+
+%%---------------------------------
+% Check Git Status
+\usepackage{shellesc}
+\usepackage{catchfile}
+\usepackage{etoolbox}
+
+\newcommand{\GitBuildStatus}{unknown}
+\newcommand{\GitStatusRaw}{}
+
+\newcommand{\CheckGitStatus}{%
+    \ShellEscape{git status --porcelain=v1 > "\jobname.gitstatus"}%
+    \IfFileExists{\jobname.gitstatus}{%
+        \CatchFileDef{\GitStatusRaw}{\jobname.gitstatus}{\endlinechar=-1 }%
+        \ifdefempty{\GitStatusRaw}{%
+            \renewcommand{\GitBuildStatus}{clean}%
+        }{%
+            \renewcommand{\GitBuildStatus}{dirty}%
+        }%
+    }{%
+        \renewcommand{\GitBuildStatus}{unknown}%
+    }%
+}
+
+\CheckGitStatus
 
 \author{Michael Capotosto}
 \title{zPSC Calibration and Test Manual}
-\date{May 2026}
+\date{May 2026\\[1em]
+    \small Document Revision: Rev. 1\\
+    \small Source Version: \gitDescribe\\
+    \small Commit: \gitAbbrevHash{-}\GitBuildStatus
+}
 
-\frontmatter
-\maketitle
-\tableofcontents
+\begin{document}
 
-\mainmatter
-\include{./TeX_files/Introduction}
-\include{./TeX_files/Cable_Assemblies}
-\include{./TeX_files/ATE}
-\include{./TeX_files/zPSC}
-\include{./TeX_files/IOCs}
-\include{./TeX_files/CS-Studio-Phoebus}
-\include{./TeX_files/Networking}
-\include{./TeX_files/Installing_Minicom}
-\include{./TeX_files/Python}
-\include{./TeX_files/Installing_Test_Cal_Scripts}
-\include{./TeX_files/Test and Calibration Script Configuration}
-\include{./TeX_files/PSC_EEPROM}
-\include{./TeX_files/Running_Test_Cal_Scripts}
+    \frontmatter
+    \maketitle
+    \tableofcontents
 
-\appendix
+    \mainmatter
+    \include{./TeX_files/Introduction}
+    \include{./TeX_files/Cable_Assemblies}
+    \include{./TeX_files/ATE}
+    \include{./TeX_files/zPSC}
+    \include{./TeX_files/IOCs}
+    \include{./TeX_files/CS-Studio-Phoebus}
+    \include{./TeX_files/Networking}
+    \include{./TeX_files/Installing_Minicom}
+    \include{./TeX_files/Python}
+    \include{./TeX_files/Installing_Test_Cal_Scripts}
+    \include{./TeX_files/Test and Calibration Script Configuration}
+    \include{./TeX_files/PSC_EEPROM}
+    \include{./TeX_files/Running_Test_Cal_Scripts}
 
-\include{./TeX_files/Appendix_Secondary_Ops}
-\include{./TeX_files/Appendix_Calibration_Report}
-\include{./TeX_files/Appendix_Test_Report}
+    \appendix
+
+    \include{./TeX_files/Appendix_Secondary_Ops}
+    \include{./TeX_files/Appendix_Calibration_Report}
+    \include{./TeX_files/Appendix_Test_Report}
 
 
-\backmatter
-% bibliography, glossary and index would go here.
+    \backmatter
+    % bibliography, glossary and index would go here.
 
 \end{document}
