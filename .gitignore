@@ -38,5 +38,5 @@ gitHeadLocal.gin
 *.gitstatus
 
 # minted
-*_minted/*
-*_minted-*/
+**_minted/*
+**_minted-*/
