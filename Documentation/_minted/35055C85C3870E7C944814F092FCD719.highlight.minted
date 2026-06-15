@@ -1,7 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{n}{func\PYGZus{}tests}\PYG{o}{=}\PYG{n}{FuncSuite}\PYG{p}{(}
-\PYG{n}{regulation}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,}
-\PYG{n}{smooth}\PYG{o}{=}\PYG{k+kc}{True}\PYG{p}{,}
-\PYG{n}{jump}\PYG{o}{=}\PYG{k+kc}{True}
-\PYG{p}{)}
-\end{MintedVerbatim}

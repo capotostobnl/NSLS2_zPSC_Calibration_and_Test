@@ -4,6 +4,7 @@
 \setlength{\parindent}{0pt}
 \usepackage[margin=1in]{geometry}
 \usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{positioning,calc}
@@ -30,10 +31,31 @@
 
 \usepackage{booktabs}
 
+\fancyhf{}
+\fancyhead[LE,RO]{\thepage}
+\fancyfoot[L]{\manualdate}
+\fancyfoot[C]{\manualrev}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyhead[LE,RO]{\thepage}
+
+    \fancyfoot[L]{\manualdate}
+    \fancyfoot[C]{\manualrev}
+
+    \renewcommand{\headrulewidth}{0pt}
+    \renewcommand{\footrulewidth}{0.4pt}
+}
+
+
+\newcommand{\manualdate}{\today}
+\newcommand{\manualrev}{Rev. 1}
+
 \author{Michael Capotosto}
 \title{zPSC Calibration and Test Manual}
-\date{{\today}\\[1em]
-    \small Rev. 1\\
+\date{\manualdate\\[1em]
+    \small \manualrev\\
 }
 
 \begin{document}
@@ -43,6 +65,7 @@
     \tableofcontents
 
     \mainmatter
+    \pagestyle{fancy}
     \include{./TeX_files/Introduction}
     \include{./TeX_files/Cable_Assemblies}
     \include{./TeX_files/ATE}

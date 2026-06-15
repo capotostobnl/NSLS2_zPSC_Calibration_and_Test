@@ -1,7 +1,0 @@
-\begin{MintedVerbatim}[commandchars=\\\{\}]
-\PYG{n}{MODELS} \PYG{o}{=} \PYG{p}{\PYGZob{}}
-	\PYG{l+s+s2}{\PYGZdq{}MY\PYGZus{}NEW\PYGZus{}MODEL\PYGZdq{}}\PYG{p}{:} \PYG{n}{PSCModel}\PYG{p}{(}
-	\PYG{o}{...}
-	\PYG{p}{),}
-\PYG{p}{\PYGZcb{}}
-\end{MintedVerbatim}
