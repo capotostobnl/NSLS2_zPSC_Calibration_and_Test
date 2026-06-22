@@ -1,0 +1,160 @@
+% !TeX root = ../main.tex
+\chapter{EPICS Base and IOCs}
+\label{chap:epics_iocs}
+
+\section{Introduction}
+There are two IOCs associated with the calibration and test of the zPSC: The ATE IOC, and the zPSC IOC. 
+
+\section{EPICS Installation Overview}
+	EPICS installations performed by M. Capotosto loosely follow the below directory structure:
+
+	\begin{itemize}
+		\item \texttt{EPICS\_BASE=/epics/base} or \texttt{/epics/base\_[version]} or similar
+		\item \texttt{SUPPORT=/epics/support} -- or sometimes MODULES instead of SUPPORT is used.
+			\par\bigskip
+			\quad Modules required for the ATE and PSC are installed here:
+			\begin{itemize}[topsep=0pt]
+				\item seq: SNL-Sequencer
+				\item pscdrv: Portable Streaming Controller Driver
+				\item asyn: EPICS module for driver and device support
+			\end{itemize}
+		\item \texttt{epics/iocs} - each IOC is cloned into this repository
+		\item \texttt{epics/systemd-softioc} - This is an NSLS-II utility for managing IOCs as a system service
+	\end{itemize}
+
+\section{Installing EPICS Base and Required Modules}
+	\begin{enumerate}
+		\item Install Dependencies for Build
+			\hspace*{2em} Install git, build-essential, and perl:\\ \texttt{sudo apt -y install git build-essential perl libtirpc-dev re2c libevent-dev autoconf automake libtool pkg-config}
+		\item Create the EPICS user group, and the empty EPICS directory: \\
+			\hspace*{2em} \texttt{sudo groupadd epics}\\
+			\hspace*{2em} \texttt{sudo usermod -aG epics \$USER}\\
+			\hspace*{2em} \texttt{newgrp epics}\\
+			\hspace*{2em} \texttt{sudo mkdir -p /epics}\\
+			\hspace*{2em} \texttt{sudo chown \$USER:epics /epics}\\
+			\hspace*{2em} \texttt{sudo chmod 2775 /epics}\\
+		\item EPICS Base is cloned into \texttt{/epics/base} via:\\
+			\hspace*{2em} \texttt{git clone --recursive -b 7.0} \\ \hspace*{4em}\texttt{https://github.com/epics-base/epics-base.git /epics/base}\\
+			\hspace*{2em} \texttt{cd /epics/base}\\
+		\item Build EPICS:\\
+			\hspace*{2em} \texttt{make clean}\\
+			\hspace*{2em} \texttt{make}\\
+		
+		\item Create the remaining directory structure:\\
+			\hspace*{2em} \texttt{mkdir -p /epics/iocs /epics/modules}\\
+			
+		\item Clone asyn:
+			\begin{enumerate}
+				\item \texttt{cd /epics/modules}
+				\item \texttt{git clone https://github.com/epics-modules/asyn.git asyn}
+				\item \texttt{cd /epics/modules/asyn}
+				\item Set up required files in \texttt{configure/RELEASE, configure/RELEASE.LOCAL}
+				\item Build with \texttt{make clean}, and \texttt{make}
+			\end{enumerate}
+	
+		\item Clone Sequencer:
+		\begin{enumerate}
+			\item \texttt{cd /epics/modules}
+			\item \texttt{git clone https://github.com/epics-modules/sequencer.git seq}
+			\item \texttt{cd /epics/modules/seq}
+			\item Set up required files in \texttt{configure/RELEASE, configure/RELEASE.LOCAL}
+			\item Build with \texttt{make clean}, and \texttt{make}
+		\end{enumerate}
+			
+		\item Clone PSC Driver:
+		\begin{enumerate}
+			\item \texttt{cd /epics/modules}
+			\item \texttt{git clone https://github.com/mdavidsaver/pscdrv.git pscdrv}
+			\item \texttt{cd /epics/modules/pscdrv}
+			\item Set up required files in \texttt{configure/RELEASE, configure/RELEASE.LOCAL}
+			\item Build with \texttt{make clean}, and \texttt{make}
+		\end{enumerate}
+			
+		\item Clone Manage IOCs Utility:
+		\begin{enumerate}
+			\item \texttt{cd /epics}
+			\item \texttt{git clone https://github.com/NSLS2/systemd-softioc.git}
+			\item Navigate to the repo directory \texttt{cd systemd-softioc}
+			\item Make the install script executable and run:\\
+			\hspace*{2em}\texttt{sudo chmod +x install.sh}\\
+			\hspace*{2em}\texttt{sudo ./install.sh}\\
+			\hspace*{2em}\texttt{sudo usermod -aG epics softioc}\\
+			\hspace*{2em}\texttt{newgrp}\\
+			\hspace*{2em}\texttt{sudo chown softioc:epics /epics/iocs}\\
+			\hspace*{2em}\texttt{sudo chmod 2775 /epics/iocs}\\
+		\end{enumerate}
+	\end{enumerate}
+
+\section{Installing the ATE IOC}
+	\begin{enumerate}
+		\item Change to IOC directory \texttt{cd /epics/iocs}
+		\item Clone the repo:\\
+		\hspace*{1em} \texttt{git clone https://github.com/capotostobnl/ALSu-PSC\_ATE-ioc.git PSCtest}
+		\item \texttt{cd PSCtest}
+		\item \texttt{git switch Released,-UPC/BPC-Split-IOC-Ver-2}
+		\item Create the \texttt{RELEASE.local} file, \texttt{touch configure/RELEASE.local}
+		\item \texttt{echo -e "EPICS\_BASE=/epics/base\textbackslash nASYN=/epics/modules/asyn" >}\\
+			\hspace*{2em} \texttt{ /epics/iocs/PSCtest/configure/RELEASE.local}
+		\item Build the IOC: \texttt{make clean}, \texttt{make}
+		\item Update the st.cmd file: \texttt{cd iocBoot/iocPSCtest}
+			\begin{enumerate}
+			\item Edit the st.cmd file: \texttt{nano st.cmd}
+			\item Update the EPICS\_BASE variable if needed.
+			\item Update the IPPORT to match the ATE. Repository has 10.69.26.4:5000 as default. Changing this later from the Phoebus/CSS panels may not work!	
+		\end{enumerate}
+
+		\item Find the next available port: \texttt{manage-iocs nextport}
+		\item Configure this in the config file: \texttt{nano config}
+		\item Set the \texttt{NAME=PSCtest}, \texttt{PORT=} your next port, \texttt{USER=softioc}, and \texttt{HOST=\$HOSTNAME}
+		\item Update the directory path in the root-level st.cmd to point to the right binaries
+		\item Enroll in manage-iocs as a service: \texttt{sudo manage-iocs install PSCtest}
+		\item Enable auto-start on boot: \texttt{sudo manage-iocs enable PSCtest}
+		\item Check the status, it should be running! \texttt{manage-iocs status}
+		\item And if you want other information on the ioc: \texttt{manage-iocs report}
+	\end{enumerate}
+
+\section{Installing the PSC IOC}
+\begin{enumerate}
+	\item Change to IOC directory \texttt{cd /epics/iocs}
+	\item Clone the repo:\\
+	\hspace*{1em} \texttt{git clone https://github.com/jamead/zpsc-ioc.git zpsc\_ioc}
+	\item \texttt{cd zpsc\_ioc}
+	\item Create the \texttt{RELEASE.local} file, \texttt{touch configure/RELEASE.local}
+	\item \texttt{echo -e "EPICS\_BASE = /epics/base\textbackslash n}\\
+		\hspace*{2em}\texttt{PSCDRV = /epics/modules/pscdrv\textbackslash n}\\
+		\hspace*{2em}\texttt{SEQ = /epics/modules/seq" >}\\
+		\hspace*{2em} \texttt{/epics/iocs/zpsc\_ioc/configure/RELEASE.local}
+	\item Build the IOC: \texttt{make clean}, \texttt{make}
+	\item Update the st.cmd file as needed: \texttt{cd iocBoot/ioczpsc}
+	\item Create the st.cmd file used by systemd-softioc: \begin{verbatim}echo -e '#!/bin/bash\n\n
+		cd "/epics/iocs/zpsc_ioc/iocBoot/ioczpsc"\n./st.cmd' > st.cmd\end{verbatim}
+	\item Make the new st.cmd executable: \texttt{chmod +x st.cmd}
+	\item Find the next available port: \texttt{manage-iocs nextport}
+	\item Configure this in the config file: \texttt{nano config}
+	\item Set the \texttt{NAME=zpsc\_ioc}, \texttt{PORT=} your next port, \texttt{USER=softioc}, and \texttt{HOST=\$HOSTNAME}
+	\item Update the directory path in the root-level st.cmd to the \texttt{iocBoot/ioczpsc/st.cmd}
+	\item Enroll in manage-iocs as a service: \texttt{sudo manage-iocs install zpsc\_ioc}
+	\item Enable auto-start on boot: \texttt{sudo manage-iocs enable zpsc\_ioc}
+	\item Check the status, it should be running! \texttt{manage-iocs status}
+	\item And if you want other information on the ioc: \texttt{manage-iocs report}
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

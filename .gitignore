@@ -11,4 +11,32 @@ __pycache__
 .venv/
 #Shipment*
 venv/
+.venv/
 psc_calibration_temp.doc
+
+# LaTeX build files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+buildinfo.tex
+
+gitHeadLocal.gin
+*.gitstatus
+
+# minted
+**/_minted/*
+**/_minted-*/
