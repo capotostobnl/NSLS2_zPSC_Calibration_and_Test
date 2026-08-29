@@ -3,7 +3,7 @@
 \label{chap:epics_iocs}
 
 \section{Introduction}
-There are two IOCs associated with the calibration and test of the zPSC: The ATE IOC, and the zPSC IOC. 
+There are two IOCs associated with the calibration and test of the zPSC: The ATE IOC, and the zPSC IOC.
 
 \section{EPICS Installation Overview}
 	EPICS installations performed by M. Capotosto loosely follow the below directory structure:
@@ -36,13 +36,29 @@ There are two IOCs associated with the calibration and test of the zPSC: The ATE
 		\item EPICS Base is cloned into \texttt{/epics/base} via:\\
 			\hspace*{2em} \texttt{git clone --recursive -b 7.0} \\ \hspace*{4em}\texttt{https://github.com/epics-base/epics-base.git /epics/base}\\
 			\hspace*{2em} \texttt{cd /epics/base}\\
+
+            \textbf{Note:} The \texttt{7.0} branch tracks ongoing EPICS Base development and may contain commits newer than the most recent stable release. During testing, the development branch produced a Channel Access regression that caused \texttt{caput} operations to disconnect from the IOC. EPICS Base was therefore pinned to the stable \texttt{R7.0.10} release tag before building:
+
+            \hspace*{2em} \texttt{git checkout R7.0.10}
+
+            \hspace*{2em} \texttt{git submodule update --init --recursive}
 		\item Build EPICS:\\
 			\hspace*{2em} \texttt{make clean}\\
 			\hspace*{2em} \texttt{make}\\
-		
+
+        \item Add the EPICS Base binaries to the user's PATH:\
+
+            \hspace*{2em} \texttt{echo 'export EPICS\_BASE=/epics/base' >> \textasciitilde/.bashrc}\
+
+            \hspace*{2em} \texttt{echo 'export EPICS\_HOST\_ARCH=linux-x86\_64' >> \textasciitilde/.bashrc}\
+
+            \hspace*{2em} \texttt{echo 'export PATH=\$EPICS\_BASE/bin/\$EPICS\_HOST\_ARCH:\$PATH' >>    \textasciitilde/.bashrc}\
+
+            \hspace*{2em} \texttt{source \textasciitilde/.bashrc}\
+
 		\item Create the remaining directory structure:\\
 			\hspace*{2em} \texttt{mkdir -p /epics/iocs /epics/modules}\\
-			
+
 		\item Clone asyn:
 			\begin{enumerate}
 				\item \texttt{cd /epics/modules}
@@ -51,7 +67,7 @@ There are two IOCs associated with the calibration and test of the zPSC: The ATE
 				\item Set up required files in \texttt{configure/RELEASE, configure/RELEASE.LOCAL}
 				\item Build with \texttt{make clean}, and \texttt{make}
 			\end{enumerate}
-	
+
 		\item Clone Sequencer:
 		\begin{enumerate}
 			\item \texttt{cd /epics/modules}
@@ -60,7 +76,7 @@ There are two IOCs associated with the calibration and test of the zPSC: The ATE
 			\item Set up required files in \texttt{configure/RELEASE, configure/RELEASE.LOCAL}
 			\item Build with \texttt{make clean}, and \texttt{make}
 		\end{enumerate}
-			
+
 		\item Clone PSC Driver:
 		\begin{enumerate}
 			\item \texttt{cd /epics/modules}
@@ -69,7 +85,7 @@ There are two IOCs associated with the calibration and test of the zPSC: The ATE
 			\item Set up required files in \texttt{configure/RELEASE, configure/RELEASE.LOCAL}
 			\item Build with \texttt{make clean}, and \texttt{make}
 		\end{enumerate}
-			
+
 		\item Clone Manage IOCs Utility:
 		\begin{enumerate}
 			\item \texttt{cd /epics}
@@ -89,7 +105,7 @@ There are two IOCs associated with the calibration and test of the zPSC: The ATE
 	\begin{enumerate}
 		\item Change to IOC directory \texttt{cd /epics/iocs}
 		\item Clone the repo:\\
-		\hspace*{1em} \texttt{git clone https://github.com/capotostobnl/ALSu-PSC\_ATE-ioc.git PSCtest}
+		\hspace*{1em} \texttt{git clone https://github.com/capotosto/ALSu-PSC\_ATE-ioc.git PSCtest}
 		\item \texttt{cd PSCtest}
 		\item \texttt{git switch Released,-UPC/BPC-Split-IOC-Ver-2}
 		\item Create the \texttt{RELEASE.local} file, \texttt{touch configure/RELEASE.local}
@@ -100,7 +116,7 @@ There are two IOCs associated with the calibration and test of the zPSC: The ATE
 			\begin{enumerate}
 			\item Edit the st.cmd file: \texttt{nano st.cmd}
 			\item Update the EPICS\_BASE variable if needed.
-			\item Update the IPPORT to match the ATE. Repository has 10.69.26.4:5000 as default. Changing this later from the Phoebus/CSS panels may not work!	
+			\item Update the IPPORT to match the ATE. Repository has 10.69.26.4:5000 as default. Changing this later from the Phoebus/CSS panels may not work!
 		\end{enumerate}
 
 		\item Find the next available port: \texttt{manage-iocs nextport}
